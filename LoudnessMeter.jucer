@@ -11,6 +11,62 @@
               aaxIdentifier="com.yourcompany.LoudnessMeter" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
               jucerVersion="3.1.0">
   <MAINGROUP id="voUama" name="LoudnessMeter">
+    <GROUP id="{5B3DE26F-74D8-69CE-EF44-C7AFB44B07C8}" name="loudnessCode">
+      <GROUP id="{3C867BE9-9333-20A8-4CBA-CC2660F63555}" name="cnpy">
+        <FILE id="iQk7xM" name="cnpy.cpp" compile="1" resource="0" file="Source/loudnessCode/cnpy/cnpy.cpp"/>
+        <FILE id="HwrruD" name="cnpy.h" compile="0" resource="0" file="Source/loudnessCode/cnpy/cnpy.h"/>
+        <FILE id="p06kdA" name="LICENSE" compile="0" resource="1" file="Source/loudnessCode/cnpy/LICENSE"/>
+      </GROUP>
+      <GROUP id="{F72ACB90-4C95-B9AC-B547-A78581B81250}" name="Modules">
+        <FILE id="vhHGCX" name="Butter.cpp" compile="1" resource="0" file="Source/loudnessCode/Modules/Butter.cpp"/>
+        <FILE id="k5mvI5" name="Butter.h" compile="0" resource="0" file="Source/loudnessCode/Modules/Butter.h"/>
+        <FILE id="I8Kuwh" name="CompressSpectrum.cpp" compile="1" resource="0"
+              file="Source/loudnessCode/Modules/CompressSpectrum.cpp"/>
+        <FILE id="wchDMw" name="CompressSpectrum.h" compile="0" resource="0"
+              file="Source/loudnessCode/Modules/CompressSpectrum.h"/>
+        <FILE id="nlauqy" name="FastRoexBank.cpp" compile="1" resource="0"
+              file="Source/loudnessCode/Modules/FastRoexBank.cpp"/>
+        <FILE id="eWK6UU" name="FastRoexBank.h" compile="0" resource="0" file="Source/loudnessCode/Modules/FastRoexBank.h"/>
+        <FILE id="XR2oZw" name="FIR.cpp" compile="1" resource="0" file="Source/loudnessCode/Modules/FIR.cpp"/>
+        <FILE id="vNdand" name="FIR.h" compile="0" resource="0" file="Source/loudnessCode/Modules/FIR.h"/>
+        <FILE id="G9xJz6" name="FrameGenerator.cpp" compile="1" resource="0"
+              file="Source/loudnessCode/Modules/FrameGenerator.cpp"/>
+        <FILE id="tB8gpe" name="FrameGenerator.h" compile="0" resource="0"
+              file="Source/loudnessCode/Modules/FrameGenerator.h"/>
+        <FILE id="jr4uz3" name="IIR.cpp" compile="1" resource="0" file="Source/loudnessCode/Modules/IIR.cpp"/>
+        <FILE id="kqptxe" name="IIR.h" compile="0" resource="0" file="Source/loudnessCode/Modules/IIR.h"/>
+        <FILE id="dN82IJ" name="IntegratedLoudnessGM.cpp" compile="1" resource="0"
+              file="Source/loudnessCode/Modules/IntegratedLoudnessGM.cpp"/>
+        <FILE id="LbHdX0" name="IntegratedLoudnessGM.h" compile="0" resource="0"
+              file="Source/loudnessCode/Modules/IntegratedLoudnessGM.h"/>
+        <FILE id="qwok2T" name="PowerSpectrum.cpp" compile="1" resource="0"
+              file="Source/loudnessCode/Modules/PowerSpectrum.cpp"/>
+        <FILE id="UuIUM8" name="PowerSpectrum.h" compile="0" resource="0" file="Source/loudnessCode/Modules/PowerSpectrum.h"/>
+        <FILE id="VZem6D" name="SpecificLoudnessGM.cpp" compile="1" resource="0"
+              file="Source/loudnessCode/Modules/SpecificLoudnessGM.cpp"/>
+        <FILE id="IluhGI" name="SpecificLoudnessGM.h" compile="0" resource="0"
+              file="Source/loudnessCode/Modules/SpecificLoudnessGM.h"/>
+        <FILE id="lHWMUY" name="WeightSpectrum.cpp" compile="1" resource="0"
+              file="Source/loudnessCode/Modules/WeightSpectrum.cpp"/>
+        <FILE id="tManaL" name="WeightSpectrum.h" compile="0" resource="0"
+              file="Source/loudnessCode/Modules/WeightSpectrum.h"/>
+      </GROUP>
+      <GROUP id="{6EC8C5ED-5B13-8E1C-1754-C2912FAF2849}" name="Support">
+        <FILE id="RQRkWI" name="AuditoryTools.cpp" compile="1" resource="0"
+              file="Source/loudnessCode/Support/AuditoryTools.cpp"/>
+        <FILE id="BemO86" name="AuditoryTools.h" compile="0" resource="0" file="Source/loudnessCode/Support/AuditoryTools.h"/>
+        <FILE id="jJMEym" name="Common.h" compile="0" resource="0" file="Source/loudnessCode/Support/Common.h"/>
+        <FILE id="of1GfA" name="Debug.h" compile="0" resource="0" file="Source/loudnessCode/Support/Debug.h"/>
+        <FILE id="wF1Qqu" name="Filter.cpp" compile="1" resource="0" file="Source/loudnessCode/Support/Filter.cpp"/>
+        <FILE id="x6fMwx" name="Filter.h" compile="0" resource="0" file="Source/loudnessCode/Support/Filter.h"/>
+        <FILE id="SJwT1o" name="Module.cpp" compile="1" resource="0" file="Source/loudnessCode/Support/Module.cpp"/>
+        <FILE id="BHt2wy" name="Module.h" compile="0" resource="0" file="Source/loudnessCode/Support/Module.h"/>
+        <FILE id="HOaDnm" name="SignalBank.cpp" compile="1" resource="0" file="Source/loudnessCode/Support/SignalBank.cpp"/>
+        <FILE id="SH5m19" name="SignalBank.h" compile="0" resource="0" file="Source/loudnessCode/Support/SignalBank.h"/>
+        <FILE id="glf4yd" name="Spline.cpp" compile="1" resource="0" file="Source/loudnessCode/Support/Spline.cpp"/>
+        <FILE id="RVFA28" name="Spline.h" compile="0" resource="0" file="Source/loudnessCode/Support/Spline.h"/>
+      </GROUP>
+    </GROUP>
     <GROUP id="{A378BF1D-E94F-A564-0129-4472F286686B}" name="Source">
       <FILE id="LEWwoT" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
@@ -22,7 +78,8 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <LINUX_MAKE targetFolder="Builds/Linux" vstFolder="~/SDKs/vstsdk2.4">
+    <LINUX_MAKE targetFolder="Builds/Linux" vstFolder="/home/dominic/SDKs/VST3SDK"
+                externalLibraries="fftw3">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
                        targetName="LoudnessMeter"/>

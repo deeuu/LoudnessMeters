@@ -18,12 +18,12 @@ ifeq ($(CONFIG),Debug)
     TARGET_ARCH := -march=native
   endif
 
-  CPPFLAGS := $(DEPFLAGS) -std=c++11 -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/vstsdk2.4 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
+  CPPFLAGS := $(DEPFLAGS) -std=c++11 -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I /home/dominic/SDKs/VST3SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -fPIC -O0
   CXXFLAGS += $(CFLAGS)
-  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -shared -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt 
+  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -shared -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt -lfftw3 
   LDDEPS :=
-  RESFLAGS :=  -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/vstsdk2.4 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
+  RESFLAGS :=  -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I /home/dominic/SDKs/VST3SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
   TARGET := LoudnessMeter.so
   BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
   CLEANCMD = rm -rf $(OUTDIR)/$(TARGET) $(OBJDIR)
@@ -39,20 +39,37 @@ ifeq ($(CONFIG),Release)
     TARGET_ARCH := -march=native
   endif
 
-  CPPFLAGS := $(DEPFLAGS) -std=c++11 -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/vstsdk2.4 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
+  CPPFLAGS := $(DEPFLAGS) -std=c++11 -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I /home/dominic/SDKs/VST3SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -fPIC -Os
   CXXFLAGS += $(CFLAGS)
-  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -shared -fvisibility=hidden -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt 
+  LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -shared -fvisibility=hidden -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt -lfftw3 
   LDDEPS :=
-  RESFLAGS :=  -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/vstsdk2.4 -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
+  RESFLAGS :=  -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I /home/dominic/SDKs/VST3SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
   TARGET := LoudnessMeter.so
   BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
   CLEANCMD = rm -rf $(OUTDIR)/$(TARGET) $(OBJDIR)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/cnpy_fc6e98ff.o \
+  $(OBJDIR)/Butter_758e74c2.o \
+  $(OBJDIR)/CompressSpectrum_39346655.o \
+  $(OBJDIR)/FastRoexBank_ede88f8a.o \
+  $(OBJDIR)/FIR_2a6b257.o \
+  $(OBJDIR)/FrameGenerator_11f5eaa8.o \
+  $(OBJDIR)/IIR_a159641a.o \
+  $(OBJDIR)/IntegratedLoudnessGM_3d0d1404.o \
+  $(OBJDIR)/PowerSpectrum_6f1992fe.o \
+  $(OBJDIR)/SpecificLoudnessGM_c843f4e3.o \
+  $(OBJDIR)/WeightSpectrum_d03b5bab.o \
+  $(OBJDIR)/AuditoryTools_fb2619b0.o \
+  $(OBJDIR)/Filter_2f5bc8f2.o \
+  $(OBJDIR)/Module_581009e6.o \
+  $(OBJDIR)/SignalBank_5369c1fe.o \
+  $(OBJDIR)/Spline_6db570cb.o \
   $(OBJDIR)/PluginProcessor_a059e380.o \
   $(OBJDIR)/PluginEditor_94d4fb09.o \
+  $(OBJDIR)/BinaryData_ce4232d4.o \
   $(OBJDIR)/juce_audio_basics_2442e4ea.o \
   $(OBJDIR)/juce_audio_devices_a4c8a728.o \
   $(OBJDIR)/juce_audio_formats_d349f0c8.o \
@@ -87,6 +104,86 @@ strip:
 	@echo Stripping LoudnessMeter
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
 
+$(OBJDIR)/cnpy_fc6e98ff.o: ../../Source/loudnessCode/cnpy/cnpy.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling cnpy.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Butter_758e74c2.o: ../../Source/loudnessCode/Modules/Butter.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Butter.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/CompressSpectrum_39346655.o: ../../Source/loudnessCode/Modules/CompressSpectrum.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling CompressSpectrum.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/FastRoexBank_ede88f8a.o: ../../Source/loudnessCode/Modules/FastRoexBank.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling FastRoexBank.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/FIR_2a6b257.o: ../../Source/loudnessCode/Modules/FIR.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling FIR.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/FrameGenerator_11f5eaa8.o: ../../Source/loudnessCode/Modules/FrameGenerator.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling FrameGenerator.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/IIR_a159641a.o: ../../Source/loudnessCode/Modules/IIR.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling IIR.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/IntegratedLoudnessGM_3d0d1404.o: ../../Source/loudnessCode/Modules/IntegratedLoudnessGM.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling IntegratedLoudnessGM.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/PowerSpectrum_6f1992fe.o: ../../Source/loudnessCode/Modules/PowerSpectrum.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling PowerSpectrum.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/SpecificLoudnessGM_c843f4e3.o: ../../Source/loudnessCode/Modules/SpecificLoudnessGM.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling SpecificLoudnessGM.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/WeightSpectrum_d03b5bab.o: ../../Source/loudnessCode/Modules/WeightSpectrum.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling WeightSpectrum.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/AuditoryTools_fb2619b0.o: ../../Source/loudnessCode/Support/AuditoryTools.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling AuditoryTools.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Filter_2f5bc8f2.o: ../../Source/loudnessCode/Support/Filter.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Filter.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Module_581009e6.o: ../../Source/loudnessCode/Support/Module.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Module.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/SignalBank_5369c1fe.o: ../../Source/loudnessCode/Support/SignalBank.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling SignalBank.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Spline_6db570cb.o: ../../Source/loudnessCode/Support/Spline.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Spline.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
 $(OBJDIR)/PluginProcessor_a059e380.o: ../../Source/PluginProcessor.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling PluginProcessor.cpp"
@@ -95,6 +192,11 @@ $(OBJDIR)/PluginProcessor_a059e380.o: ../../Source/PluginProcessor.cpp
 $(OBJDIR)/PluginEditor_94d4fb09.o: ../../Source/PluginEditor.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling PluginEditor.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/BinaryData_ce4232d4.o: ../../JuceLibraryCode/BinaryData.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling BinaryData.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/juce_audio_basics_2442e4ea.o: ../../JuceLibraryCode/modules/juce_audio_basics/juce_audio_basics.cpp
