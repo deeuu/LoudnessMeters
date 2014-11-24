@@ -10,6 +10,14 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "loudnessCode/Support/AuditoryTools.h"
+#include "loudnessCode/Modules/Butter.h"
+#include "loudnessCode/Modules/FrameGenerator.h"
+#include "loudnessCode/Modules/PowerSpectrum.h"
+#include "loudnessCode/Modules/WeightSpectrum.h"
+#include "loudnessCode/Modules/FastRoexBank.h"
+#include "loudnessCode/Modules/SpecificLoudnessGM.h"
+#include "loudnessCode/Modules/IntegratedLoudnessGM.h"
 
 
 //==============================================================================
@@ -126,9 +134,49 @@ void LoudnessMeterAudioProcessor::changeProgramName (int index, const String& ne
 //==============================================================================
 void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
-    inputBuf.initialize(1,1,44100);
+    DBG("fs = " + String(sampleRate));
+    //set up an input buffer with a default hop size of 4ms
+    hopSize = int(sampleRate * 0.004);
+    loudnessBuf.initialize(1, hopSize, (int)sampleRate);
+
+    //set up butterworth filter
+    modules.add(new loudness::Butter(3, 0, 50.0));
+
+    //set up module for generating FFT input buffers
+    //Glasberg and Moore use a window size 64ms
+    int windowSize = int(sampleRate * 0.064);
+    modules.add(new loudness::FrameGenerator(windowSize, hopSize));
+
+    //set up multi-resolution FFT
+    loudness::RealVec bands {10, 80, 500, 1250, 2540, 4050, 15001};
+    loudness::RealVec windSize {0.064, 0.032, 0.016, 0.008, 0.004, 0.002};
+    modules.add(new loudness::PowerSpectrum(bands, windSize, false));
+
+    //set up spectral weighting
+    loudness::OME::MiddleEarType middleEar = loudness::OME::ANSI_HPF; //disgusting
+    loudness::OME::OuterEarType outerEar = loudness::OME::ANSI_FREE;
+    modules.add(new loudness::WeightSpectrum(middleEar, outerEar));
+
+    //excitation pattern
+    modules.add(new loudness::FastRoexBank(1.0, false));
+
+    //specific loudness
+    modules.add(new loudness::SpecificLoudnessGM);
+
+    //loudness integration
+    modules.add(new loudness::IntegratedLoudnessGM);
+     
+    //initialisation
+    modules[0] -> initialize(loudnessBuf);
+    for(int i=1; i < modules.size(); i++)
+        modules[i] -> initialize(*modules[i-1] -> getOutput());
+
+    //Buffer stuff...Sean check this
+    blockBufSize = 4 * samplesPerBlock + hopSize;
+    blockBuf.allocate(blockBufSize, true);
+    writePos = 0;
+    readPos = 0;
+    newSamples = 0;
 }
 
 void LoudnessMeterAudioProcessor::releaseResources()
@@ -139,16 +187,36 @@ void LoudnessMeterAudioProcessor::releaseResources()
 
 void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    //A stupid test to make sure were up and running
-    inputBuf.setSample(0,0,0.01);
-    for (int channel = 0; channel < getNumInputChannels(); ++channel)
+    int numSamples = buffer.getNumSamples();
+
+    //not sure if correct, need to debug...
+    for (int channel = 0; channel < 1; ++channel)
     {
         float* channelData = buffer.getWritePointer (channel);
 
-        for(int sample =0; sample<buffer.getNumSamples(); sample++)
-            channelData[sample] *= inputBuf.getSample(0,0);
+        //fill the buffer required for dealing with variable block size
+        for (int i=0; i<numSamples; i++)
+        {
+            blockBuf[writePos++] = channelData[i];
+            writePos = writePos % blockBufSize;
+        }
 
-        // ..do something to the data...
+        //break the buffer into frames of length hopSamples
+        newSamples += numSamples;
+        int nFrames = newSamples / hopSize;
+        for(int frame=0; frame<nFrames; frame++)
+        {
+            for (int i=0; i<hopSize; i++)
+            {
+                loudnessBuf.setSample(0, i, blockBuf[readPos++]);
+                readPos = readPos % blockBufSize;
+            }
+
+            newSamples -= nFrames*hopSize;
+
+            //Do processing here
+        }
+
     }
 }
 

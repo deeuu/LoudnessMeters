@@ -40,13 +40,12 @@ namespace loudness{
     using std::vector;
     using std::string;
     using std::unique_ptr;
+    /*
+     * Types
+     */
+    typedef double Real;
+    typedef std::vector<Real> RealVec;
+    typedef std::vector<std::vector<Real> > RealVecVec;
 }
-
-/*
- * Types
- */
-typedef double Real;
-typedef std::vector<Real> RealVec;
-typedef std::vector<std::vector<Real> > RealVecVec;
 
 #endif  

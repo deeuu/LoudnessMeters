@@ -13,10 +13,14 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "loudnessCode/Support/SignalBank.h"
+#include "loudnessCode/Support/Module.h"
 
 //==============================================================================
 /**
+ * I need to think about stereo implementation.
+ * Modules are not set as targets because we can save some memory this way.
 */
+
 class LoudnessMeterAudioProcessor  : public AudioProcessor
 {
 public:
@@ -66,7 +70,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    loudness::SignalBank inputBuf;
+    HeapBlock <float> blockBuf;
+    int blockBufSize, readPos, writePos, newSamples, hopSize;
+    loudness::SignalBank loudnessBuf;
+    OwnedArray <loudness::Module> modules;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeterAudioProcessor)
 };
