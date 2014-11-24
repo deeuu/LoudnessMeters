@@ -78,8 +78,7 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <LINUX_MAKE targetFolder="Builds/Linux" vstFolder="/home/dominic/SDKs/VST3SDK"
-                externalLibraries="fftw3">
+    <LINUX_MAKE targetFolder="Builds/Linux" vstFolder="~/SDKs/VST3SDK" externalLibraries="fftw3">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
                        targetName="LoudnessMeter"/>

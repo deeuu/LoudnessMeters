@@ -139,6 +139,15 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     hopSize = int(sampleRate * 0.004);
     loudnessBuf.initialize(1, hopSize, (int)sampleRate);
 
+    // set the size of our analysis buffer 
+    // if I understood you correctly we only need to keep
+    // hold of one hop sizes worth of samples at any time
+    analysisBuffer.setSize (getNumInputChannels(), hopSize);
+    
+    // we also have some ints to keep track of where we are writing in the buffer
+    samplesNeeded = hopSize;
+    writePos = 0;
+
     //set up butterworth filter
     modules.add(new loudness::Butter(3, 0, 50.0));
 
@@ -170,13 +179,6 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     modules[0] -> initialize(loudnessBuf);
     for(int i=1; i < modules.size(); i++)
         modules[i] -> initialize(*modules[i-1] -> getOutput());
-
-    //Buffer stuff...Sean check this
-    blockBufSize = 4 * samplesPerBlock + hopSize;
-    blockBuf.allocate(blockBufSize, true);
-    writePos = 0;
-    readPos = 0;
-    newSamples = 0;
 }
 
 void LoudnessMeterAudioProcessor::releaseResources()
@@ -188,35 +190,38 @@ void LoudnessMeterAudioProcessor::releaseResources()
 void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
     int numSamples = buffer.getNumSamples();
+    int remainingSamples = numSamples;
+    int readPos = 0;
 
-    //not sure if correct, need to debug...
-    for (int channel = 0; channel < 1; ++channel)
+    // deal with any samples in the input which will create full hop buffers for us
+    while (remainingSamples >= samplesNeeded)
     {
-        float* channelData = buffer.getWritePointer (channel);
-
-        //fill the buffer required for dealing with variable block size
-        for (int i=0; i<numSamples; i++)
+        for (int channel = 0; channel < getNumInputChannels(); ++channel)
         {
-            blockBuf[writePos++] = channelData[i];
-            writePos = writePos % blockBufSize;
+            analysisBuffer.copyFrom (channel, writePos, buffer, channel, readPos, samplesNeeded);
         }
 
-        //break the buffer into frames of length hopSamples
-        newSamples += numSamples;
-        int nFrames = newSamples / hopSize;
-        for(int frame=0; frame<nFrames; frame++)
+        //================================================================================
+        //  Here we can analyse the latest full buffer we have.
+        //  If loudness::SignalBank can take a pointer to the samples we can get 
+        //  that from analysisBuffer. If not just copy them in in a loop like before.
+        //================================================================================
+
+        remainingSamples -= samplesNeeded;
+        readPos += samplesNeeded;
+        samplesNeeded = hopSize;
+        writePos = 0;
+    }
+
+    // grab any samples we need to save for the next processBlock call
+    if (remainingSamples != 0)
+    {
+        for (int channel = 0; channel < getNumInputChannels(); ++channel)
         {
-            for (int i=0; i<hopSize; i++)
-            {
-                loudnessBuf.setSample(0, i, blockBuf[readPos++]);
-                readPos = readPos % blockBufSize;
-            }
-
-            newSamples -= nFrames*hopSize;
-
-            //Do processing here
+            analysisBuffer.copyFrom (channel, writePos, buffer, channel, readPos, remainingSamples);
         }
 
+        samplesNeeded -= remainingSamples;
     }
 }
 

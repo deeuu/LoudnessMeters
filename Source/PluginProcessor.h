@@ -70,8 +70,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    HeapBlock <float> blockBuf;
-    int blockBufSize, readPos, writePos, newSamples, hopSize;
+    int hopSize;
+    AudioSampleBuffer analysisBuffer;
+    int samplesNeeded, writePos;
+
     loudness::SignalBank loudnessBuf;
     OwnedArray <loudness::Module> modules;
     //==============================================================================
