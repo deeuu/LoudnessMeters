@@ -22,6 +22,7 @@
 
 //==============================================================================
 LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
+    : pluginInitialised (false)
 {
 }
 
@@ -134,57 +135,73 @@ void LoudnessMeterAudioProcessor::changeProgramName (int index, const String& ne
 //==============================================================================
 void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    DBG("fs = " + String(sampleRate));
-    //set up an input buffer with a default hop size of 4ms
-    hopSize = int(sampleRate * 0.004);
-    loudnessBuf.initialize(1, hopSize, (int)sampleRate);
+    if(!pluginInitialised)//Ardour hack
+    {
+        int numChannels = getNumInputChannels();
 
-    // set the size of our analysis buffer 
-    // if I understood you correctly we only need to keep
-    // hold of one hop sizes worth of samples at any time
-    analysisBuffer.setSize (getNumInputChannels(), hopSize);
-    
-    // we also have some ints to keep track of where we are writing in the buffer
-    samplesNeeded = hopSize;
-    writePos = 0;
+        //set up an input buffer with a default hop size of 4ms
+        hopSize = int(sampleRate * 0.004);
+        samplesNeeded = hopSize;
+        writePos = 0;
 
-    //set up butterworth filter
-    modules.add(new loudness::Butter(3, 0, 50.0));
+        /* If stereo, need 2x:
+         * -Butterworth HPF
+         * -Frame generators
+         * -Loudness integrators (initialized last)
+         */
+        //Glasberg and Moore use a 64ms window
+        int windowSize = int(sampleRate * 0.064);
+        for(int i=0; i<numChannels; i++)
+        {
+            loudnessBuf.add(new loudness::SignalBank);
+            loudnessBuf[i] -> initialize(1, hopSize, (int)sampleRate);
+            butters.add(new loudness::Butter(3, 0, 50.0));
+            butters[i] -> initialize(*loudnessBuf[i]);
+            frameGens.add(new loudness::FrameGenerator(windowSize, hopSize));
+            frameGens[i] -> initialize(*butters[i] -> getOutput());
+            totalLoudness.add(new loudness::IntegratedLoudnessGM);
+        }
 
-    //set up module for generating FFT input buffers
-    //Glasberg and Moore use a window size 64ms
-    int windowSize = int(sampleRate * 0.064);
-    modules.add(new loudness::FrameGenerator(windowSize, hopSize));
+        //set up multi-resolution FFT
+        loudness::RealVec bands {10, 80, 500, 1250, 2540, 4050, 15001};
+        loudness::RealVec windSize {0.064, 0.032, 0.016, 0.008, 0.004, 0.002};
+        singleChnModules.add(new loudness::PowerSpectrum(bands, windSize, false));
+        singleChnModules[0] -> initialize(*frameGens[0] -> getOutput());
 
-    //set up multi-resolution FFT
-    loudness::RealVec bands {10, 80, 500, 1250, 2540, 4050, 15001};
-    loudness::RealVec windSize {0.064, 0.032, 0.016, 0.008, 0.004, 0.002};
-    modules.add(new loudness::PowerSpectrum(bands, windSize, false));
+        //set up spectral weighting
+        loudness::OME::MiddleEarType middleEar = loudness::OME::ANSI_HPF;
+        loudness::OME::OuterEarType outerEar = loudness::OME::ANSI_FREE;
+        singleChnModules.add(new loudness::WeightSpectrum(middleEar, outerEar));
 
-    //set up spectral weighting
-    loudness::OME::MiddleEarType middleEar = loudness::OME::ANSI_HPF; //disgusting
-    loudness::OME::OuterEarType outerEar = loudness::OME::ANSI_FREE;
-    modules.add(new loudness::WeightSpectrum(middleEar, outerEar));
+        //excitation pattern
+        singleChnModules.add(new loudness::FastRoexBank(1.0, false));
 
-    //excitation pattern
-    modules.add(new loudness::FastRoexBank(1.0, false));
+        //specific loudness
+        singleChnModules.add(new loudness::SpecificLoudnessGM);
 
-    //specific loudness
-    modules.add(new loudness::SpecificLoudnessGM);
+        //complete initialisation
+        for(int i=1; i < singleChnModules.size(); i++)
+            singleChnModules[i] -> initialize(*singleChnModules[i-1] -> getOutput());
+        //2 channel integrators
+        for(int i=0; i < numChannels; i++)
+            totalLoudness[i] -> initialize(*singleChnModules.getLast() -> getOutput());
 
-    //loudness integration
-    modules.add(new loudness::IntegratedLoudnessGM);
-     
-    //initialisation
-    modules[0] -> initialize(loudnessBuf);
-    for(int i=1; i < modules.size(); i++)
-        modules[i] -> initialize(*modules[i-1] -> getOutput());
+        pluginInitialised = true;
+    }
 }
 
 void LoudnessMeterAudioProcessor::releaseResources()
 {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
+    if(pluginInitialised)
+    {
+        loudnessBuf.clear();
+        butters.clear();
+        frameGens.clear();
+        totalLoudness.clear();
+        singleChnModules.clear();
+
+        pluginInitialised = false;
+    }
 }
 
 void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
@@ -198,14 +215,9 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     {
         for (int channel = 0; channel < getNumInputChannels(); ++channel)
         {
-            analysisBuffer.copyFrom (channel, writePos, buffer, channel, readPos, samplesNeeded);
+            float* channelData = buffer.getWritePointer (channel);
+            loudnessBuf[channel] -> fillSignal(0, writePos, channelData, readPos, samplesNeeded);
         }
-
-        //================================================================================
-        //  Here we can analyse the latest full buffer we have.
-        //  If loudness::SignalBank can take a pointer to the samples we can get 
-        //  that from analysisBuffer. If not just copy them in in a loop like before.
-        //================================================================================
 
         remainingSamples -= samplesNeeded;
         readPos += samplesNeeded;
@@ -218,10 +230,12 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     {
         for (int channel = 0; channel < getNumInputChannels(); ++channel)
         {
-            analysisBuffer.copyFrom (channel, writePos, buffer, channel, readPos, remainingSamples);
+            float* channelData = buffer.getWritePointer (channel);
+            loudnessBuf[channel] -> fillSignal(0, writePos, channelData, readPos, samplesNeeded);
         }
 
         samplesNeeded -= remainingSamples;
+        writePos += remainingSamples;
     }
 }
 

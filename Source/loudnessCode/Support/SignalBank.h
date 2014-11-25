@@ -129,6 +129,19 @@ namespace loudness{
         }
 
         /**
+         * @brief Fills a signal with the contents of an array.
+         *
+         * @param channel Channel of the SignalBank to write to.
+         * @param writeSampleIndex Sample index to write to.
+         * @param source An array of Real values.
+         * @readSampleIndex Sample index to read from.
+         * @numSamples The number of samples to copy.
+         */
+        void fillSignal(int channel, int writeSampleIndex, const double* source, int readSampleIndex, int numSamples);
+        void fillSignal(int channel, int writeSampleIndex, const float* source, int readSampleIndex, int numSamples);
+        void fillSignal(int channel, int writeSampleIndex, const RealVec& source, int readSampleIndex, int numSamples);
+
+        /**
          * @brief Sets the trigger state of the SignalBank.
          *
          * This function is mainly for use with PowerSpectrum.

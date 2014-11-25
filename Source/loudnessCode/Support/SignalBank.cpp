@@ -111,6 +111,24 @@ namespace loudness{
         }
     }
 
+    void SignalBank::fillSignal(int channel, int writeSampleIndex, const double* source, int readSampleIndex, int numSamples)
+    {
+        for(int i=0; i<numSamples; i++)
+            signal_[channel][writeSampleIndex] = source[readSampleIndex+i];
+    }
+    void SignalBank::fillSignal(int channel, int writeSampleIndex, const float* source, int readSampleIndex, int numSamples)
+    {
+        for(int i=0; i<numSamples; i++)
+            signal_[channel][writeSampleIndex] = source[readSampleIndex+i];
+    }
+    void SignalBank::fillSignal(int channel, int writeSampleIndex, const RealVec& source, int readSampleIndex, int numSamples)
+    {
+        for(int i=0; i<numSamples; i++)
+            signal_[channel][writeSampleIndex] = source[readSampleIndex+i];
+    }
+
+
+
     const RealVec &SignalBank::getSignal(int channel) const
     {
         return signal_[channel];

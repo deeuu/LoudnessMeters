@@ -73,9 +73,14 @@ private:
     int hopSize;
     AudioSampleBuffer analysisBuffer;
     int samplesNeeded, writePos;
+    bool pluginInitialised;
 
-    loudness::SignalBank loudnessBuf;
-    OwnedArray <loudness::Module> modules;
+    OwnedArray <loudness::SignalBank> loudnessBuf;
+    OwnedArray <loudness::Module> butters;
+    OwnedArray <loudness::Module> frameGens;
+    OwnedArray <loudness::Module> totalLoudness;
+    OwnedArray <loudness::Module> singleChnModules;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeterAudioProcessor)
 };
