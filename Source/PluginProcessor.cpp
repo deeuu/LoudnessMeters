@@ -133,8 +133,7 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     if(!pluginInitialised)//Ardour hack
     {
         //limit to two channels (ears)
-        numEars = jmin(getNumInputChannels(), 2);
-        Logger::outputDebugString("prepareToPlay: numInputChannels :" + String (getNumInputChannels()) + "\n");
+        numEars = 2;
 
         //set up an input buffer with a default hop size of 4ms
         hopSize = round(sampleRate * 0.004);
@@ -169,11 +168,11 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
 {
 
     int numSamples = buffer.getNumSamples();
+    int numInputChannels = buffer.getNumChannels();
     int remainingSamples = numSamples;
     int readPos = 0;
 
-    //Logger::outputDebugString("ProcessBlock: samplesNeeded" + String (samplesNeeded) + "\n");
-    Logger::outputDebugString("processBlock: numEars :" + String (numEars) + "\n");
+    Logger::outputDebugString("ProcessBlock: samplesNeeded" + String (samplesNeeded) + "\n");
 
     // deal with any samples in the input which will create full hop buffers for us
     while (remainingSamples >= samplesNeeded)
@@ -181,7 +180,10 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         //fill the SignalBank to be processed
         for (int ear = 0; ear < numEars; ++ear)
         {
-            const float* signalToCopy = buffer.getReadPointer(ear);
+            int idx = ear;
+            if (numInputChannels == 1)
+                idx = 0;
+            const float* signalToCopy = buffer.getReadPointer(idx);
             inputSignalBank.copySamples(ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
         }
 
@@ -203,6 +205,9 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     {
         for (int ear = 0; ear < numEars; ++ear)
         {
+            int idx = ear;
+            if (numInputChannels == 1)
+                idx = 0;
             const float* signalToCopy = buffer.getReadPointer(ear);
             inputSignalBank.copySamples(ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
         }
