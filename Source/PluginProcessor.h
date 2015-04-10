@@ -12,14 +12,10 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "loudnessCode/Support/SignalBank.h"
-#include "loudnessCode/Support/Module.h"
+#include "loudnessCode/support/SignalBank.h"
+#include "loudnessCode/models/DynamicLoudnessGM2002.h"
 
 //==============================================================================
-/**
- * I need to think about stereo implementation.
- * Modules are not set as targets because we can save some memory this way.
-*/
 
 class LoudnessMeterAudioProcessor  : public AudioProcessor
 {
@@ -70,17 +66,13 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    int hopSize;
-    AudioSampleBuffer analysisBuffer;
+    int hopSize, numEarsUsedByModel;
     int samplesNeeded, writePos;
     bool pluginInitialised;
+    AudioSampleBuffer analysisBuffer;
+    SignalBank inputSignalBank;
+    DynamicLoudnessGM2002 model;
 
-    OwnedArray <loudness::SignalBank> loudnessBuf;
-    OwnedArray <loudness::Module> butters;
-    OwnedArray <loudness::Module> frameGens;
-    OwnedArray <loudness::Module> totalLoudness;
-    OwnedArray <loudness::Module> singleChnModules;
-    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeterAudioProcessor)
 };

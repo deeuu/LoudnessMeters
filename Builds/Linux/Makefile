@@ -51,25 +51,37 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
-  $(OBJDIR)/cnpy_fc6e98ff.o \
-  $(OBJDIR)/Butter_758e74c2.o \
-  $(OBJDIR)/CompressSpectrum_39346655.o \
-  $(OBJDIR)/FastRoexBank_ede88f8a.o \
-  $(OBJDIR)/FIR_2a6b257.o \
-  $(OBJDIR)/FrameGenerator_11f5eaa8.o \
-  $(OBJDIR)/IIR_a159641a.o \
-  $(OBJDIR)/IntegratedLoudnessGM_3d0d1404.o \
-  $(OBJDIR)/PowerSpectrum_6f1992fe.o \
-  $(OBJDIR)/SpecificLoudnessGM_c843f4e3.o \
-  $(OBJDIR)/WeightSpectrum_d03b5bab.o \
-  $(OBJDIR)/AuditoryTools_fb2619b0.o \
-  $(OBJDIR)/Filter_2f5bc8f2.o \
-  $(OBJDIR)/Module_581009e6.o \
-  $(OBJDIR)/SignalBank_5369c1fe.o \
-  $(OBJDIR)/Spline_6db570cb.o \
+  $(OBJDIR)/DynamicLoudnessCH2012_20d29b81.o \
+  $(OBJDIR)/DynamicLoudnessGM2002_d599b263.o \
+  $(OBJDIR)/SteadyStateLoudnessANSIS342007_3fab5d63.o \
+  $(OBJDIR)/ARAverager_d3198648.o \
+  $(OBJDIR)/AudioFileCutter_9319499.o \
+  $(OBJDIR)/BinauralInhibitionMG2007_59913024.o \
+  $(OBJDIR)/Biquad_a3f8db0.o \
+  $(OBJDIR)/Butter_7cab8a2.o \
+  $(OBJDIR)/CompressSpectrum_53555235.o \
+  $(OBJDIR)/DoubleRoexBank_ae3fb01f.o \
+  $(OBJDIR)/FastRoexBank_6e1a6b6a.o \
+  $(OBJDIR)/FIR_3e13fa77.o \
+  $(OBJDIR)/FrameGenerator_4d204e88.o \
+  $(OBJDIR)/IIR_dcc6ac3a.o \
+  $(OBJDIR)/InstantaneousLoudness_c98f8a07.o \
+  $(OBJDIR)/PowerSpectrum_f523331e.o \
+  $(OBJDIR)/RoexBankANSIS342007_d08d1172.o \
+  $(OBJDIR)/SMA_f3a8cfaf.o \
+  $(OBJDIR)/SpecificLoudnessANSIS342007_9c7580a3.o \
+  $(OBJDIR)/GoertzelPS_da487308.o \
+  $(OBJDIR)/WeightSpectrum_b65bf8b.o \
+  $(OBJDIR)/Window_7247f692.o \
+  $(OBJDIR)/AuditoryTools_812fb9d0.o \
+  $(OBJDIR)/FFT_61c22fe4.o \
+  $(OBJDIR)/Filter_c1980cd2.o \
+  $(OBJDIR)/Model_5783ee19.o \
+  $(OBJDIR)/Module_ea4c4dc6.o \
+  $(OBJDIR)/SignalBank_242115de.o \
+  $(OBJDIR)/Timer_d2888c35.o \
   $(OBJDIR)/PluginProcessor_a059e380.o \
   $(OBJDIR)/PluginEditor_94d4fb09.o \
-  $(OBJDIR)/BinaryData_ce4232d4.o \
   $(OBJDIR)/juce_audio_basics_2442e4ea.o \
   $(OBJDIR)/juce_audio_devices_a4c8a728.o \
   $(OBJDIR)/juce_audio_formats_d349f0c8.o \
@@ -104,84 +116,149 @@ strip:
 	@echo Stripping LoudnessMeter
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
 
-$(OBJDIR)/cnpy_fc6e98ff.o: ../../Source/loudnessCode/cnpy/cnpy.cpp
+$(OBJDIR)/DynamicLoudnessCH2012_20d29b81.o: ../../Source/loudnessCode/models/DynamicLoudnessCH2012.cpp
 	-@mkdir -p $(OBJDIR)
-	@echo "Compiling cnpy.cpp"
+	@echo "Compiling DynamicLoudnessCH2012.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Butter_758e74c2.o: ../../Source/loudnessCode/Modules/Butter.cpp
+$(OBJDIR)/DynamicLoudnessGM2002_d599b263.o: ../../Source/loudnessCode/models/DynamicLoudnessGM2002.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling DynamicLoudnessGM2002.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/SteadyStateLoudnessANSIS342007_3fab5d63.o: ../../Source/loudnessCode/models/SteadyStateLoudnessANSIS342007.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling SteadyStateLoudnessANSIS342007.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/ARAverager_d3198648.o: ../../Source/loudnessCode/modules/ARAverager.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling ARAverager.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/AudioFileCutter_9319499.o: ../../Source/loudnessCode/modules/AudioFileCutter.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling AudioFileCutter.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/BinauralInhibitionMG2007_59913024.o: ../../Source/loudnessCode/modules/BinauralInhibitionMG2007.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling BinauralInhibitionMG2007.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Biquad_a3f8db0.o: ../../Source/loudnessCode/modules/Biquad.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Biquad.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Butter_7cab8a2.o: ../../Source/loudnessCode/modules/Butter.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Butter.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/CompressSpectrum_39346655.o: ../../Source/loudnessCode/Modules/CompressSpectrum.cpp
+$(OBJDIR)/CompressSpectrum_53555235.o: ../../Source/loudnessCode/modules/CompressSpectrum.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling CompressSpectrum.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/FastRoexBank_ede88f8a.o: ../../Source/loudnessCode/Modules/FastRoexBank.cpp
+$(OBJDIR)/DoubleRoexBank_ae3fb01f.o: ../../Source/loudnessCode/modules/DoubleRoexBank.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling DoubleRoexBank.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/FastRoexBank_6e1a6b6a.o: ../../Source/loudnessCode/modules/FastRoexBank.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling FastRoexBank.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/FIR_2a6b257.o: ../../Source/loudnessCode/Modules/FIR.cpp
+$(OBJDIR)/FIR_3e13fa77.o: ../../Source/loudnessCode/modules/FIR.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling FIR.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/FrameGenerator_11f5eaa8.o: ../../Source/loudnessCode/Modules/FrameGenerator.cpp
+$(OBJDIR)/FrameGenerator_4d204e88.o: ../../Source/loudnessCode/modules/FrameGenerator.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling FrameGenerator.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/IIR_a159641a.o: ../../Source/loudnessCode/Modules/IIR.cpp
+$(OBJDIR)/IIR_dcc6ac3a.o: ../../Source/loudnessCode/modules/IIR.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling IIR.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/IntegratedLoudnessGM_3d0d1404.o: ../../Source/loudnessCode/Modules/IntegratedLoudnessGM.cpp
+$(OBJDIR)/InstantaneousLoudness_c98f8a07.o: ../../Source/loudnessCode/modules/InstantaneousLoudness.cpp
 	-@mkdir -p $(OBJDIR)
-	@echo "Compiling IntegratedLoudnessGM.cpp"
+	@echo "Compiling InstantaneousLoudness.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/PowerSpectrum_6f1992fe.o: ../../Source/loudnessCode/Modules/PowerSpectrum.cpp
+$(OBJDIR)/PowerSpectrum_f523331e.o: ../../Source/loudnessCode/modules/PowerSpectrum.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling PowerSpectrum.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/SpecificLoudnessGM_c843f4e3.o: ../../Source/loudnessCode/Modules/SpecificLoudnessGM.cpp
+$(OBJDIR)/RoexBankANSIS342007_d08d1172.o: ../../Source/loudnessCode/modules/RoexBankANSIS342007.cpp
 	-@mkdir -p $(OBJDIR)
-	@echo "Compiling SpecificLoudnessGM.cpp"
+	@echo "Compiling RoexBankANSIS342007.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/WeightSpectrum_d03b5bab.o: ../../Source/loudnessCode/Modules/WeightSpectrum.cpp
+$(OBJDIR)/SMA_f3a8cfaf.o: ../../Source/loudnessCode/modules/SMA.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling SMA.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/SpecificLoudnessANSIS342007_9c7580a3.o: ../../Source/loudnessCode/modules/SpecificLoudnessANSIS342007.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling SpecificLoudnessANSIS342007.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/GoertzelPS_da487308.o: ../../Source/loudnessCode/modules/temp/GoertzelPS.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling GoertzelPS.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/WeightSpectrum_b65bf8b.o: ../../Source/loudnessCode/modules/WeightSpectrum.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling WeightSpectrum.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/AuditoryTools_fb2619b0.o: ../../Source/loudnessCode/Support/AuditoryTools.cpp
+$(OBJDIR)/Window_7247f692.o: ../../Source/loudnessCode/modules/Window.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Window.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/AuditoryTools_812fb9d0.o: ../../Source/loudnessCode/support/AuditoryTools.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling AuditoryTools.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Filter_2f5bc8f2.o: ../../Source/loudnessCode/Support/Filter.cpp
+$(OBJDIR)/FFT_61c22fe4.o: ../../Source/loudnessCode/support/FFT.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling FFT.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Filter_c1980cd2.o: ../../Source/loudnessCode/support/Filter.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Filter.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Module_581009e6.o: ../../Source/loudnessCode/Support/Module.cpp
+$(OBJDIR)/Model_5783ee19.o: ../../Source/loudnessCode/support/Model.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Model.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Module_ea4c4dc6.o: ../../Source/loudnessCode/support/Module.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Module.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/SignalBank_5369c1fe.o: ../../Source/loudnessCode/Support/SignalBank.cpp
+$(OBJDIR)/SignalBank_242115de.o: ../../Source/loudnessCode/support/SignalBank.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling SignalBank.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Spline_6db570cb.o: ../../Source/loudnessCode/Support/Spline.cpp
+$(OBJDIR)/Timer_d2888c35.o: ../../Source/loudnessCode/support/Timer.cpp
 	-@mkdir -p $(OBJDIR)
-	@echo "Compiling Spline.cpp"
+	@echo "Compiling Timer.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/PluginProcessor_a059e380.o: ../../Source/PluginProcessor.cpp
@@ -192,11 +269,6 @@ $(OBJDIR)/PluginProcessor_a059e380.o: ../../Source/PluginProcessor.cpp
 $(OBJDIR)/PluginEditor_94d4fb09.o: ../../Source/PluginEditor.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling PluginEditor.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/BinaryData_ce4232d4.o: ../../JuceLibraryCode/BinaryData.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling BinaryData.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/juce_audio_basics_2442e4ea.o: ../../JuceLibraryCode/modules/juce_audio_basics/juce_audio_basics.cpp
