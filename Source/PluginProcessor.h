@@ -66,12 +66,14 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 private:
-    int hopSize, numEarsUsedByModel;
+    int hopSize, numEars;
     int samplesNeeded, writePos;
     bool pluginInitialised;
     AudioSampleBuffer analysisBuffer;
-    SignalBank inputSignalBank;
-    DynamicLoudnessGM2002 model;
+    loudness::SignalBank inputSignalBank;
+    loudness::DynamicLoudnessGM2002 model;
+    const loudness::SignalBank* instantaneousLoudnessSignalBankPtr, *shortTermLoudnessSignalBankPtr;
+    const loudness::SignalBank* longTermLoudnessSignalBankPtr, *specificLoudnessSignalBankPtr;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeterAudioProcessor)

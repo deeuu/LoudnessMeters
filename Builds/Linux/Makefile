@@ -12,7 +12,7 @@ ifeq ($(CONFIG),Debug)
   BINDIR := build
   LIBDIR := build
   OBJDIR := build/intermediate/Debug
-  OUTDIR := build
+  OUTDIR := /usr/local/lib/lxvst/
 
   ifeq ($(TARGET_ARCH),)
     TARGET_ARCH := -march=native
@@ -53,11 +53,8 @@ endif
 OBJECTS := \
   $(OBJDIR)/DynamicLoudnessCH2012_20d29b81.o \
   $(OBJDIR)/DynamicLoudnessGM2002_d599b263.o \
-  $(OBJDIR)/SteadyStateLoudnessANSIS342007_3fab5d63.o \
   $(OBJDIR)/ARAverager_d3198648.o \
-  $(OBJDIR)/AudioFileCutter_9319499.o \
   $(OBJDIR)/BinauralInhibitionMG2007_59913024.o \
-  $(OBJDIR)/Biquad_a3f8db0.o \
   $(OBJDIR)/Butter_7cab8a2.o \
   $(OBJDIR)/CompressSpectrum_53555235.o \
   $(OBJDIR)/DoubleRoexBank_ae3fb01f.o \
@@ -68,9 +65,7 @@ OBJECTS := \
   $(OBJDIR)/InstantaneousLoudness_c98f8a07.o \
   $(OBJDIR)/PowerSpectrum_f523331e.o \
   $(OBJDIR)/RoexBankANSIS342007_d08d1172.o \
-  $(OBJDIR)/SMA_f3a8cfaf.o \
   $(OBJDIR)/SpecificLoudnessANSIS342007_9c7580a3.o \
-  $(OBJDIR)/GoertzelPS_da487308.o \
   $(OBJDIR)/WeightSpectrum_b65bf8b.o \
   $(OBJDIR)/Window_7247f692.o \
   $(OBJDIR)/AuditoryTools_812fb9d0.o \
@@ -79,9 +74,11 @@ OBJECTS := \
   $(OBJDIR)/Model_5783ee19.o \
   $(OBJDIR)/Module_ea4c4dc6.o \
   $(OBJDIR)/SignalBank_242115de.o \
-  $(OBJDIR)/Timer_d2888c35.o \
+  $(OBJDIR)/cnpy_6563f899.o \
+  $(OBJDIR)/Spline_902b84d9.o \
   $(OBJDIR)/PluginProcessor_a059e380.o \
   $(OBJDIR)/PluginEditor_94d4fb09.o \
+  $(OBJDIR)/BinaryData_ce4232d4.o \
   $(OBJDIR)/juce_audio_basics_2442e4ea.o \
   $(OBJDIR)/juce_audio_devices_a4c8a728.o \
   $(OBJDIR)/juce_audio_formats_d349f0c8.o \
@@ -126,29 +123,14 @@ $(OBJDIR)/DynamicLoudnessGM2002_d599b263.o: ../../Source/loudnessCode/models/Dyn
 	@echo "Compiling DynamicLoudnessGM2002.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/SteadyStateLoudnessANSIS342007_3fab5d63.o: ../../Source/loudnessCode/models/SteadyStateLoudnessANSIS342007.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling SteadyStateLoudnessANSIS342007.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
 $(OBJDIR)/ARAverager_d3198648.o: ../../Source/loudnessCode/modules/ARAverager.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling ARAverager.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/AudioFileCutter_9319499.o: ../../Source/loudnessCode/modules/AudioFileCutter.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling AudioFileCutter.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
 $(OBJDIR)/BinauralInhibitionMG2007_59913024.o: ../../Source/loudnessCode/modules/BinauralInhibitionMG2007.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling BinauralInhibitionMG2007.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/Biquad_a3f8db0.o: ../../Source/loudnessCode/modules/Biquad.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling Biquad.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/Butter_7cab8a2.o: ../../Source/loudnessCode/modules/Butter.cpp
@@ -201,19 +183,9 @@ $(OBJDIR)/RoexBankANSIS342007_d08d1172.o: ../../Source/loudnessCode/modules/Roex
 	@echo "Compiling RoexBankANSIS342007.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/SMA_f3a8cfaf.o: ../../Source/loudnessCode/modules/SMA.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling SMA.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
 $(OBJDIR)/SpecificLoudnessANSIS342007_9c7580a3.o: ../../Source/loudnessCode/modules/SpecificLoudnessANSIS342007.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling SpecificLoudnessANSIS342007.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/GoertzelPS_da487308.o: ../../Source/loudnessCode/modules/temp/GoertzelPS.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling GoertzelPS.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/WeightSpectrum_b65bf8b.o: ../../Source/loudnessCode/modules/WeightSpectrum.cpp
@@ -256,9 +228,14 @@ $(OBJDIR)/SignalBank_242115de.o: ../../Source/loudnessCode/support/SignalBank.cp
 	@echo "Compiling SignalBank.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
-$(OBJDIR)/Timer_d2888c35.o: ../../Source/loudnessCode/support/Timer.cpp
+$(OBJDIR)/cnpy_6563f899.o: ../../Source/loudnessCode/thirdParty/cnpy/cnpy.cpp
 	-@mkdir -p $(OBJDIR)
-	@echo "Compiling Timer.cpp"
+	@echo "Compiling cnpy.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Spline_902b84d9.o: ../../Source/loudnessCode/thirdParty/spline/Spline.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Spline.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/PluginProcessor_a059e380.o: ../../Source/PluginProcessor.cpp
@@ -269,6 +246,11 @@ $(OBJDIR)/PluginProcessor_a059e380.o: ../../Source/PluginProcessor.cpp
 $(OBJDIR)/PluginEditor_94d4fb09.o: ../../Source/PluginEditor.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling PluginEditor.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/BinaryData_ce4232d4.o: ../../JuceLibraryCode/BinaryData.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling BinaryData.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/juce_audio_basics_2442e4ea.o: ../../JuceLibraryCode/modules/juce_audio_basics/juce_audio_basics.cpp

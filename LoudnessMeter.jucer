@@ -12,103 +12,96 @@
               jucerVersion="3.1.0">
   <MAINGROUP id="voUama" name="LoudnessMeter">
     <GROUP id="{A378BF1D-E94F-A564-0129-4472F286686B}" name="Source">
-      <GROUP id="{5B3DE26F-74D8-69CE-EF44-C7AFB44B07C8}" name="loudnessCode">
-        <GROUP id="{D55C2878-CEC6-07AA-A98E-D9871505F831}" name="models">
-          <FILE id="ZdqNYF" name="DynamicLoudnessCH2012.cpp" compile="1" resource="0"
+      <GROUP id="{8978B137-8AFD-5691-BC86-BE2863E88F7B}" name="loudnessCode">
+        <GROUP id="{1B2EC49A-C8B3-7AB0-AF1C-02AFC8C9CE8C}" name="models">
+          <FILE id="TRQNZL" name="DynamicLoudnessCH2012.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/models/DynamicLoudnessCH2012.cpp"/>
-          <FILE id="vkUEAr" name="DynamicLoudnessCH2012.h" compile="0" resource="0"
+          <FILE id="uY3lFl" name="DynamicLoudnessCH2012.h" compile="0" resource="0"
                 file="Source/loudnessCode/models/DynamicLoudnessCH2012.h"/>
-          <FILE id="o4Syyi" name="DynamicLoudnessGM2002.cpp" compile="1" resource="0"
+          <FILE id="d0urYZ" name="DynamicLoudnessGM2002.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/models/DynamicLoudnessGM2002.cpp"/>
-          <FILE id="vcR4cl" name="DynamicLoudnessGM2002.h" compile="0" resource="0"
+          <FILE id="WU2mYu" name="DynamicLoudnessGM2002.h" compile="0" resource="0"
                 file="Source/loudnessCode/models/DynamicLoudnessGM2002.h"/>
-          <FILE id="msakBv" name="SteadyStateLoudnessANSIS342007.cpp" compile="1"
-                resource="0" file="Source/loudnessCode/models/SteadyStateLoudnessANSIS342007.cpp"/>
-          <FILE id="sZkjeK" name="SteadyStateLoudnessANSIS342007.h" compile="0"
-                resource="0" file="Source/loudnessCode/models/SteadyStateLoudnessANSIS342007.h"/>
         </GROUP>
-        <GROUP id="{46B68097-33A5-5D74-1C2C-ABB27B1C701F}" name="modules">
-          <FILE id="KsrRzy" name="ARAverager.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/ARAverager.cpp"/>
-          <FILE id="eeupC2" name="ARAverager.h" compile="0" resource="0" file="Source/loudnessCode/modules/ARAverager.h"/>
-          <FILE id="NQhk7T" name="AudioFileCutter.cpp" compile="1" resource="0"
-                file="Source/loudnessCode/modules/AudioFileCutter.cpp"/>
-          <FILE id="CYnXqR" name="AudioFileCutter.h" compile="0" resource="0"
-                file="Source/loudnessCode/modules/AudioFileCutter.h"/>
-          <FILE id="gzg6Kb" name="BinauralInhibitionMG2007.cpp" compile="1" resource="0"
+        <GROUP id="{17196442-48BC-500D-4A98-F6D2A335A83A}" name="modules">
+          <FILE id="ofoD0D" name="ARAverager.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/ARAverager.cpp"/>
+          <FILE id="KMqRL5" name="ARAverager.h" compile="0" resource="0" file="Source/loudnessCode/modules/ARAverager.h"/>
+          <FILE id="yyPF3R" name="BinauralInhibitionMG2007.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/modules/BinauralInhibitionMG2007.cpp"/>
-          <FILE id="keRq9g" name="BinauralInhibitionMG2007.h" compile="0" resource="0"
+          <FILE id="rI9kqZ" name="BinauralInhibitionMG2007.h" compile="0" resource="0"
                 file="Source/loudnessCode/modules/BinauralInhibitionMG2007.h"/>
-          <FILE id="Izcdqd" name="Biquad.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/Biquad.cpp"/>
-          <FILE id="lKhBJh" name="Biquad.h" compile="0" resource="0" file="Source/loudnessCode/modules/Biquad.h"/>
-          <FILE id="kdqzn6" name="Butter.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/Butter.cpp"/>
-          <FILE id="JH1ZbU" name="Butter.h" compile="0" resource="0" file="Source/loudnessCode/modules/Butter.h"/>
-          <FILE id="PXZv1F" name="CompressSpectrum.cpp" compile="1" resource="0"
+          <FILE id="llVpjj" name="Butter.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/Butter.cpp"/>
+          <FILE id="N7Vyty" name="Butter.h" compile="0" resource="0" file="Source/loudnessCode/modules/Butter.h"/>
+          <FILE id="IMGTin" name="CompressSpectrum.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/modules/CompressSpectrum.cpp"/>
-          <FILE id="U6rB6p" name="CompressSpectrum.h" compile="0" resource="0"
+          <FILE id="sU4rcf" name="CompressSpectrum.h" compile="0" resource="0"
                 file="Source/loudnessCode/modules/CompressSpectrum.h"/>
-          <FILE id="FLDKQo" name="DoubleRoexBank.cpp" compile="1" resource="0"
+          <FILE id="uqHD9g" name="DoubleRoexBank.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/modules/DoubleRoexBank.cpp"/>
-          <FILE id="sPNW6e" name="DoubleRoexBank.h" compile="0" resource="0"
+          <FILE id="cYb6JA" name="DoubleRoexBank.h" compile="0" resource="0"
                 file="Source/loudnessCode/modules/DoubleRoexBank.h"/>
-          <FILE id="yXOYyc" name="FastRoexBank.cpp" compile="1" resource="0"
+          <FILE id="NouLL8" name="FastRoexBank.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/modules/FastRoexBank.cpp"/>
-          <FILE id="fnumM1" name="FastRoexBank.h" compile="0" resource="0" file="Source/loudnessCode/modules/FastRoexBank.h"/>
-          <FILE id="Nt481T" name="FIR.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/FIR.cpp"/>
-          <FILE id="ggUmoD" name="FIR.h" compile="0" resource="0" file="Source/loudnessCode/modules/FIR.h"/>
-          <FILE id="mf9bRj" name="FrameGenerator.cpp" compile="1" resource="0"
+          <FILE id="Sir7Rq" name="FastRoexBank.h" compile="0" resource="0" file="Source/loudnessCode/modules/FastRoexBank.h"/>
+          <FILE id="n4fAc8" name="FIR.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/FIR.cpp"/>
+          <FILE id="tR8kHS" name="FIR.h" compile="0" resource="0" file="Source/loudnessCode/modules/FIR.h"/>
+          <FILE id="ApK5FR" name="FrameGenerator.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/modules/FrameGenerator.cpp"/>
-          <FILE id="xYuVeO" name="FrameGenerator.h" compile="0" resource="0"
+          <FILE id="K99XmD" name="FrameGenerator.h" compile="0" resource="0"
                 file="Source/loudnessCode/modules/FrameGenerator.h"/>
-          <FILE id="dLENrj" name="IIR.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/IIR.cpp"/>
-          <FILE id="YbspdW" name="IIR.h" compile="0" resource="0" file="Source/loudnessCode/modules/IIR.h"/>
-          <FILE id="P3Tmyp" name="InstantaneousLoudness.cpp" compile="1" resource="0"
+          <FILE id="u1l1nA" name="IIR.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/IIR.cpp"/>
+          <FILE id="NvKD99" name="IIR.h" compile="0" resource="0" file="Source/loudnessCode/modules/IIR.h"/>
+          <FILE id="FQbEBa" name="InstantaneousLoudness.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/modules/InstantaneousLoudness.cpp"/>
-          <FILE id="TlXGfx" name="InstantaneousLoudness.h" compile="0" resource="0"
+          <FILE id="YjsGtT" name="InstantaneousLoudness.h" compile="0" resource="0"
                 file="Source/loudnessCode/modules/InstantaneousLoudness.h"/>
-          <FILE id="SLkmtA" name="PowerSpectrum.cpp" compile="1" resource="0"
+          <FILE id="fYjhFw" name="PowerSpectrum.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/modules/PowerSpectrum.cpp"/>
-          <FILE id="vWm6YR" name="PowerSpectrum.h" compile="0" resource="0" file="Source/loudnessCode/modules/PowerSpectrum.h"/>
-          <FILE id="chxh0r" name="RoexBankANSIS342007.cpp" compile="1" resource="0"
+          <FILE id="iZdesM" name="PowerSpectrum.h" compile="0" resource="0" file="Source/loudnessCode/modules/PowerSpectrum.h"/>
+          <FILE id="C7mFtF" name="RoexBankANSIS342007.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/modules/RoexBankANSIS342007.cpp"/>
-          <FILE id="eoEGSH" name="RoexBankANSIS342007.h" compile="0" resource="0"
+          <FILE id="wmktPr" name="RoexBankANSIS342007.h" compile="0" resource="0"
                 file="Source/loudnessCode/modules/RoexBankANSIS342007.h"/>
-          <FILE id="NbapI7" name="SMA.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/SMA.cpp"/>
-          <FILE id="wH842F" name="SMA.h" compile="0" resource="0" file="Source/loudnessCode/modules/SMA.h"/>
-          <FILE id="Kgr6yM" name="SpecificLoudnessANSIS342007.cpp" compile="1"
+          <FILE id="nt0glQ" name="SpecificLoudnessANSIS342007.cpp" compile="1"
                 resource="0" file="Source/loudnessCode/modules/SpecificLoudnessANSIS342007.cpp"/>
-          <FILE id="y2srwf" name="SpecificLoudnessANSIS342007.h" compile="0"
+          <FILE id="V3ieU4" name="SpecificLoudnessANSIS342007.h" compile="0"
                 resource="0" file="Source/loudnessCode/modules/SpecificLoudnessANSIS342007.h"/>
-          <GROUP id="{779C0F49-3CE2-DB25-50FD-4D9DBC88C07E}" name="temp">
-            <FILE id="sXCb33" name="GoertzelPS.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/temp/GoertzelPS.cpp"/>
-            <FILE id="QPBkeQ" name="GoertzelPS.h" compile="0" resource="0" file="Source/loudnessCode/modules/temp/GoertzelPS.h"/>
-          </GROUP>
-          <FILE id="HUf336" name="WeightSpectrum.cpp" compile="1" resource="0"
+          <FILE id="nyqghc" name="WeightSpectrum.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/modules/WeightSpectrum.cpp"/>
-          <FILE id="b1XCeY" name="WeightSpectrum.h" compile="0" resource="0"
+          <FILE id="g6Rt7k" name="WeightSpectrum.h" compile="0" resource="0"
                 file="Source/loudnessCode/modules/WeightSpectrum.h"/>
-          <FILE id="bjWcBA" name="Window.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/Window.cpp"/>
-          <FILE id="XriiII" name="Window.h" compile="0" resource="0" file="Source/loudnessCode/modules/Window.h"/>
+          <FILE id="f8N0c0" name="Window.cpp" compile="1" resource="0" file="Source/loudnessCode/modules/Window.cpp"/>
+          <FILE id="hYUF9g" name="Window.h" compile="0" resource="0" file="Source/loudnessCode/modules/Window.h"/>
         </GROUP>
-        <GROUP id="{30026E88-0859-5236-870D-AB0A4A02E59B}" name="support">
-          <FILE id="sZsWLx" name="AuditoryTools.cpp" compile="1" resource="0"
+        <GROUP id="{62C0CD8E-4921-52F6-B07E-9670B65CC905}" name="support">
+          <FILE id="uGEz9b" name="AuditoryTools.cpp" compile="1" resource="0"
                 file="Source/loudnessCode/support/AuditoryTools.cpp"/>
-          <FILE id="pUbvkR" name="AuditoryTools.h" compile="0" resource="0" file="Source/loudnessCode/support/AuditoryTools.h"/>
-          <FILE id="pFq5Tc" name="Common.h" compile="0" resource="0" file="Source/loudnessCode/support/Common.h"/>
-          <FILE id="Y62WYs" name="Debug.h" compile="0" resource="0" file="Source/loudnessCode/support/Debug.h"/>
-          <FILE id="frIUW2" name="FFT.cpp" compile="1" resource="0" file="Source/loudnessCode/support/FFT.cpp"/>
-          <FILE id="rnAuTx" name="FFT.h" compile="0" resource="0" file="Source/loudnessCode/support/FFT.h"/>
-          <FILE id="Pl215J" name="Filter.cpp" compile="1" resource="0" file="Source/loudnessCode/support/Filter.cpp"/>
-          <FILE id="o5tEDo" name="Filter.h" compile="0" resource="0" file="Source/loudnessCode/support/Filter.h"/>
-          <FILE id="zTJjwy" name="Model.cpp" compile="1" resource="0" file="Source/loudnessCode/support/Model.cpp"/>
-          <FILE id="ziiXzr" name="Model.h" compile="0" resource="0" file="Source/loudnessCode/support/Model.h"/>
-          <FILE id="yJ7JN0" name="Module.cpp" compile="1" resource="0" file="Source/loudnessCode/support/Module.cpp"/>
-          <FILE id="xKl2mh" name="Module.h" compile="0" resource="0" file="Source/loudnessCode/support/Module.h"/>
-          <FILE id="dnb57m" name="SignalBank.cpp" compile="1" resource="0" file="Source/loudnessCode/support/SignalBank.cpp"/>
-          <FILE id="x8dVyS" name="SignalBank.h" compile="0" resource="0" file="Source/loudnessCode/support/SignalBank.h"/>
-          <FILE id="SxAoKD" name="Timer.cpp" compile="1" resource="0" file="Source/loudnessCode/support/Timer.cpp"/>
-          <FILE id="Ml4Rzc" name="Timer.h" compile="0" resource="0" file="Source/loudnessCode/support/Timer.h"/>
-          <FILE id="EqKoEG" name="UsefulFunctions.h" compile="0" resource="0"
+          <FILE id="W9Wf2t" name="AuditoryTools.h" compile="0" resource="0" file="Source/loudnessCode/support/AuditoryTools.h"/>
+          <FILE id="f4OLJZ" name="Common.h" compile="0" resource="0" file="Source/loudnessCode/support/Common.h"/>
+          <FILE id="N649fL" name="Debug.h" compile="0" resource="0" file="Source/loudnessCode/support/Debug.h"/>
+          <FILE id="Lua0LU" name="FFT.cpp" compile="1" resource="0" file="Source/loudnessCode/support/FFT.cpp"/>
+          <FILE id="m0Jr2V" name="FFT.h" compile="0" resource="0" file="Source/loudnessCode/support/FFT.h"/>
+          <FILE id="pxdnFc" name="Filter.cpp" compile="1" resource="0" file="Source/loudnessCode/support/Filter.cpp"/>
+          <FILE id="lx62Gs" name="Filter.h" compile="0" resource="0" file="Source/loudnessCode/support/Filter.h"/>
+          <FILE id="uPN089" name="Model.cpp" compile="1" resource="0" file="Source/loudnessCode/support/Model.cpp"/>
+          <FILE id="kRbXVv" name="Model.h" compile="0" resource="0" file="Source/loudnessCode/support/Model.h"/>
+          <FILE id="hniomh" name="Module.cpp" compile="1" resource="0" file="Source/loudnessCode/support/Module.cpp"/>
+          <FILE id="L45JbX" name="Module.h" compile="0" resource="0" file="Source/loudnessCode/support/Module.h"/>
+          <FILE id="DnOwDU" name="SignalBank.cpp" compile="1" resource="0" file="Source/loudnessCode/support/SignalBank.cpp"/>
+          <FILE id="tfgwOJ" name="SignalBank.h" compile="0" resource="0" file="Source/loudnessCode/support/SignalBank.h"/>
+          <FILE id="UFKacG" name="UsefulFunctions.h" compile="0" resource="0"
                 file="Source/loudnessCode/support/UsefulFunctions.h"/>
+        </GROUP>
+        <GROUP id="{3DBCB549-8E8C-32BE-3ACF-D6DA948D1220}" name="thirdParty">
+          <GROUP id="{2D2D7110-8695-DE6E-1D9C-C293AA6BFD7E}" name="cnpy">
+            <FILE id="SGXhoN" name="cnpy.cpp" compile="1" resource="0" file="Source/loudnessCode/thirdParty/cnpy/cnpy.cpp"/>
+            <FILE id="EvTrPm" name="cnpy.h" compile="0" resource="0" file="Source/loudnessCode/thirdParty/cnpy/cnpy.h"/>
+            <FILE id="TPYI1B" name="LICENSE" compile="0" resource="1" file="Source/loudnessCode/thirdParty/cnpy/LICENSE"/>
+          </GROUP>
+          <GROUP id="{B7DA05C3-F2C7-4B3B-E74E-0EB2C0A3C051}" name="spline">
+            <FILE id="E6ic4g" name="Spline.cpp" compile="1" resource="0" file="Source/loudnessCode/thirdParty/spline/Spline.cpp"/>
+            <FILE id="fwmeAk" name="Spline.h" compile="0" resource="0" file="Source/loudnessCode/thirdParty/spline/Spline.h"/>
+          </GROUP>
         </GROUP>
       </GROUP>
       <FILE id="LEWwoT" name="PluginProcessor.cpp" compile="1" resource="0"
@@ -124,7 +117,7 @@
     <LINUX_MAKE targetFolder="Builds/Linux" vstFolder="~/SDKs/VST3SDK" externalLibraries="fftw3">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
-                       targetName="LoudnessMeter"/>
+                       targetName="LoudnessMeter" binaryPath="/usr/local/lib/lxvst/"/>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
                        targetName="LoudnessMeter"/>
       </CONFIGURATIONS>

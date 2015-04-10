@@ -15,8 +15,9 @@
 
 //==============================================================================
 LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
-    : model,
-    pluginInitialised (false)
+    : model(),
+    inputSignalBank(),
+    pluginInitialised(false)
 {
 }
 
@@ -132,16 +133,25 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     if(!pluginInitialised)//Ardour hack
     {
         //limit to two channels (ears)
-        numEars = jmax(getNumInputChannels(), 2);
+        numEars = jmin(getNumInputChannels(), 2);
+        Logger::outputDebugString("prepareToPlay: numInputChannels :" + String (getNumInputChannels()) + "\n");
 
         //set up an input buffer with a default hop size of 4ms
-        hopSize = int(sampleRate * 0.004);
+        hopSize = round(sampleRate * 0.004);
         samplesNeeded = hopSize;
         writePos = 0;
 
         //loudness model configuration
-        inputSignalBank.initialize(numEarsUsedByModel, 1, hopSize, (int)getSampleRate());
+        inputSignalBank.initialize(numEars, 1, hopSize, (int)getSampleRate());
         model.initialize(inputSignalBank);
+        
+        //pointers to loudness measures
+        instantaneousLoudnessSignalBankPtr = &model.getOutputSignalBank("InstantaneousLoudness");
+        shortTermLoudnessSignalBankPtr = &model.getOutputSignalBank("ShortTermLoudness");
+        longTermLoudnessSignalBankPtr = &model.getOutputSignalBank("LongTermLoudness");
+
+        //pointer to specific loudness (loudness as a function of frequency)
+        specificLoudnessSignalBankPtr = &model.getOutputSignalBank("SpecificLoudnessPattern");
 
         pluginInitialised = true;
     }
@@ -157,18 +167,26 @@ void LoudnessMeterAudioProcessor::releaseResources()
 
 void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
+
     int numSamples = buffer.getNumSamples();
     int remainingSamples = numSamples;
     int readPos = 0;
 
+    //Logger::outputDebugString("ProcessBlock: samplesNeeded" + String (samplesNeeded) + "\n");
+    Logger::outputDebugString("processBlock: numEars :" + String (numEars) + "\n");
+
     // deal with any samples in the input which will create full hop buffers for us
     while (remainingSamples >= samplesNeeded)
     {
+        //fill the SignalBank to be processed
         for (int ear = 0; ear < numEars; ++ear)
         {
-            float* signalToCopy = buffer.getWritePointer (channel);
-            inputSignalBank.copySignal(ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
+            const float* signalToCopy = buffer.getReadPointer(ear);
+            inputSignalBank.copySamples(ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
         }
+
+        //model process call
+        model.process(inputSignalBank);
 
         remainingSamples -= samplesNeeded;
         readPos += samplesNeeded;
@@ -176,13 +194,17 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         writePos = 0;
     }
 
+    double loudnessL = instantaneousLoudnessSignalBankPtr -> getSample(0, 0, 0);
+
+    Logger::outputDebugString("ProcessBlock: loudness (left):" + String (loudnessL) + "\n");
+
     // grab any samples we need to save for the next processBlock call
     if (remainingSamples != 0)
     {
         for (int ear = 0; ear < numEars; ++ear)
         {
-            float* signalToCopy = buffer.getWritePointer (channel);
-            inputSignalBank.copySignal(ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
+            const float* signalToCopy = buffer.getReadPointer(ear);
+            inputSignalBank.copySamples(ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
         }
 
         samplesNeeded -= remainingSamples;
