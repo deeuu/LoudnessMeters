@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="xwcxs9" name="LoudnessMeter" projectType="audioplug" version="1.0.0"
+              bundleIdentifier="com.yourcompany.LoudnessMeter" includeBinaryInAppConfig="1"
+              buildVST="1" buildVST3="0" buildAU="1" buildRTAS="0" buildAAX="0"
+              pluginName="LoudnessMeter" pluginDesc="LoudnessMeter" pluginManufacturer="yourcompany"
+              pluginManufacturerCode="Manu" pluginCode="Plug" pluginChannelConfigs="{1, 1}, {2, 2}"
+              pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
+              pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
+              pluginAUExportPrefix="LoudnessMeterAU" pluginRTASCategory=""
+              aaxIdentifier="com.yourcompany.LoudnessMeter" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
+              jucerVersion="3.1.0">
+  <MAINGROUP id="voUama" name="LoudnessMeter">
+    <GROUP id="{5B3DE26F-74D8-69CE-EF44-C7AFB44B07C8}" name="loudnessCode">
+      <GROUP id="{E47E5CA3-9D96-A629-6BAE-1B9F4F0771C5}" name="models">
+        <FILE id="mwqp5h" name="DynamicLoudnessGM2002.cpp" compile="1" resource="0"
+              file="../loudnessCode/models/DynamicLoudnessGM2002.cpp"/>
+        <FILE id="rfcoc7" name="DynamicLoudnessGM2002.h" compile="0" resource="0"
+              file="../loudnessCode/models/DynamicLoudnessGM2002.h"/>
+      </GROUP>
+      <GROUP id="{EACC2048-5D03-1A6C-686A-CA1B9541E292}" name="modules">
+        <FILE id="sk0pKe" name="ARAverager.cpp" compile="1" resource="0" file="../loudnessCode/modules/ARAverager.cpp"/>
+        <FILE id="noVIrO" name="ARAverager.h" compile="0" resource="0" file="../loudnessCode/modules/ARAverager.h"/>
+        <FILE id="iKyDEI" name="BinauralInhibitionMG2007.cpp" compile="1" resource="0"
+              file="../loudnessCode/modules/BinauralInhibitionMG2007.cpp"/>
+        <FILE id="xhVjmw" name="BinauralInhibitionMG2007.h" compile="0" resource="0"
+              file="../loudnessCode/modules/BinauralInhibitionMG2007.h"/>
+        <FILE id="dCWjgS" name="Butter.cpp" compile="1" resource="0" file="../loudnessCode/modules/Butter.cpp"/>
+        <FILE id="O69iva" name="Butter.h" compile="0" resource="0" file="../loudnessCode/modules/Butter.h"/>
+        <FILE id="rXZadb" name="CompressSpectrum.cpp" compile="1" resource="0"
+              file="../loudnessCode/modules/CompressSpectrum.cpp"/>
+        <FILE id="bIM8oW" name="CompressSpectrum.h" compile="0" resource="0"
+              file="../loudnessCode/modules/CompressSpectrum.h"/>
+        <FILE id="YeV4Gm" name="FastRoexBank.cpp" compile="1" resource="0"
+              file="../loudnessCode/modules/FastRoexBank.cpp"/>
+        <FILE id="nQaaZm" name="FastRoexBank.h" compile="0" resource="0" file="../loudnessCode/modules/FastRoexBank.h"/>
+        <FILE id="GleMCb" name="FIR.cpp" compile="1" resource="0" file="../loudnessCode/modules/FIR.cpp"/>
+        <FILE id="kbPcW7" name="FIR.h" compile="0" resource="0" file="../loudnessCode/modules/FIR.h"/>
+        <FILE id="ppx68K" name="FrameGenerator.cpp" compile="1" resource="0"
+              file="../loudnessCode/modules/FrameGenerator.cpp"/>
+        <FILE id="RcO2Sz" name="FrameGenerator.h" compile="0" resource="0"
+              file="../loudnessCode/modules/FrameGenerator.h"/>
+        <FILE id="yRHVL6" name="IIR.cpp" compile="1" resource="0" file="../loudnessCode/modules/IIR.cpp"/>
+        <FILE id="eikOU3" name="IIR.h" compile="0" resource="0" file="../loudnessCode/modules/IIR.h"/>
+        <FILE id="ONmm1l" name="InstantaneousLoudness.cpp" compile="1" resource="0"
+              file="../loudnessCode/modules/InstantaneousLoudness.cpp"/>
+        <FILE id="vZiqrF" name="InstantaneousLoudness.h" compile="0" resource="0"
+              file="../loudnessCode/modules/InstantaneousLoudness.h"/>
+        <FILE id="rQvKgw" name="PowerSpectrum.cpp" compile="1" resource="0"
+              file="../loudnessCode/modules/PowerSpectrum.cpp"/>
+        <FILE id="H7IYxP" name="PowerSpectrum.h" compile="0" resource="0" file="../loudnessCode/modules/PowerSpectrum.h"/>
+        <FILE id="w2mssb" name="RoexBankANSIS342007.cpp" compile="1" resource="0"
+              file="../loudnessCode/modules/RoexBankANSIS342007.cpp"/>
+        <FILE id="SzZME0" name="RoexBankANSIS342007.h" compile="0" resource="0"
+              file="../loudnessCode/modules/RoexBankANSIS342007.h"/>
+        <FILE id="WrY1OM" name="SpecificLoudnessANSIS342007.cpp" compile="1"
+              resource="0" file="../loudnessCode/modules/SpecificLoudnessANSIS342007.cpp"/>
+        <FILE id="U3LXTA" name="SpecificLoudnessANSIS342007.h" compile="0"
+              resource="0" file="../loudnessCode/modules/SpecificLoudnessANSIS342007.h"/>
+        <FILE id="zdcMeT" name="WeightSpectrum.cpp" compile="1" resource="0"
+              file="../loudnessCode/modules/WeightSpectrum.cpp"/>
+        <FILE id="WYam78" name="WeightSpectrum.h" compile="0" resource="0"
+              file="../loudnessCode/modules/WeightSpectrum.h"/>
+        <FILE id="XqX2jm" name="Window.cpp" compile="1" resource="0" file="../loudnessCode/modules/Window.cpp"/>
+        <FILE id="C00Y4i" name="Window.h" compile="0" resource="0" file="../loudnessCode/modules/Window.h"/>
+      </GROUP>
+      <GROUP id="{8F30C3A8-D00F-F767-5106-4B7ED9884BCA}" name="support">
+        <FILE id="V6DN0R" name="AuditoryTools.cpp" compile="1" resource="0"
+              file="../loudnessCode/support/AuditoryTools.cpp"/>
+        <FILE id="KiSCl0" name="AuditoryTools.h" compile="0" resource="0" file="../loudnessCode/support/AuditoryTools.h"/>
+        <FILE id="daKhgF" name="Common.h" compile="0" resource="0" file="../loudnessCode/support/Common.h"/>
+        <FILE id="rwU22n" name="Debug.h" compile="0" resource="0" file="../loudnessCode/support/Debug.h"/>
+        <FILE id="XXLCpd" name="FFT.cpp" compile="1" resource="0" file="../loudnessCode/support/FFT.cpp"/>
+        <FILE id="CccLLK" name="FFT.h" compile="0" resource="0" file="../loudnessCode/support/FFT.h"/>
+        <FILE id="fBuHc0" name="Filter.cpp" compile="1" resource="0" file="../loudnessCode/support/Filter.cpp"/>
+        <FILE id="cKMg79" name="Filter.h" compile="0" resource="0" file="../loudnessCode/support/Filter.h"/>
+        <FILE id="bKGRBf" name="Model.cpp" compile="1" resource="0" file="../loudnessCode/support/Model.cpp"/>
+        <FILE id="lfzq0m" name="Model.h" compile="0" resource="0" file="../loudnessCode/support/Model.h"/>
+        <FILE id="kTPxM1" name="Module.cpp" compile="1" resource="0" file="../loudnessCode/support/Module.cpp"/>
+        <FILE id="nj2Enr" name="Module.h" compile="0" resource="0" file="../loudnessCode/support/Module.h"/>
+        <FILE id="H0YfaV" name="SignalBank.cpp" compile="1" resource="0" file="../loudnessCode/support/SignalBank.cpp"/>
+        <FILE id="sdyywS" name="SignalBank.h" compile="0" resource="0" file="../loudnessCode/support/SignalBank.h"/>
+        <FILE id="bjar9V" name="UsefulFunctions.h" compile="0" resource="0"
+              file="../loudnessCode/support/UsefulFunctions.h"/>
+      </GROUP>
+      <GROUP id="{86212CDC-D71D-0DAC-8FFB-ED88B8B2ED31}" name="thirdParty">
+        <GROUP id="{4A4D0953-4470-BCD0-1479-8CFEF28164BD}" name="cnpy">
+          <FILE id="aWos7x" name="cnpy.cpp" compile="1" resource="0" file="../loudnessCode/thirdParty/cnpy/cnpy.cpp"/>
+          <FILE id="bWlgmn" name="cnpy.h" compile="0" resource="0" file="../loudnessCode/thirdParty/cnpy/cnpy.h"/>
+          <FILE id="vy1ioF" name="LICENSE" compile="0" resource="1" file="../loudnessCode/thirdParty/cnpy/LICENSE"/>
+        </GROUP>
+        <GROUP id="{FC15D924-FD7A-40E3-66A5-B2CCE4D554D3}" name="spline">
+          <FILE id="rjRjTi" name="Spline.cpp" compile="1" resource="0" file="../loudnessCode/thirdParty/spline/Spline.cpp"/>
+          <FILE id="t1YDED" name="Spline.h" compile="0" resource="0" file="../loudnessCode/thirdParty/spline/Spline.h"/>
+        </GROUP>
+      </GROUP>
+    </GROUP>
+    <GROUP id="{A378BF1D-E94F-A564-0129-4472F286686B}" name="Source">
+      <FILE id="LEWwoT" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="oVe8sb" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="HzEPvP" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="V3iYiC" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <LINUX_MAKE targetFolder="Builds/Linux" vstFolder="~/SDKs/VST3SDK" externalLibraries="fftw3">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+                       targetName="LoudnessMeter" binaryPath="/usr/local/lib/lxvst/"/>
+        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="2"
+                       targetName="LoudnessMeter"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_events" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_graphics" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_data_structures" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_cryptography" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_video" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_opengl" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="JuceLibraryCode/modules"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_cryptography" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_video" showAllCode="1" useLocalCopy="1"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+</JUCERPROJECT>

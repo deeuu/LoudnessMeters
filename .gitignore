@@ -1,2 +1,3 @@
-Builds/Linux/build*
+./src/LoudnessMeterGM2002/Builds/Linux/build*
 *.swp
+*.swo
