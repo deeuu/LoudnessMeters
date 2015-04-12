@@ -129,6 +129,7 @@ void LoudnessMeterAudioProcessor::changeProgramName (int index, const String& ne
 //==============================================================================
 void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    Logger::outputDebugString("prepareToPlay: numInputChannels:" + String (getNumInputChannels()) + "\n");
     if(!pluginInitialised)//Ardour hack
     {
         //limit to two channels (ears)
@@ -170,6 +171,8 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     /*
      * Buffer -> SignalBank -> Model
      */
+
+    Logger::outputDebugString("processBlock: numInputChannels:" + String (getNumInputChannels()) + "\n");
 
     int numSamples = buffer.getNumSamples();
     int numInputChannels = buffer.getNumChannels();
@@ -220,8 +223,8 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
 
     double leftSTL = shortTermLoudnessSignalBankPtr -> getSample(0, 0, 0);
     double rightSTL = shortTermLoudnessSignalBankPtr -> getSample(1, 0, 0);
-    Logger::outputDebugString("processBlock: STL (left):" + String (leftSTL) + "\n");
-    Logger::outputDebugString("processBlock: STL (right):" + String (rightSTL) + "\n");
+    //Logger::outputDebugString("processBlock: STL (left):" + String (leftSTL) + "\n");
+    //Logger::outputDebugString("processBlock: STL (right):" + String (rightSTL) + "\n");
 }
 
 //==============================================================================
