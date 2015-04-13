@@ -136,14 +136,21 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
         numEars = 2;
 
         //set up an input buffer with a default hop size of 4ms
-        hopSize = round(sampleRate * 0.004);
+        //use something larger for debugging, e.g. 32ms
+        hopSize = round(sampleRate * 0.032);
         samplesNeeded = hopSize;
         writePos = 0;
 
         //loudness model configuration and initialisation
         inputSignalBank.initialize(numEars, 1, hopSize, (int)getSampleRate());
         model.configureModelParameters("recentAndFaster");
-        model.setDioticPresentation(false); //required for left and right output
+        model.setPresentationDiotic(false); //required for left and right output
+
+        //should be faster
+        model.setFilterSpacingInCams(1.5);
+        model.setCompressionCriterionInCams(0.3);
+        model.setExcitationPatternInterpolated(false);
+
         model.initialize(inputSignalBank);
         
         //pointers to loudness measures

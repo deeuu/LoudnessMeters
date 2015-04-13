@@ -96,26 +96,34 @@ namespace loudness{
 
             void configureModelParameters(const string& setName);
 
-            void setSampleSpectrumUniformly(bool sampleSpectrumUniformly);
-            void setDioticPresentation(bool dioticPresentation);
-            void setOutputSpecificLoudness(bool outputSpecificLoudness);
-            void setInhibitSpecificLoudness(bool inhibitSpecificLoudness);
-            void setUseDiffuseFieldResponse(bool useDiffuseFieldResponse);
-            void setStartAtWindowCentre(bool startAtWindowCentre);
-            void setFilterSpacing(Real filterSpacing);
-            void setCompressionCriterion(Real compressionCriterion);
+            void setSpectrumSampledUniformly(bool isSpectrumSampledUniformly);
+
+            void setPresentationDiotic(bool isPresentationDiotic);
+
+            void setBinauralInhibitionUsed(bool isBinauralInhibitionUsed);
+
+            void setResponseDiffuseField(bool isResponseDiffuseField);
+
+            void setFirstSampleAtWindowCentre(bool isFirstSampleAtWindowCentre);
+
+            void setSpecificLoudnessOutput(bool isSpecificLoudnessOutput);
+
+            void setFilterSpacingInCams(Real filterSpacingInCams);
+
+            void setCompressionCriterionInCams(Real compressionCriterionInCams);
+
             void setPathToFilterCoefs(string pathToFilterCoefs);
 
         private:
             virtual bool initializeInternal(const SignalBank &input);
 
             string pathToFilterCoefs_;
-            Real filterSpacing_, compressionCriterion_;
+            Real filterSpacingInCams_, compressionCriterionInCams_;
             Real attackTimeSTL_, releaseTimeSTL_;
             Real attackTimeLTL_, releaseTimeLTL_;
-            bool sampleSpectrumUniformly_, dioticPresentation_;
-            bool outputSpecificLoudness_, inhibitSpecificLoudness_;
-            bool useDiffuseFieldResponse_, startAtWindowCentre_;
+            bool isSpectrumSampledUniformly_, isPresentationDiotic_;
+            bool isSpecificLoudnessOutput_, isBinauralInhibitionUsed_;
+            bool isResponseDiffuseField_, isFirstSampleAtWindowCentre_;
     }; 
 }
 
