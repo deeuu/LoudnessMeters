@@ -21,12 +21,12 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     setSize (400, 300);
     
     addAndMakeVisible (barGraph);
-    barGraph.setGraduationColour (Colours::black);
+    barGraph.setGraduationColour (Colours::lightgrey);
     barGraph.setPhonsRange (20, 80);
     barGraph.setBounds (300, 20, 80, 260);
     
     addAndMakeVisible (specificLoudness);
-    specificLoudness.setGraduationColour (Colours::black);
+    specificLoudness.setGraduationColour (Colours::lightgrey);
     specificLoudness.setBounds (10, 20, 280, 260);
     
     startTimer (50);
@@ -39,7 +39,7 @@ LoudnessMeterAudioProcessorEditor::~LoudnessMeterAudioProcessorEditor()
 //==============================================================================
 void LoudnessMeterAudioProcessorEditor::paint (Graphics& g)
 {
-    g.fillAll (Colours::hotpink);
+    g.fillAll (Colours::darkgrey);
 }
 
 void LoudnessMeterAudioProcessorEditor::resized()
