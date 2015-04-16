@@ -19,7 +19,7 @@ public:
     //==========================================================================
     //      setting meter values
     //==========================================================================
-    void setSpecificLoudnessValues (const Array <double> &leftValues, const Array <double> &rightValues);
+    void setSpecificLoudnessValues (const Array <double> &frequencies, const Array <double> &leftValues, const Array <double> &rightValues);
 
 private:
     int height, width, labelSize, graphX, graphY, graphWidth, graphHeight;
@@ -32,7 +32,10 @@ private:
     static const int minPhons = 0, maxPhons = 10;
 
     float phonsToY (double levelInPhons); 
+    float camsToX (double frequencyInCams);
     virtual void meterLevelChanged (int index) override;
+
+    Array <double> centreFrequencies;
 
     CriticalSection mutex;
 

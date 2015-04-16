@@ -20,7 +20,7 @@
 struct LoudnessValues
 {
     double leftSTL, rightSTL, leftLTL, rightLTL;
-    Array <double> leftSpecificLoudness, rightSpecificLoudness;
+    Array <double> centreFrequencies, leftSpecificLoudness, rightSpecificLoudness;
 };
 
 class LoudnessMeterAudioProcessor  : public AudioProcessor

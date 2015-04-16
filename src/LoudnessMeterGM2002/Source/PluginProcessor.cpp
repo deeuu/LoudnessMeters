@@ -183,18 +183,15 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
 		copyLoudnessValues.set(1);
         loudnessValues.leftSpecificLoudness.clear();
         loudnessValues.rightSpecificLoudness.clear();
+        loudnessValues.centreFrequencies.clear();
         
+        const loudness::Real* ptr = bank -> getCentreFreqsReadPointer(0);
+
         for (int i = 0; i < numAuditoryChannels; ++i)
         {
             loudnessValues.leftSpecificLoudness.add (0);
             loudnessValues.rightSpecificLoudness.add (0);
-        }
-
-        //get cam values for plot
-        const loudness::Real* ptr = bank -> getCentreFreqsReadPointer(0);
-        for (int i = 0; i < bank -> getNChannels(); ++i)
-        {
-            loudness::freqToCam (ptr[i]); //here
+            loudnessValues.centreFrequencies.add (loudness::freqToCam (ptr[i]));
         }
 
         pluginInitialised = true;

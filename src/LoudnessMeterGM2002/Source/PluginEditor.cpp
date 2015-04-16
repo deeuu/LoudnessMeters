@@ -21,12 +21,12 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     setSize (400, 300);
     
     addAndMakeVisible (barGraph);
-    barGraph.setGraduationColour (Colours::white);
+    barGraph.setGraduationColour (Colours::black);
     barGraph.setPhonsRange (20, 80);
     barGraph.setBounds (300, 20, 80, 260);
     
     addAndMakeVisible (specificLoudness);
-    specificLoudness.setGraduationColour (Colours::white);
+    specificLoudness.setGraduationColour (Colours::black);
     specificLoudness.setBounds (10, 20, 280, 260);
     
     startTimer (50);
@@ -39,7 +39,7 @@ LoudnessMeterAudioProcessorEditor::~LoudnessMeterAudioProcessorEditor()
 //==============================================================================
 void LoudnessMeterAudioProcessorEditor::paint (Graphics& g)
 {
-    g.fillAll (Colours::darkblue);
+    g.fillAll (Colours::hotpink);
 }
 
 void LoudnessMeterAudioProcessorEditor::resized()
@@ -53,7 +53,7 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
     if (processor.loudnessValuesReady())
     {
         barGraph.setMeterLevels (loudnessValues->leftSTL, loudnessValues->leftLTL, loudnessValues->rightSTL, loudnessValues->rightLTL);
-        specificLoudness.setSpecificLoudnessValues (loudnessValues->leftSpecificLoudness, loudnessValues->rightSpecificLoudness);
+        specificLoudness.setSpecificLoudnessValues (loudnessValues->centreFrequencies, loudnessValues->leftSpecificLoudness, loudnessValues->rightSpecificLoudness);
         
         processor.updateLoudnessValues();
     }

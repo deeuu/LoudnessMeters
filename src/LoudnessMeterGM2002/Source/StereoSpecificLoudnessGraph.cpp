@@ -38,14 +38,13 @@ void StereoSpecificLoudnessGraph::paint (Graphics& g)
     g.reduceClipRegion (graphX, graphY, graphWidth, graphHeight);
 
     Path leftTracePath, rightTracePath;
-    float x = graphX;
-    float xIncrement = graphWidth / (numMeters / 2 - 1);
+    float x = camsToX (centreFrequencies [0]);
     leftTracePath.startNewSubPath (x, phonsToY (getMeterLevel (0)));
     rightTracePath.startNewSubPath (x, phonsToY (getMeterLevel (1)));
 
     for (int i = 1; i < numMeters / 2; ++i)
     {
-        x += xIncrement;
+        x = camsToX (centreFrequencies [i]);
         leftTracePath.lineTo (x, phonsToY (getMeterLevel (i * 2)));
         rightTracePath.lineTo (x, phonsToY (getMeterLevel (i * 2 + 1)));
     }
@@ -135,7 +134,7 @@ void StereoSpecificLoudnessGraph::setGraduationColour (Colour newColour)
 //==========================================================================
 //      setting meter values
 //==========================================================================
-void StereoSpecificLoudnessGraph::setSpecificLoudnessValues (const Array <double> &leftValues, const Array <double> &rightValues)
+void StereoSpecificLoudnessGraph::setSpecificLoudnessValues (const Array <double> &frequencies, const Array <double> &leftValues, const Array <double> &rightValues)
 {
     GenericScopedLock <CriticalSection> lock (mutex);
 
@@ -147,6 +146,7 @@ void StereoSpecificLoudnessGraph::setSpecificLoudnessValues (const Array <double
     if (numMeters != newNumMeters)
     {
         setNumMeters (newNumMeters);
+        centreFrequencies = frequencies;
         numMeters = newNumMeters;
     }
 
@@ -162,6 +162,11 @@ void StereoSpecificLoudnessGraph::setSpecificLoudnessValues (const Array <double
 float StereoSpecificLoudnessGraph::phonsToY (double levelInPhons)
 {
     return graphY + graphHeight - graphHeight * (levelInPhons - minPhons) / (maxPhons - minPhons);
+}
+
+float StereoSpecificLoudnessGraph::camsToX (double frequencyInCams)
+{
+    return graphWidth * frequencyInCams / 40.2 + graphX;
 }
 
 void StereoSpecificLoudnessGraph::meterLevelChanged (int index)
