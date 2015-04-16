@@ -132,6 +132,10 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     Logger::outputDebugString("prepareToPlay: numInputChannels:" + String (getNumInputChannels()) + "\n");
     if(!pluginInitialised)//Ardour hack
     {
+        /*
+         * Model configuration
+         */
+
         //limit to two channels (ears)
         numEars = 2;
 
@@ -151,15 +155,27 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
         model.setCompressionCriterionInCams(0.3);
         model.setExcitationPatternInterpolated(false);
 
+        //initialise the model
         model.initialize(inputSignalBank);
         
-        //pointers to loudness measures
-        instantaneousLoudnessSignalBankPtr = &model.getOutputSignalBank("InstantaneousLoudness");
-        shortTermLoudnessSignalBankPtr = &model.getOutputSignalBank("ShortTermLoudness");
-        longTermLoudnessSignalBankPtr = &model.getOutputSignalBank("LongTermLoudness");
+        /*
+        * Pointers to loudness measures
+        */
 
-        //pointer to specific loudness (loudness as a function of frequency)
-        specificLoudnessSignalBankPtr = &model.getOutputSignalBank("SpecificLoudnessPattern");
+        // STL
+        const loudness::SignalBank* bank = &model.getOutputSignalBank("ShortTermLoudness");
+        pointerToSTLLeft = bank -> getSingleSampleReadPointer(0, 0);
+        pointerToSTLRight = bank -> getSingleSampleReadPointer(1, 0);
+
+        // LTL
+        bank = &model.getOutputSignalBank("LongTermLoudness");
+        pointerToLTLLeft = bank -> getSingleSampleReadPointer(0, 0);
+        pointerToLTLRight = bank -> getSingleSampleReadPointer(1, 0);
+
+        // Specific loudness (loudness as a function of frequency)
+        bank = &model.getOutputSignalBank("SpecificLoudnessPattern");
+        pointerToSpecificLeft = bank -> getSingleSampleReadPointer(0, 0);
+        pointerToSpecificRight = bank -> getSingleSampleReadPointer(1, 0);
 
         pluginInitialised = true;
     }
@@ -227,11 +243,8 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     /*
      * Output
      */
-
-    double leftSTL = shortTermLoudnessSignalBankPtr -> getSample(0, 0, 0);
-    double rightSTL = shortTermLoudnessSignalBankPtr -> getSample(1, 0, 0);
-    //Logger::outputDebugString("processBlock: STL (left):" + String (leftSTL) + "\n");
-    //Logger::outputDebugString("processBlock: STL (right):" + String (rightSTL) + "\n");
+    Logger::outputDebugString("processBlock: STL (left):" + String (*pointerToSTLLeft) + "\n");
+    Logger::outputDebugString("processBlock: STL (right):" + String (*pointerToSTLRight) + "\n");
 }
 
 //==============================================================================

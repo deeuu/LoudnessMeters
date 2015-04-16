@@ -72,8 +72,12 @@ private:
     AudioSampleBuffer analysisBuffer;
     loudness::SignalBank inputSignalBank;
     loudness::DynamicLoudnessGM2002 model;
-    const loudness::SignalBank* instantaneousLoudnessSignalBankPtr, *shortTermLoudnessSignalBankPtr;
-    const loudness::SignalBank* longTermLoudnessSignalBankPtr, *specificLoudnessSignalBankPtr;
+    const loudness::Real* pointerToSTLLeft;
+    const loudness::Real* pointerToSTLRight;
+    const loudness::Real* pointerToLTLLeft;
+    const loudness::Real* pointerToLTLRight;
+    const loudness::Real* pointerToSpecificLeft;
+    const loudness::Real* pointerToSpecificRight;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeterAudioProcessor)
