@@ -10,7 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
-
+#include "../../loudnessCode/support/AuditoryTools.h"
 
 //==============================================================================
 LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
@@ -176,6 +176,13 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
         bank = &model.getOutputSignalBank("SpecificLoudnessPattern");
         pointerToSpecificLeft = bank -> getSingleSampleReadPointer(0, 0);
         pointerToSpecificRight = bank -> getSingleSampleReadPointer(1, 0);
+
+        //get cam values for plot
+        const loudness::Real* ptr = bank -> getCentreFreqsReadPointer(0);
+        for (int i = 0; i < bank -> getNChannels(); ++i)
+        {
+            loudness::freqToCam (ptr[i]); //here
+        }
 
         pluginInitialised = true;
     }
