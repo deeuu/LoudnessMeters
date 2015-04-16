@@ -17,7 +17,7 @@ LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
     : model(),
     inputSignalBank(),
     pluginInitialised(false),
-    leftSTL (0), rightSTL (0)
+    copyLoudnessValues (1)
 {
 }
 
@@ -133,6 +133,10 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
     Logger::outputDebugString("prepareToPlay: numInputChannels:" + String (getNumInputChannels()) + "\n");
     if(!pluginInitialised)//Ardour hack
     {
+        /*
+         * Model configuration
+         */
+
         //limit to two channels (ears)
         numEars = 2;
 
@@ -152,15 +156,27 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
         model.setCompressionCriterionInCams(0.3);
         model.setExcitationPatternInterpolated(false);
 
+        //initialise the model
         model.initialize(inputSignalBank);
         
-        //pointers to loudness measures
-        instantaneousLoudnessSignalBankPtr = &model.getOutputSignalBank("InstantaneousLoudness");
-        shortTermLoudnessSignalBankPtr = &model.getOutputSignalBank("ShortTermLoudness");
-        longTermLoudnessSignalBankPtr = &model.getOutputSignalBank("LongTermLoudness");
+        /*
+        * Pointers to loudness measures
+        */
 
-        //pointer to specific loudness (loudness as a function of frequency)
-        specificLoudnessSignalBankPtr = &model.getOutputSignalBank("SpecificLoudnessPattern");
+        // STL
+        const loudness::SignalBank* bank = &model.getOutputSignalBank("ShortTermLoudness");
+        pointerToSTLLeft = bank -> getSingleSampleReadPointer(0, 0);
+        pointerToSTLRight = bank -> getSingleSampleReadPointer(1, 0);
+
+        // LTL
+        bank = &model.getOutputSignalBank("LongTermLoudness");
+        pointerToLTLLeft = bank -> getSingleSampleReadPointer(0, 0);
+        pointerToLTLRight = bank -> getSingleSampleReadPointer(1, 0);
+
+        // Specific loudness (loudness as a function of frequency)
+        bank = &model.getOutputSignalBank("SpecificLoudnessPattern");
+        pointerToSpecificLeft = bank -> getSingleSampleReadPointer(0, 0);
+        pointerToSpecificRight = bank -> getSingleSampleReadPointer(1, 0);
 
         pluginInitialised = true;
     }
@@ -228,13 +244,18 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     /*
      * Output
      */
-
-    leftSTL = shortTermLoudnessSignalBankPtr -> getSample(0, 0, 0);
-    rightSTL = shortTermLoudnessSignalBankPtr -> getSample(1, 0, 0);
+    Logger::outputDebugString("processBlock: STL (left):" + String (*pointerToSTLLeft) + "\n");
+    Logger::outputDebugString("processBlock: STL (right):" + String (*pointerToSTLRight) + "\n");
     
-    Logger::outputDebugString ("STLs: " + String (leftSTL, 2) + ", " + String (rightSTL, 2));
-    //Logger::outputDebugString("processBlock: STL (left):" + String (leftSTL) + "\n");
-    //Logger::outputDebugString("processBlock: STL (right):" + String (rightSTL) + "\n");
+    if (copyLoudnessValues.get() == 1)
+    {
+        loudnessValues.leftSTL = *pointerToSTLLeft;
+        loudnessValues.rightSTL = *pointerToSTLRight;
+        loudnessValues.leftLTL = *pointerToLTLLeft;
+        loudnessValues.rightLTL = *pointerToLTLRight;
+        
+        copyLoudnessValues.set (0);
+    }
 }
 
 //==============================================================================
@@ -262,14 +283,20 @@ void LoudnessMeterAudioProcessor::setStateInformation (const void* data, int siz
     // whose contents will have been created by the getStateInformation() call.
 }
 
-double LoudnessMeterAudioProcessor::getLeftSTL()
+//==============================================================================
+bool LoudnessMeterAudioProcessor::loudnessValuesReady()
 {
-    return leftSTL;
+    return (copyLoudnessValues.get() == 0);
 }
 
-double LoudnessMeterAudioProcessor::getRightSTL()
+void LoudnessMeterAudioProcessor::updateLoudnessValues()
 {
-    return rightSTL;
+    copyLoudnessValues.set (1);
+}
+
+LoudnessValues* LoudnessMeterAudioProcessor::getPointerToLoudnessValues()
+{
+    return &loudnessValues;
 }
 
 //==============================================================================

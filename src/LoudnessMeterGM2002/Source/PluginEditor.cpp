@@ -14,7 +14,8 @@
 
 //==============================================================================
 LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMeterAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+    : AudioProcessorEditor (&p), processor (p),
+      loudnessValues (processor.getPointerToLoudnessValues())
 {
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
@@ -22,6 +23,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     
     addAndMakeVisible (barGraph);
     barGraph.setGraduationColour (Colours::white);
+    barGraph.setPhonsRange (20, 80);
     barGraph.setBounds (300, 20, 80, 260);
     
     startTimer (50);
@@ -45,7 +47,10 @@ void LoudnessMeterAudioProcessorEditor::resized()
 
 void LoudnessMeterAudioProcessorEditor::timerCallback()
 {
-    double leftSTL = processor.getLeftSTL();
-    double rightSTL = processor.getRightSTL();
-    barGraph.setMeterLevels (leftSTL, leftSTL, rightSTL, rightSTL);
+    if (processor.loudnessValuesReady())
+    {
+        barGraph.setMeterLevels (loudnessValues->leftSTL, loudnessValues->leftLTL, loudnessValues->rightSTL, loudnessValues->rightLTL);
+        
+        processor.updateLoudnessValues();
+    }
 }

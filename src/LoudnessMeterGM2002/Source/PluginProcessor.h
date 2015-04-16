@@ -17,6 +17,11 @@
 
 //==============================================================================
 
+struct LoudnessValues
+{
+    double leftSTL, rightSTL, leftLTL, rightLTL;
+};
+
 class LoudnessMeterAudioProcessor  : public AudioProcessor
 {
 public:
@@ -65,8 +70,10 @@ public:
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
     
-    double getLeftSTL();
-    double getRightSTL();
+    // info for GUI
+    bool loudnessValuesReady();
+    void updateLoudnessValues();
+    LoudnessValues* getPointerToLoudnessValues();
 
 private:
     int hopSize, numEars;
@@ -75,10 +82,17 @@ private:
     AudioSampleBuffer analysisBuffer;
     loudness::SignalBank inputSignalBank;
     loudness::DynamicLoudnessGM2002 model;
-    const loudness::SignalBank* instantaneousLoudnessSignalBankPtr, *shortTermLoudnessSignalBankPtr;
-    const loudness::SignalBank* longTermLoudnessSignalBankPtr, *specificLoudnessSignalBankPtr;
+
+    const loudness::Real* pointerToSTLLeft;
+    const loudness::Real* pointerToSTLRight;
+    const loudness::Real* pointerToLTLLeft;
+    const loudness::Real* pointerToLTLRight;
+    const loudness::Real* pointerToSpecificLeft;
+    const loudness::Real* pointerToSpecificRight;
     
-    double leftSTL, rightSTL;
+    // info for GUI
+    Atomic <int> copyLoudnessValues;
+    LoudnessValues loudnessValues;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeterAudioProcessor)
