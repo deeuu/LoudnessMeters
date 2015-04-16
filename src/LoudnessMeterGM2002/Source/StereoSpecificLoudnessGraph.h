@@ -4,12 +4,12 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MeterBallistics.h"
 
-class SpecificLoudnessGraph : public Component,
+class StereoSpecificLoudnessGraph : public Component,
                               private MeterBallistics
 {
 public:
-    SpecificLoudnessGraph();
-    ~SpecificLoudnessGraph();
+    StereoSpecificLoudnessGraph();
+    ~StereoSpecificLoudnessGraph();
 
     void paint (Graphics&);
     void resized();
@@ -19,23 +19,24 @@ public:
     //==========================================================================
     //      setting meter values
     //==========================================================================
-    void setSpecificLoudnessValues (const Array <double> &values);
+    void setSpecificLoudnessValues (const Array <double> &leftValues, const Array <double> &rightValues);
 
 private:
     int height, width, labelSize, graphX, graphY, graphWidth, graphHeight;
 
-    Colour graduationColour, traceColour;
+    Colour graduationColour, leftTraceColour, rightTraceColour;
 
-    // no idea what this should be, for now it is a suitably big number
-    static const int numMeters = 30;
+    int numMeters;
 
     // again may change this is lazy :P
-    static const int minPhons = 0, maxPhons = 60;
+    static const int minPhons = 0, maxPhons = 10;
 
     float phonsToY (double levelInPhons); 
     virtual void meterLevelChanged (int index) override;
 
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SpecificLoudnessGraph)
+    CriticalSection mutex;
+
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StereoSpecificLoudnessGraph)
 };
 
 

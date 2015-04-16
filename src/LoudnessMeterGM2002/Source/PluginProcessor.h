@@ -20,6 +20,7 @@
 struct LoudnessValues
 {
     double leftSTL, rightSTL, leftLTL, rightLTL;
+    Array <double> leftSpecificLoudness, rightSpecificLoudness;
 };
 
 class LoudnessMeterAudioProcessor  : public AudioProcessor
@@ -82,6 +83,7 @@ private:
     AudioSampleBuffer analysisBuffer;
     loudness::SignalBank inputSignalBank;
     loudness::DynamicLoudnessGM2002 model;
+    int numAuditoryChannels;
 
     const loudness::Real* pointerToSTLLeft;
     const loudness::Real* pointerToSTLRight;

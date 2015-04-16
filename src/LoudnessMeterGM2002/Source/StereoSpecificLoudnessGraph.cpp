@@ -1,8 +1,8 @@
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "SpecificLoudnessGraph.h"
+#include "StereoSpecificLoudnessGraph.h"
 
-SpecificLoudnessGraph::SpecificLoudnessGraph()
-    : MeterBallistics (numMeters, minPhons, maxPhons),
+StereoSpecificLoudnessGraph::StereoSpecificLoudnessGraph()
+    : MeterBallistics (0, minPhons, maxPhons),
       width (0),
       height (0),
       labelSize (0),
@@ -11,42 +11,50 @@ SpecificLoudnessGraph::SpecificLoudnessGraph()
       graphWidth (0),
       graphHeight (0),
       graduationColour (Colours::black),
-      traceColour (0xaa00ff00)
+      leftTraceColour (0xff00ff00), rightTraceColour (0xffff0000),
+      numMeters (0)
 {
-    for (unsigned int i = 0; i < numMeters; ++i)
+    for (int i = 0; i < numMeters; ++i)
     {
         setMeterRiseTime (i, 10);
         setMeterDecayTime (i, 1000);
     }
 }
 
-SpecificLoudnessGraph::~SpecificLoudnessGraph()
+StereoSpecificLoudnessGraph::~StereoSpecificLoudnessGraph()
 {
 }
 
-void SpecificLoudnessGraph::paint (Graphics& g)
+void StereoSpecificLoudnessGraph::paint (Graphics& g)
 {
+    GenericScopedLock <CriticalSection> lock (mutex);
+
     // draw background
     g.setColour (Colours::black);
     g.fillRect (graphX, graphY, graphWidth, graphHeight);
 
     // draw trace
     g.saveState();
-    g.setColour (traceColour);
     g.reduceClipRegion (graphX, graphY, graphWidth, graphHeight);
 
-    Path tracePath;
+    Path leftTracePath, rightTracePath;
     float x = graphX;
-    float xIncrement = graphWidth / (numMeters - 1);
-    tracePath.startNewSubPath (x, phonsToY (getMeterLevel (0)));
+    float xIncrement = graphWidth / (numMeters / 2 - 1);
+    leftTracePath.startNewSubPath (x, phonsToY (getMeterLevel (0)));
+    rightTracePath.startNewSubPath (x, phonsToY (getMeterLevel (1)));
 
-    for (unsigned int i = 1; i < numMeters; ++i)
+    for (int i = 1; i < numMeters / 2; ++i)
     {
         x += xIncrement;
-        tracePath.lineTo (x, phonsToY (getMeterLevel (i)));
+        leftTracePath.lineTo (x, phonsToY (getMeterLevel (i * 2)));
+        rightTracePath.lineTo (x, phonsToY (getMeterLevel (i * 2 + 1)));
     }
 
-    g.strokePath (tracePath, PathStrokeType (2.0f));
+    g.setColour (leftTraceColour);
+    g.strokePath (leftTracePath, PathStrokeType (2.0f));
+
+    g.setColour (rightTraceColour);
+    g.strokePath (rightTracePath, PathStrokeType (2.0f));
 
     // draw axes
     g.restoreState();
@@ -104,7 +112,7 @@ void SpecificLoudnessGraph::paint (Graphics& g)
 
 }
 
-void SpecificLoudnessGraph::resized()
+void StereoSpecificLoudnessGraph::resized()
 {
     width = getWidth();
     height = getHeight();
@@ -119,7 +127,7 @@ void SpecificLoudnessGraph::resized()
     graphHeight = height - 9 * labelSize / 8;
 }
 
-void SpecificLoudnessGraph::setGraduationColour (Colour newColour)
+void StereoSpecificLoudnessGraph::setGraduationColour (Colour newColour)
 {
     graduationColour = newColour;
 }
@@ -127,22 +135,36 @@ void SpecificLoudnessGraph::setGraduationColour (Colour newColour)
 //==========================================================================
 //      setting meter values
 //==========================================================================
-void SpecificLoudnessGraph::setSpecificLoudnessValues (const Array <double> &values)
+void StereoSpecificLoudnessGraph::setSpecificLoudnessValues (const Array <double> &leftValues, const Array <double> &rightValues)
 {
-    jassert (values.size() == numMeters);
+    GenericScopedLock <CriticalSection> lock (mutex);
 
-    for (unsigned int i = 0; i < numMeters; ++i)
+    // left and right values should contain the same number of elements
+    jassert (leftValues.size() == rightValues.size());
+
+    int newNumMeters = leftValues.size() * 2;
+
+    if (numMeters != newNumMeters)
     {
-        setMeterLevel (i, values [i]);
+        setNumMeters (newNumMeters);
+        numMeters = newNumMeters;
     }
+
+    for (int i = 0; i < numMeters / 2; ++i)
+    {
+        setMeterLevel (i * 2, leftValues [i]);
+        setMeterLevel (i * 2 + 1, rightValues [i]);
+    }
+
+    repaint();
 }
 
-float SpecificLoudnessGraph::phonsToY (double levelInPhons)
+float StereoSpecificLoudnessGraph::phonsToY (double levelInPhons)
 {
     return graphY + graphHeight - graphHeight * (levelInPhons - minPhons) / (maxPhons - minPhons);
 }
 
-void SpecificLoudnessGraph::meterLevelChanged (int index)
+void StereoSpecificLoudnessGraph::meterLevelChanged (int index)
 {
     repaint();
 }

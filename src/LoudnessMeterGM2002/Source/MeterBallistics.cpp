@@ -81,8 +81,8 @@ void MeterBallistics::setNumMeters (unsigned int newNumMeters)
             targetLevels.add (minLevel);
             currentLevels.add (minLevel);
             previousLevels.add (minLevel);
-            riseStepSizes.add (riseStepSizes [lastIndex]);
-            decayStepSizes.add (decayStepSizes [lastIndex]);
+            riseStepSizes.add (5);
+            decayStepSizes.add (50);
         }
     }
     else if (newNumMeters < numMeters)
@@ -145,7 +145,7 @@ void MeterBallistics::timerCallback()
     {
         double distanceToTarget = targetLevels [index] - currentLevels [index];
 
-        if (distanceToTarget < 0)
+        if (distanceToTarget < 0.0)
         {
             if (fabs (distanceToTarget) > decayStepSizes [index])
             {
@@ -157,7 +157,7 @@ void MeterBallistics::timerCallback()
                 currentLevels.set (index, targetLevels [index]);
             }
         }
-        else if (distanceToTarget > 0)
+        else if (distanceToTarget > 0.0)
         {
             if (fabs (distanceToTarget) > riseStepSizes [index])
             {

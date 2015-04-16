@@ -26,6 +26,10 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     barGraph.setPhonsRange (20, 80);
     barGraph.setBounds (300, 20, 80, 260);
     
+    addAndMakeVisible (specificLoudness);
+    specificLoudness.setGraduationColour (Colours::white);
+    specificLoudness.setBounds (10, 20, 280, 260);
+    
     startTimer (50);
 }
 
@@ -50,6 +54,7 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
     if (processor.loudnessValuesReady())
     {
         barGraph.setMeterLevels (loudnessValues->leftSTL, loudnessValues->leftLTL, loudnessValues->rightSTL, loudnessValues->rightLTL);
+        specificLoudness.setSpecificLoudnessValues (loudnessValues->leftSpecificLoudness, loudnessValues->rightSpecificLoudness);
         
         processor.updateLoudnessValues();
     }

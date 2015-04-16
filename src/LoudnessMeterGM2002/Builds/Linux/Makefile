@@ -74,9 +74,9 @@ OBJECTS := \
   $(OBJDIR)/SignalBank_80ff8e3.o \
   $(OBJDIR)/cnpy_9262e5e.o \
   $(OBJDIR)/Spline_78a3501e.o \
+  $(OBJDIR)/StereoSpecificLoudnessGraph_5b2e71dc.o \
   $(OBJDIR)/BarGraph_df5e2e04.o \
   $(OBJDIR)/MeterBallistics_1bf105d8.o \
-  $(OBJDIR)/SpecificLoudnessGraph_8eed73f4.o \
   $(OBJDIR)/StereoLoudnessBarGraph_2ac20265.o \
   $(OBJDIR)/PluginProcessor_a059e380.o \
   $(OBJDIR)/PluginEditor_94d4fb09.o \
@@ -230,6 +230,11 @@ $(OBJDIR)/Spline_78a3501e.o: ../../../loudnessCode/thirdParty/spline/Spline.cpp
 	@echo "Compiling Spline.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
+$(OBJDIR)/StereoSpecificLoudnessGraph_5b2e71dc.o: ../../Source/StereoSpecificLoudnessGraph.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling StereoSpecificLoudnessGraph.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
 $(OBJDIR)/BarGraph_df5e2e04.o: ../../Source/BarGraph.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling BarGraph.cpp"
@@ -238,11 +243,6 @@ $(OBJDIR)/BarGraph_df5e2e04.o: ../../Source/BarGraph.cpp
 $(OBJDIR)/MeterBallistics_1bf105d8.o: ../../Source/MeterBallistics.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling MeterBallistics.cpp"
-	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
-
-$(OBJDIR)/SpecificLoudnessGraph_8eed73f4.o: ../../Source/SpecificLoudnessGraph.cpp
-	-@mkdir -p $(OBJDIR)
-	@echo "Compiling SpecificLoudnessGraph.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/StereoLoudnessBarGraph_2ac20265.o: ../../Source/StereoLoudnessBarGraph.cpp

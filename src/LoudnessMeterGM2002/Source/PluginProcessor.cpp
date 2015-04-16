@@ -177,6 +177,18 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
         bank = &model.getOutputSignalBank("SpecificLoudnessPattern");
         pointerToSpecificLeft = bank -> getSingleSampleReadPointer(0, 0);
         pointerToSpecificRight = bank -> getSingleSampleReadPointer(1, 0);
+        
+        numAuditoryChannels = bank->getNChannels();
+        
+		copyLoudnessValues.set(1);
+        loudnessValues.leftSpecificLoudness.clear();
+        loudnessValues.rightSpecificLoudness.clear();
+        
+        for (int i = 0; i < numAuditoryChannels; ++i)
+        {
+            loudnessValues.leftSpecificLoudness.add (0);
+            loudnessValues.rightSpecificLoudness.add (0);
+        }
 
         pluginInitialised = true;
     }
@@ -244,8 +256,8 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     /*
      * Output
      */
-    Logger::outputDebugString("processBlock: STL (left):" + String (*pointerToSTLLeft) + "\n");
-    Logger::outputDebugString("processBlock: STL (right):" + String (*pointerToSTLRight) + "\n");
+    //Logger::outputDebugString("processBlock: STL (left):" + String (*pointerToSTLLeft) + "\n");
+    //Logger::outputDebugString("processBlock: STL (right):" + String (*pointerToSTLRight) + "\n");
     
     if (copyLoudnessValues.get() == 1)
     {
@@ -254,6 +266,12 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         loudnessValues.leftLTL = *pointerToLTLLeft;
         loudnessValues.rightLTL = *pointerToLTLRight;
         
+        for (int i = 0; i < numAuditoryChannels; ++i)
+        {
+            loudnessValues.leftSpecificLoudness.set (i, pointerToSpecificLeft [i]);
+            loudnessValues.rightSpecificLoudness.set (i, pointerToSpecificRight [i]);
+        }
+                
         copyLoudnessValues.set (0);
     }
 }

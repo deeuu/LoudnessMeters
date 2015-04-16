@@ -14,6 +14,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
 #include "StereoLoudnessBarGraph.h"
+#include "StereoSpecificLoudnessGraph.h"
 
 
 //==============================================================================
@@ -37,6 +38,7 @@ private:
     LoudnessValues *loudnessValues;
     
     StereoLoudnessBarGraph barGraph;
+    StereoSpecificLoudnessGraph specificLoudness;
     
     void timerCallback();
 

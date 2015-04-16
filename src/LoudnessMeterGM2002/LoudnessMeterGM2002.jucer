@@ -96,16 +96,16 @@
       </GROUP>
     </GROUP>
     <GROUP id="{A378BF1D-E94F-A564-0129-4472F286686B}" name="Source">
+      <FILE id="Twxdbe" name="StereoSpecificLoudnessGraph.cpp" compile="1"
+            resource="0" file="Source/StereoSpecificLoudnessGraph.cpp"/>
+      <FILE id="jwULEQ" name="StereoSpecificLoudnessGraph.h" compile="0"
+            resource="0" file="Source/StereoSpecificLoudnessGraph.h"/>
       <FILE id="k4ID2p" name="BarGraph.cpp" compile="1" resource="0" file="Source/BarGraph.cpp"/>
       <FILE id="bsFxLL" name="BarGraph.h" compile="0" resource="0" file="Source/BarGraph.h"/>
       <FILE id="kVb3WJ" name="MeterBallistics.cpp" compile="1" resource="0"
             file="Source/MeterBallistics.cpp"/>
       <FILE id="tJWaZf" name="MeterBallistics.h" compile="0" resource="0"
             file="Source/MeterBallistics.h"/>
-      <FILE id="pWEliv" name="SpecificLoudnessGraph.cpp" compile="1" resource="0"
-            file="Source/SpecificLoudnessGraph.cpp"/>
-      <FILE id="gYfVsG" name="SpecificLoudnessGraph.h" compile="0" resource="0"
-            file="Source/SpecificLoudnessGraph.h"/>
       <FILE id="XHsnT0" name="StereoLoudnessBarGraph.cpp" compile="1" resource="0"
             file="Source/StereoLoudnessBarGraph.cpp"/>
       <FILE id="mFTps1" name="StereoLoudnessBarGraph.h" compile="0" resource="0"
