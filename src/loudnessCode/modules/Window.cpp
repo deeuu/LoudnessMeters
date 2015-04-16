@@ -48,8 +48,10 @@ namespace loudness{
    
     bool Window::initializeInternal(const SignalBank &input)
     {
+#ifndef _MSC_VER
         LOUDNESS_ASSERT(input.getNSamples() == length_[0], 
                     name_ << ": Number of input samples does not equal the largest window size!");
+#endif
 
         //number of windows
         nWindows_ = (int)length_.size();

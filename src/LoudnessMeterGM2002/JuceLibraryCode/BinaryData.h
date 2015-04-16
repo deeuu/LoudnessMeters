@@ -10,7 +10,7 @@
 namespace BinaryData
 {
     extern const char*   LICENSE;
-    const int            LICENSESize = 1073;
+    const int            LICENSESize = 1094;
 
     // Points to the start of a list of resource names.
     extern const char* namedResourceList[];

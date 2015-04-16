@@ -37,12 +37,15 @@ namespace loudness{
         
         //number of windows
         int nWindows = (int)windowSizes_.size();
+
+#ifndef _MSC_VER
         LOUDNESS_ASSERT(input.getNChannels() == nWindows,
                 name_ << ": Number of channels do not match number of windows");
         LOUDNESS_ASSERT((int)bandFreqsHz_.size() == (nWindows + 1),
                 name_ << ": Number of frequency bands should equal number of input channels + 1.");
         LOUDNESS_ASSERT(!anyAscendingValues(windowSizes_),
                     name_ << ": Window lengths must be in descending order.");
+#endif
 
         //work out FFT configuration (constrain to power of 2)
         int largestWindowSize = input.getNSamples();
@@ -76,8 +79,10 @@ namespace loudness{
             bandBinIndices_[i][1] = ceil(bandFreqsHz_[i+1]*fftSize[i]/fs)-1;
             LOUDNESS_DEBUG(name_ << ": band hi : " << bandBinIndices_[i][1]);
 
+#ifndef _MSC_VER
             LOUDNESS_ASSERT(bandBinIndices_[i][1]>0,
                     name_ << ": No components found in band number " << i);
+#endif
 
             //exclude DC and Nyquist if found
             int nyqIdx = (fftSize[i]/2) + (fftSize[i]%2);

@@ -33,7 +33,9 @@ namespace loudness{
 
     bool FIR::initializeInternal(const SignalBank &input)
     {
+#ifndef _MSC_VER
         LOUDNESS_ASSERT(bCoefs_.size() > 0, name_ << ": No filter coefficients");
+#endif
 
         //constants, order currently fixed for all ears/channels
         order_ = (int)bCoefs_.size()-1;

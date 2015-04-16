@@ -9,7 +9,7 @@
               pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="LoudnessMeterAU" pluginRTASCategory=""
               aaxIdentifier="com.yourcompany.LoudnessMeter" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
-              jucerVersion="3.1.0">
+              jucerVersion="3.1.1">
   <MAINGROUP id="voUama" name="LoudnessMeter">
     <GROUP id="{5B3DE26F-74D8-69CE-EF44-C7AFB44B07C8}" name="loudnessCode">
       <GROUP id="{E47E5CA3-9D96-A629-6BAE-1B9F4F0771C5}" name="models">
@@ -130,6 +130,33 @@
         <MODULEPATH id="juce_audio_plugin_client" path="JuceLibraryCode/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
+    <VS2013 targetFolder="Builds/VisualStudio2013" vstFolder="c:\vstsdk2.4"
+            externalLibraries="libfftw3-3.lib&#10;zlib.lib">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="LoudnessMeter" headerPath="c:\Libs\fftw\fftw-3.3.4-dll32&#10;c:\Libs\zlib\include"
+                       libraryPath="c:\Libs\fftw\fftw-3.3.4-dll32&#10;c:\Libs\zlib\lib"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="3" targetName="LoudnessMeter" headerPath="c:\Libs\fftw\fftw-3.3.4-dll32&#10;c:\Libs\zlib\include"
+                       libraryPath="c:\Libs\fftw\fftw-3.3.4-dll32&#10;c:\Libs\zlib\lib"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_video" path="../../juce"/>
+        <MODULEPATH id="juce_opengl" path="../../juce"/>
+        <MODULEPATH id="juce_gui_extra" path="../../juce"/>
+        <MODULEPATH id="juce_gui_basics" path="../../juce"/>
+        <MODULEPATH id="juce_graphics" path="../../juce"/>
+        <MODULEPATH id="juce_events" path="../../juce"/>
+        <MODULEPATH id="juce_data_structures" path="../../juce"/>
+        <MODULEPATH id="juce_cryptography" path="../../juce"/>
+        <MODULEPATH id="juce_core" path="../../juce"/>
+        <MODULEPATH id="juce_audio_processors" path="../../juce"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../juce"/>
+        <MODULEPATH id="juce_audio_formats" path="../../juce"/>
+        <MODULEPATH id="juce_audio_devices" path="../../juce"/>
+        <MODULEPATH id="juce_audio_basics" path="../../juce"/>
+      </MODULEPATHS>
+    </VS2013>
   </EXPORTFORMATS>
   <MODULES>
     <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>
