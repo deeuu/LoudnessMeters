@@ -16,7 +16,8 @@
 LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
     : model(),
     inputSignalBank(),
-    pluginInitialised(false)
+    pluginInitialised(false),
+    leftSTL (0), rightSTL (0)
 {
 }
 
@@ -179,7 +180,7 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
      * Buffer -> SignalBank -> Model
      */
 
-    Logger::outputDebugString("processBlock: numInputChannels:" + String (getNumInputChannels()) + "\n");
+    //Logger::outputDebugString("processBlock: numInputChannels:" + String (getNumInputChannels()) + "\n");
 
     int numSamples = buffer.getNumSamples();
     int numInputChannels = buffer.getNumChannels();
@@ -228,8 +229,10 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
      * Output
      */
 
-    double leftSTL = shortTermLoudnessSignalBankPtr -> getSample(0, 0, 0);
-    double rightSTL = shortTermLoudnessSignalBankPtr -> getSample(1, 0, 0);
+    leftSTL = shortTermLoudnessSignalBankPtr -> getSample(0, 0, 0);
+    rightSTL = shortTermLoudnessSignalBankPtr -> getSample(1, 0, 0);
+    
+    Logger::outputDebugString ("STLs: " + String (leftSTL, 2) + ", " + String (rightSTL, 2));
     //Logger::outputDebugString("processBlock: STL (left):" + String (leftSTL) + "\n");
     //Logger::outputDebugString("processBlock: STL (right):" + String (rightSTL) + "\n");
 }
@@ -257,6 +260,16 @@ void LoudnessMeterAudioProcessor::setStateInformation (const void* data, int siz
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+}
+
+double LoudnessMeterAudioProcessor::getLeftSTL()
+{
+    return leftSTL;
+}
+
+double LoudnessMeterAudioProcessor::getRightSTL()
+{
+    return rightSTL;
 }
 
 //==============================================================================

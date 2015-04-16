@@ -64,6 +64,9 @@ public:
     //==============================================================================
     void getStateInformation (MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    double getLeftSTL();
+    double getRightSTL();
 
 private:
     int hopSize, numEars;
@@ -74,6 +77,8 @@ private:
     loudness::DynamicLoudnessGM2002 model;
     const loudness::SignalBank* instantaneousLoudnessSignalBankPtr, *shortTermLoudnessSignalBankPtr;
     const loudness::SignalBank* longTermLoudnessSignalBankPtr, *specificLoudnessSignalBankPtr;
+    
+    double leftSTL, rightSTL;
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeterAudioProcessor)

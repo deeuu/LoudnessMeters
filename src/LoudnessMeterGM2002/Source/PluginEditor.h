@@ -13,12 +13,14 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "StereoLoudnessBarGraph.h"
 
 
 //==============================================================================
 /**
 */
-class LoudnessMeterAudioProcessorEditor  : public AudioProcessorEditor
+class LoudnessMeterAudioProcessorEditor  : public AudioProcessorEditor,
+                                           private Timer
 {
 public:
     LoudnessMeterAudioProcessorEditor (LoudnessMeterAudioProcessor&);
@@ -32,6 +34,10 @@ private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
     LoudnessMeterAudioProcessor& processor;
+    
+    StereoLoudnessBarGraph barGraph;
+    
+    void timerCallback();
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeterAudioProcessorEditor)
 };

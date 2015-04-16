@@ -19,6 +19,12 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
+    
+    addAndMakeVisible (barGraph);
+    barGraph.setGraduationColour (Colours::white);
+    barGraph.setBounds (300, 20, 80, 260);
+    
+    startTimer (50);
 }
 
 LoudnessMeterAudioProcessorEditor::~LoudnessMeterAudioProcessorEditor()
@@ -28,15 +34,18 @@ LoudnessMeterAudioProcessorEditor::~LoudnessMeterAudioProcessorEditor()
 //==============================================================================
 void LoudnessMeterAudioProcessorEditor::paint (Graphics& g)
 {
-    g.fillAll (Colours::white);
-
-    g.setColour (Colours::black);
-    g.setFont (15.0f);
-    g.drawFittedText ("Loudness Yo!", getLocalBounds(), Justification::centred, 1);
+    g.fillAll (Colours::darkblue);
 }
 
 void LoudnessMeterAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+}
+
+void LoudnessMeterAudioProcessorEditor::timerCallback()
+{
+    double leftSTL = processor.getLeftSTL();
+    double rightSTL = processor.getRightSTL();
+    barGraph.setMeterLevels (leftSTL, leftSTL, rightSTL, rightSTL);
 }
