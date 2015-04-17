@@ -15,13 +15,16 @@
 #include "PluginProcessor.h"
 #include "StereoLoudnessBarGraph.h"
 #include "StereoSpecificLoudnessGraph.h"
+#include "SettingsButton.h"
+#include "SettingsScreen.h"
 
 
 //==============================================================================
 /**
 */
 class LoudnessMeterAudioProcessorEditor  : public AudioProcessorEditor,
-                                           private Timer
+                                           private Timer,
+                                           public Button::Listener
 {
 public:
     LoudnessMeterAudioProcessorEditor (LoudnessMeterAudioProcessor&);
@@ -30,6 +33,8 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
+    
+    void buttonClicked (Button *buttonThatWasClicked) override;
 
 private:
     // This reference is provided as a quick way for your editor to
@@ -39,6 +44,13 @@ private:
     
     StereoLoudnessBarGraph barGraph;
     StereoSpecificLoudnessGraph specificLoudness;
+    
+    SettingsButton settingsButton;
+    SettingsScreen settingsScreen;
+    
+    ComponentAnimator animator;
+    void showSettings();
+    void hideSettings();
     
     void timerCallback();
 

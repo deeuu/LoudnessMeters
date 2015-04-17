@@ -16,9 +16,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     : AudioProcessorEditor (&p), processor (p),
       loudnessValues (processor.getPointerToLoudnessValues())
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (400, 320);
     
     addAndMakeVisible (barGraph);
     barGraph.setGraduationColour (Colours::lightgrey);
@@ -28,6 +26,14 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     addAndMakeVisible (specificLoudness);
     specificLoudness.setGraduationColour (Colours::lightgrey);
     specificLoudness.setBounds (10, 20, 280, 260);
+    
+    addAndMakeVisible (settingsButton);
+    settingsButton.setBounds (getWidth() / 2 - 10, getHeight() - 30, 20, 20);
+    settingsButton.addListener (this);
+    
+    addAndMakeVisible (settingsScreen);
+    settingsScreen.setBounds (0, getHeight(), getWidth(), 70);
+    settingsScreen.submitButton.addListener (this);
     
     startTimer (50);
 }
@@ -44,8 +50,18 @@ void LoudnessMeterAudioProcessorEditor::paint (Graphics& g)
 
 void LoudnessMeterAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+}
+
+void LoudnessMeterAudioProcessorEditor::buttonClicked (Button *buttonThatWasClicked)
+{
+    if (buttonThatWasClicked == &settingsButton)
+    {
+        showSettings();
+    }
+    else if (buttonThatWasClicked == &(settingsScreen.submitButton))
+    {
+        hideSettings();
+    }
 }
 
 void LoudnessMeterAudioProcessorEditor::timerCallback()
@@ -57,4 +73,18 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
         
         processor.updateLoudnessValues();
     }
+}
+
+void LoudnessMeterAudioProcessorEditor::showSettings()
+{
+    animator.animateComponent (&settingsScreen,
+                               Rectangle <int> (0, getHeight() - 80, getWidth(), 80),
+                               1.0f, 1000, false, 0.0, 0.0);
+}
+
+void LoudnessMeterAudioProcessorEditor::hideSettings()
+{
+    animator.animateComponent (&settingsScreen,
+                               Rectangle <int> (0, getHeight(), getWidth(), 80),
+                               1.0f, 1000, false, 0.0, 0.0);
 }

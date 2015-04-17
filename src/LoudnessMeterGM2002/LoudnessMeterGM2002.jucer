@@ -96,6 +96,14 @@
       </GROUP>
     </GROUP>
     <GROUP id="{A378BF1D-E94F-A564-0129-4472F286686B}" name="Source">
+      <FILE id="E5a6yy" name="SettingsScreen.cpp" compile="1" resource="0"
+            file="Source/SettingsScreen.cpp"/>
+      <FILE id="kCGcGB" name="SettingsScreen.h" compile="0" resource="0"
+            file="Source/SettingsScreen.h"/>
+      <FILE id="AFfYkf" name="SettingsButton.cpp" compile="1" resource="0"
+            file="Source/SettingsButton.cpp"/>
+      <FILE id="BUn389" name="SettingsButton.h" compile="0" resource="0"
+            file="Source/SettingsButton.h"/>
       <FILE id="Twxdbe" name="StereoSpecificLoudnessGraph.cpp" compile="1"
             resource="0" file="Source/StereoSpecificLoudnessGraph.cpp"/>
       <FILE id="jwULEQ" name="StereoSpecificLoudnessGraph.h" compile="0"

@@ -180,7 +180,7 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
         
         numAuditoryChannels = bank->getNChannels();
         
-		copyLoudnessValues.set(1);
+		copyLoudnessValues.set (1);
         loudnessValues.leftSpecificLoudness.clear();
         loudnessValues.rightSpecificLoudness.clear();
         loudnessValues.centreFrequencies.clear();
