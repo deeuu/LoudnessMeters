@@ -21,9 +21,9 @@
 
 namespace loudness{
 
-    Model::Model(string name, bool dynamicModel) :
+    Model::Model(string name, bool isDynamic) :
         name_(name),
-        dynamicModel_(dynamicModel),
+        isDynamic_(isDynamic),
         rate_(0)
     {
         LOUDNESS_DEBUG(name_ << ": Constructed.");
@@ -37,8 +37,37 @@ namespace loudness{
             modules_[i] -> addTargetModule(*modules_[i + 1]);
     }
 
+    void Model::setOutputsToAggregate(const vector<string>& outputsToAggregate)
+    {
+        outputsToAggregate_ = outputsToAggregate;
+    }
+
+    const vector<string>& Model::getOutputsToAggregate()
+    {
+        return outputsToAggregate_;
+    }
+
+    void Model::configureOutputSignalBanksToAggregate()
+    {
+        if (isDynamic_)
+        {
+            for (uint i = 0; i < outputsToAggregate_.size(); i++)
+            {
+                int idx = std::find(outputNames_.begin(),
+                        outputNames_.end(),
+                        outputsToAggregate_[i]) - outputNames_.begin();
+
+                if (isPositiveAndLessThanUpper(idx, nModules_))
+                        modules_[idx] -> setOutputAggregated(true);
+            }
+        }
+    }
+
     bool Model::initialize(const SignalBank &input)
     {
+        modules_.clear();
+        outputNames_.clear();
+
         if(!initializeInternal(input))
         {
             LOUDNESS_ERROR(name_ << ": Not initialised!");
@@ -46,12 +75,15 @@ namespace loudness{
         }
         else
         {
+
             LOUDNESS_DEBUG(name_ << ": initialised.");
 
             nModules_ = (int)modules_.size();
 
             //initialise all
             modules_[0] -> initialize(input);
+
+            configureOutputSignalBanksToAggregate();
 
             LOUDNESS_DEBUG(name_ 
                     << ": Module targets set and initialised.");
@@ -117,9 +149,9 @@ namespace loudness{
         return initialized_;
     }
 
-    bool Model::isDynamicModel() const
+    bool Model::isDynamic() const
     {
-        return dynamicModel_;
+        return isDynamic_;
     }
 
     int Model::getNModules() const
