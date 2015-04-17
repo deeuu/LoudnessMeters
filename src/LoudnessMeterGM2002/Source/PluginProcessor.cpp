@@ -158,7 +158,7 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
 
     //set up an input buffer with a default hop size of 4ms
     //use something larger for debugging, e.g. 32ms
-    hopSize = round (fs * 0.032);
+    hopSize = static_cast <int> (round (fs / loudnessParameters.modelRate));
     samplesNeeded = hopSize;
     writePos = 0;
 
