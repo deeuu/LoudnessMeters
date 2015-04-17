@@ -17,6 +17,12 @@
 
 //==============================================================================
 
+struct LoudnessParameters
+{
+    double modelRate, camSpacing, compression;
+    String filter;
+};
+
 struct LoudnessValues
 {
     double leftSTL, rightSTL, leftLTL, rightLTL;
@@ -76,8 +82,13 @@ public:
     void updateLoudnessValues();
     LoudnessValues* getPointerToLoudnessValues();
 
+    // loudness parameters
+    void setLoudnessParameters (const LoudnessParameters &parameters);
+    LoudnessParameters getLoudnessParameters();
+
 private:
     int hopSize, numEars;
+    double fs;
     int samplesNeeded, writePos;
     bool pluginInitialised;
     AudioSampleBuffer analysisBuffer;
@@ -95,7 +106,20 @@ private:
     // info for GUI
     Atomic <int> copyLoudnessValues;
     LoudnessValues loudnessValues;
-
+    
+    // loudness settings 
+    LoudnessParameters loudnessParameters;
+    void initialiseLoudness (const LoudnessParameters &newParameters);
+    
+    // settings flags
+    enum SettingsFlag
+    {
+        OkToDoStuff,
+        NotOkToDoStuff
+    };
+    
+    Atomic <SettingsFlag> settingsFlag;
+    
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessMeterAudioProcessor)
 };

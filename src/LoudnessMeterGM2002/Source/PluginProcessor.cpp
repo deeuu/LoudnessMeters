@@ -15,10 +15,15 @@
 //==============================================================================
 LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
     : model(),
-    inputSignalBank(),
-    pluginInitialised (false),
-    copyLoudnessValues (1)
+      inputSignalBank(),
+      pluginInitialised (false),
+      copyLoudnessValues (1),
+      settingsFlag (OkToDoStuff)
 {
+    loudnessParameters.modelRate = 1000;
+    loudnessParameters.camSpacing = 0.5;
+    loudnessParameters.compression = 0.3;
+    loudnessParameters.filter = "";
 }
 
 LoudnessMeterAudioProcessor::~LoudnessMeterAudioProcessor()
@@ -130,73 +135,101 @@ void LoudnessMeterAudioProcessor::changeProgramName (int index, const String& ne
 //==============================================================================
 void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
+    fs = sampleRate;
+    
     Logger::outputDebugString ("prepareToPlay: numInputChannels:" + String (getNumInputChannels()) + "\n");
+    
     if(!pluginInitialised)//Ardour hack
     {
-        /*
-         * Model configuration
-         */
-
-        //limit to two channels (ears)
-        numEars = 2;
-
-        //set up an input buffer with a default hop size of 4ms
-        //use something larger for debugging, e.g. 32ms
-        hopSize = round (sampleRate * 0.032);
-        samplesNeeded = hopSize;
-        writePos = 0;
-
-        //loudness model configuration and initialisation
-        inputSignalBank.initialize (numEars, 1, hopSize, (int)getSampleRate());
-        model.configureModelParameters ("recentAndFaster");
-        model.setPresentationDiotic (false); //required for left and right output
-
-        //should be faster
-        model.setFilterSpacingInCams (1.5);
-        model.setCompressionCriterionInCams (0.3);
-        model.setExcitationPatternInterpolated (false);
-
-        //initialise the model
-        model.initialize (inputSignalBank);
-        
-        /*
-        * Pointers to loudness measures
-        */
-
-        // STL
-        const loudness::SignalBank* bank = &model.getOutputSignalBank ("ShortTermLoudness");
-        pointerToSTLLeft = bank -> getSingleSampleReadPointer (0, 0);
-        pointerToSTLRight = bank -> getSingleSampleReadPointer (1, 0);
-
-        // LTL
-        bank = &model.getOutputSignalBank ("LongTermLoudness");
-        pointerToLTLLeft = bank -> getSingleSampleReadPointer (0, 0);
-        pointerToLTLRight = bank -> getSingleSampleReadPointer (1, 0);
-
-        // Specific loudness (loudness as a function of frequency)
-        bank = &model.getOutputSignalBank ("SpecificLoudnessPattern");
-        pointerToSpecificLeft = bank -> getSingleSampleReadPointer (0, 0);
-        pointerToSpecificRight = bank -> getSingleSampleReadPointer (1, 0);
-        
-        numAuditoryChannels = bank->getNChannels();
-        
-		copyLoudnessValues.set (1);
-        loudnessValues.leftSpecificLoudness.clear();
-        loudnessValues.rightSpecificLoudness.clear();
-        loudnessValues.centreFrequencies.clear();
-        
-        const loudness::Real* ptr = bank -> getCentreFreqsReadPointer(0);
-
-        for (int i = 0; i < numAuditoryChannels; ++i)
-        {
-            loudnessValues.leftSpecificLoudness.add (0);
-            loudnessValues.rightSpecificLoudness.add (0);
-            loudnessValues.centreFrequencies.add (loudness::freqToCam (ptr[i]));
-        }
-
-        pluginInitialised = true;
+        initialiseLoudness (loudnessParameters);
     }
 }
+
+void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &newLoudnessParameters)
+{
+    loudnessParameters = newLoudnessParameters;
+    
+    /*
+    * Model configuration
+    */
+
+    //limit to two channels (ears)
+    numEars = 2;
+
+    //set up an input buffer with a default hop size of 4ms
+    //use something larger for debugging, e.g. 32ms
+    hopSize = round (fs * 0.032);
+    samplesNeeded = hopSize;
+    writePos = 0;
+
+    //loudness model configuration and initialisation
+    inputSignalBank.initialize (numEars, 1, hopSize, (int) fs);
+    model.configureModelParameters ("recentAndFaster");
+    model.setPresentationDiotic (false); //required for left and right output
+
+    //should be faster
+    model.setRate (loudnessParameters.modelRate);
+    model.setFilterSpacingInCams (loudnessParameters.camSpacing);
+    model.setCompressionCriterionInCams (loudnessParameters.compression);
+    model.setExcitationPatternInterpolated (false);
+
+    //initialise the model
+    model.initialize (inputSignalBank);
+    
+    /*
+    * Pointers to loudness measures
+    */
+
+    // STL
+    const loudness::SignalBank* bank = &model.getOutputSignalBank ("ShortTermLoudness");
+    pointerToSTLLeft = bank -> getSingleSampleReadPointer (0, 0);
+    pointerToSTLRight = bank -> getSingleSampleReadPointer (1, 0);
+
+    // LTL
+    bank = &model.getOutputSignalBank ("LongTermLoudness");
+    pointerToLTLLeft = bank -> getSingleSampleReadPointer (0, 0);
+    pointerToLTLRight = bank -> getSingleSampleReadPointer (1, 0);
+
+    // Specific loudness (loudness as a function of frequency)
+    bank = &model.getOutputSignalBank ("SpecificLoudnessPattern");
+    pointerToSpecificLeft = bank -> getSingleSampleReadPointer (0, 0);
+    pointerToSpecificRight = bank -> getSingleSampleReadPointer (1, 0);
+    
+    numAuditoryChannels = bank->getNChannels();
+    
+    copyLoudnessValues.set (1);
+    loudnessValues.leftSpecificLoudness.clear();
+    loudnessValues.rightSpecificLoudness.clear();
+    loudnessValues.centreFrequencies.clear();
+    
+    const loudness::Real* ptr = bank -> getCentreFreqsReadPointer(0);
+
+    for (int i = 0; i < numAuditoryChannels; ++i)
+    {
+        loudnessValues.leftSpecificLoudness.add (0);
+        loudnessValues.rightSpecificLoudness.add (0);
+        loudnessValues.centreFrequencies.add (loudness::freqToCam (ptr[i]));
+    }
+
+    pluginInitialised = true;
+}
+
+void LoudnessMeterAudioProcessor::setLoudnessParameters (const LoudnessParameters &newLoudnessParameters)
+{
+    while (! settingsFlag.compareAndSetBool (NotOkToDoStuff, OkToDoStuff))
+    {
+        Thread::sleep (10);
+    }
+
+    initialiseLoudness (newLoudnessParameters);
+    settingsFlag.set (OkToDoStuff);
+}
+
+LoudnessParameters LoudnessMeterAudioProcessor::getLoudnessParameters()
+{
+    return loudnessParameters;
+}
+
 
 void LoudnessMeterAudioProcessor::releaseResources()
 {
@@ -208,76 +241,82 @@ void LoudnessMeterAudioProcessor::releaseResources()
 
 void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& midiMessages)
 {
-    /*
-     * Buffer -> SignalBank -> Model
-     */
-
-    //Logger::outputDebugString("processBlock: numInputChannels:" + String (getNumInputChannels()) + "\n");
-
-    int numSamples = buffer.getNumSamples();
-    int numInputChannels = buffer.getNumChannels();
-    int remainingSamples = numSamples;
-    int readPos = 0;
-
-    // deal with any samples in the input which will create full hop buffers for us
-    while (remainingSamples >= samplesNeeded)
+    // analyse audio if settings aren't being changed
+    if (settingsFlag.compareAndSetBool (NotOkToDoStuff, OkToDoStuff))
     {
-        //fill the SignalBank to be processed
-        for (int ear = 0; ear < numEars; ++ear)
+        /*
+         * Buffer -> SignalBank -> Model
+         */
+
+        //Logger::outputDebugString("processBlock: numInputChannels:" + String (getNumInputChannels()) + "\n");
+
+        int numSamples = buffer.getNumSamples();
+        int numInputChannels = buffer.getNumChannels();
+        int remainingSamples = numSamples;
+        int readPos = 0;
+
+        // deal with any samples in the input which will create full hop buffers for us
+        while (remainingSamples >= samplesNeeded)
         {
-            int idx = ear;
-            if (numInputChannels == 1)
-                idx = 0;
-            const float* signalToCopy = buffer.getReadPointer (idx);
-            inputSignalBank.copySamples (ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
+            //fill the SignalBank to be processed
+            for (int ear = 0; ear < numEars; ++ear)
+            {
+                int idx = ear;
+                if (numInputChannels == 1)
+                    idx = 0;
+                const float* signalToCopy = buffer.getReadPointer (idx);
+                inputSignalBank.copySamples (ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
+            }
+
+            //model process call
+            model.process (inputSignalBank);
+
+            remainingSamples -= samplesNeeded;
+            readPos += samplesNeeded;
+            samplesNeeded = hopSize;
+            writePos = 0;
         }
 
-        //model process call
-        model.process (inputSignalBank);
-
-        remainingSamples -= samplesNeeded;
-        readPos += samplesNeeded;
-        samplesNeeded = hopSize;
-        writePos = 0;
-    }
-
-    // grab any samples we need to save for the next processBlock call
-    if (remainingSamples != 0)
-    {
-        for (int ear = 0; ear < numEars; ++ear)
+        // grab any samples we need to save for the next processBlock call
+        if (remainingSamples != 0)
         {
-            int idx = ear;
-            if (numInputChannels == 1)
-                idx = 0;
-            const float* signalToCopy = buffer.getReadPointer (ear);
-            inputSignalBank.copySamples (ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
+            for (int ear = 0; ear < numEars; ++ear)
+            {
+                int idx = ear;
+                if (numInputChannels == 1)
+                    idx = 0;
+                const float* signalToCopy = buffer.getReadPointer (ear);
+                inputSignalBank.copySamples (ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
+            }
+
+            samplesNeeded -= remainingSamples;
+            writePos += remainingSamples;
         }
 
-        samplesNeeded -= remainingSamples;
-        writePos += remainingSamples;
-    }
-
-    /*
-     * Output
-     */
-    //Logger::outputDebugString("processBlock: STL (left):" + String (*pointerToSTLLeft) + "\n");
-    //Logger::outputDebugString("processBlock: STL (right):" + String (*pointerToSTLRight) + "\n");
-    
-    if (copyLoudnessValues.get() == 1)
-    {
-        loudnessValues.leftSTL = loudness::soneToPhonMGB1997 (*pointerToSTLLeft, true);
-        loudnessValues.rightSTL = loudness::soneToPhonMGB1997 (*pointerToSTLRight, true);
-        loudnessValues.leftLTL = loudness::soneToPhonMGB1997 (*pointerToLTLLeft, true);
-        loudnessValues.rightLTL = loudness::soneToPhonMGB1997 (*pointerToLTLRight, true);
+        /*
+         * Output
+         */
+        //Logger::outputDebugString("processBlock: STL (left):" + String (*pointerToSTLLeft) + "\n");
+        //Logger::outputDebugString("processBlock: STL (right):" + String (*pointerToSTLRight) + "\n");
         
-        for (int i = 0; i < numAuditoryChannels; ++i)
+        if (copyLoudnessValues.get() == 1)
         {
-            //haven't made my mind up what to do with these yet...
-            loudnessValues.leftSpecificLoudness.set (i, pointerToSpecificLeft [i]);
-            loudnessValues.rightSpecificLoudness.set (i, pointerToSpecificRight [i]);
+            loudnessValues.leftSTL = loudness::soneToPhonMGB1997 (*pointerToSTLLeft, true);
+            loudnessValues.rightSTL = loudness::soneToPhonMGB1997 (*pointerToSTLRight, true);
+            loudnessValues.leftLTL = loudness::soneToPhonMGB1997 (*pointerToLTLLeft, true);
+            loudnessValues.rightLTL = loudness::soneToPhonMGB1997 (*pointerToLTLRight, true);
+            
+            for (int i = 0; i < numAuditoryChannels; ++i)
+            {
+                //haven't made my mind up what to do with these yet...
+                loudnessValues.leftSpecificLoudness.set (i, pointerToSpecificLeft [i]);
+                loudnessValues.rightSpecificLoudness.set (i, pointerToSpecificRight [i]);
+            }
+                    
+            copyLoudnessValues.set (0);
         }
-                
-        copyLoudnessValues.set (0);
+
+        settingsFlag.set (OkToDoStuff);
     }
 }
 

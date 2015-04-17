@@ -14,7 +14,8 @@
 //==============================================================================
 LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMeterAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p),
-      loudnessValues (processor.getPointerToLoudnessValues())
+      loudnessValues (processor.getPointerToLoudnessValues()),
+      settingsScreen (processor.getLoudnessParameters())
 {
     setSize (400, 320);
     
@@ -61,6 +62,7 @@ void LoudnessMeterAudioProcessorEditor::buttonClicked (Button *buttonThatWasClic
     else if (buttonThatWasClicked == &(settingsScreen.submitButton))
     {
         hideSettings();
+        processor.setLoudnessParameters (settingsScreen.getLoudnessParameters());
     }
 }
 
@@ -87,4 +89,5 @@ void LoudnessMeterAudioProcessorEditor::hideSettings()
     animator.animateComponent (&settingsScreen,
                                Rectangle <int> (0, getHeight(), getWidth(), 80),
                                1.0f, 1000, false, 0.0, 0.0);
+    repaint();
 }

@@ -5,7 +5,7 @@
 #include "MeterBallistics.h"
 
 class StereoSpecificLoudnessGraph : public Component,
-                              private MeterBallistics
+                                    private MeterBallistics
 {
 public:
     StereoSpecificLoudnessGraph();
