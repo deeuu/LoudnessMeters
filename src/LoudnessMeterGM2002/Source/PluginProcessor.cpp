@@ -20,7 +20,7 @@ LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
       copyLoudnessValues (1),
       settingsFlag (OkToDoStuff)
 {
-    loudnessParameters.modelRate = 1000;
+    loudnessParameters.modelRate = 250;
     loudnessParameters.camSpacing = 0.5;
     loudnessParameters.compression = 0.3;
     loudnessParameters.filter = "";

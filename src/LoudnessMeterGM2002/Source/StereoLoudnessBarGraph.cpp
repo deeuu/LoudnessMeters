@@ -51,7 +51,7 @@ void StereoLoudnessBarGraph::paint (Graphics& g)
             lineWidth = 2.0f;
 
             String graduationValue (maxPhons - i * 2);
-            g.drawFittedText (graduationValue, x2, y - barWidth / 8.0f, 1.5 * barWidth, barWidth / 4.0f, Justification::centred, 1);
+            g.drawFittedText (graduationValue, x2, y - barWidth / 2.0f, 1.5 * barWidth, barWidth, Justification::centred, 1);
         }
         
         g.drawLine (x1, y, x2, y, lineWidth);

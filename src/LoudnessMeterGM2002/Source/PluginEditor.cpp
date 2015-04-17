@@ -17,19 +17,19 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
       loudnessValues (processor.getPointerToLoudnessValues()),
       settingsScreen (processor.getLoudnessParameters())
 {
-    setSize (400, 320);
+    setSize (430, 310);
     
     addAndMakeVisible (barGraph);
     barGraph.setGraduationColour (Colours::lightgrey);
     barGraph.setPhonsRange (40, 120);
-    barGraph.setBounds (300, 20, 80, 260);
+    barGraph.setBounds (330, 20, 80, 260);
     
     addAndMakeVisible (specificLoudness);
     specificLoudness.setGraduationColour (Colours::lightgrey);
-    specificLoudness.setBounds (10, 20, 280, 260);
+    specificLoudness.setBounds (10, 9, 320, 258);
     
     addAndMakeVisible (settingsButton);
-    settingsButton.setBounds (355, getHeight() - 35, 25, 25);
+    settingsButton.setBounds (385, 280, 20, 20);
     settingsButton.addListener (this);
     
     addAndMakeVisible (settingsScreen);
