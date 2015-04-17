@@ -20,7 +20,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     
     addAndMakeVisible (barGraph);
     barGraph.setGraduationColour (Colours::lightgrey);
-    barGraph.setPhonsRange (20, 80);
+    barGraph.setPhonsRange (40, 120);
     barGraph.setBounds (300, 20, 80, 260);
     
     addAndMakeVisible (specificLoudness);
@@ -28,7 +28,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     specificLoudness.setBounds (10, 20, 280, 260);
     
     addAndMakeVisible (settingsButton);
-    settingsButton.setBounds (getWidth() / 2 - 10, getHeight() - 30, 20, 20);
+    settingsButton.setBounds (355, getHeight() - 35, 25, 25);
     settingsButton.addListener (this);
     
     addAndMakeVisible (settingsScreen);

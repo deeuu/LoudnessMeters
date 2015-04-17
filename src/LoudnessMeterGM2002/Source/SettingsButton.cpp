@@ -30,14 +30,16 @@ void SettingsButton::paintButton (Graphics &g, bool isMouseOverButton, bool isBu
         g.setColour (bodyColour);
     }
 
-    Path symbolPath;
-    symbolPath.addPolygon (Point <float> (width / 2.0f, height / 2.0f), 6, width / 2.0f, float_Pi / 6.0f);
+    g.fillEllipse (0, 0, width, height);
 
+    Path symbolPath;
+    symbolPath.addPolygon (Point <float> (width / 2.0f, height / 2.0f), 6, width / 2.5f, float_Pi / 6.0f);
 
     Path innerPath;
-    innerPath.addEllipse (width / 3.0f, height / 3.0f, width / 3.0f, height / 3.0f);
+    innerPath.addEllipse (2.0f * width / 5.0f, 2.0f * height / 5.0f, width / 5.0f, height / 5.0f);
 
     symbolPath.addPath (innerPath, AffineTransform::verticalFlip (height));
     
+    g.setColour (Colours::blue);
     g.fillPath (symbolPath);
 }
