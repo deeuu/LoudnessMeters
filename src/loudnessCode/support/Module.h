@@ -38,11 +38,16 @@ namespace loudness{
      * input SignalBank to initialize(), which in turn calls
      * initializeInternal() where the bulk of the work takes place. Upon
      * successful initialisation, an output SignalBank is setup for storing the
-     * processing result. If a module has a target module (see
-     * setTargetModule()), then it is also initialised by passing the output
+     * processing result. If a module has target modules (see
+     * addTargetModule()), then it they will also be initialised by passing the output
      * SignalBank to the input of the target module function
      * initializeInternal(). This allows the ins and outs of modules to be
      * connected and thus create a processing pipeline. 
+     *
+     * Note that there is no constraint on calling initialize(). Thus be careful
+     * if resources need to be cleaned up after the first call.  This also means
+     * that the structure of an output SignalBank could change, which may have
+     * lead to problems further down the processing chain.
      *
      * To process a SignalBank, pass a reference to the process() function.
      * This will call the module specific processInternal() function which will
@@ -55,14 +60,12 @@ namespace loudness{
      * processInternal() is only called if the SignalBank trigger is 1 (which is
      * the default), otherwise the output bank will not be updated.
      *
-     * @author Dominic Ward
-     *
      * @sa SignalBank
      */
     class Module
     {
     public:
-        Module(string name = "Module");
+        Module(const string& name = "Module");
         virtual ~Module();
 
         /**
@@ -74,7 +77,7 @@ namespace loudness{
          *
          * @return true if module has been initialised, false otherwise.
          */
-        virtual bool initialize();
+        bool initialize();
 
         /**
          * @brief Initialises a module with an input SignalBank.
@@ -87,7 +90,7 @@ namespace loudness{
          *
          * @return true if module has been initialised, false otherwise.
          */
-        virtual bool initialize(const SignalBank &input);
+        bool initialize(const SignalBank &input);
 
         /**
          * @brief Processes a self-generated input.
@@ -96,7 +99,7 @@ namespace loudness{
          * default function. This is useful for modules that generate their own
          * input.
          */
-        virtual void process();
+        void process();
 
         /**
          * @brief Processes the input SignalBank.
@@ -104,7 +107,7 @@ namespace loudness{
          * @param input The input SignalBank to be processed. Must be same
          * structure as the one used to initialise the module.
          */
-        virtual void process(const SignalBank &input);
+        void process(const SignalBank &input);
 
         /**
          * @brief Restores a module to intialisation state and clears the
@@ -117,7 +120,7 @@ namespace loudness{
          *
          * Once processed, the output SignalBank is passed as input to the
          * target module for processing. Note that the target module must
-         * continue to exist for the lifetime of the aggregate object when
+         * continue to exist for the lifetime of the object when
          * initialize(), process() or reset() are called. This Module does not
          * own the target module.
          *
@@ -131,12 +134,19 @@ namespace loudness{
          */
         void removeLastTargetModule();
 
+        /** Sets whether the output SignalBank is aggregated or not. */
+        void setOutputAggregated(bool isOutputAggregated);
+
         /**
          * @brief Returns the module initialisation state.
          *
          * @return true if initialised, false otherwise.
          */
         bool isInitialized() const;
+
+        /** Returns true if the output SignalBank is aggregated, false otherwise
+         **/
+        bool isOutputAggregated() const;
 
         /**
          * @brief Returns a const reference to the output SignalBank used for
@@ -155,14 +165,16 @@ namespace loudness{
     protected:
         //Pure virtual functions
         virtual bool initializeInternal(const SignalBank &input) = 0;
+        virtual bool initializeInternal() = 0;
         virtual void processInternal(const SignalBank &input) = 0;
+        virtual void processInternal() = 0;
         virtual void resetInternal() = 0;
 
         //members
-        bool initialized_;
+        string name_;
+        bool initialized_, isOutputAggregated_;
         vector<Module*> targetModules_;
         SignalBank output_;
-        string name_;
     };
 }
 

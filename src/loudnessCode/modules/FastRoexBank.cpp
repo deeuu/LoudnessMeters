@@ -22,10 +22,10 @@
 
 namespace loudness{
 
-    FastRoexBank::FastRoexBank(Real camStep, bool interp) :
+    FastRoexBank::FastRoexBank(Real camStep, bool isExcitationPatternInterpolated) :
         Module("FastRoexBank"),
         camStep_(camStep),
-        interp_(interp)
+        isExcitationPatternInterpolated_(isExcitationPatternInterpolated)
     {}
 
     FastRoexBank::~FastRoexBank() {}
@@ -34,7 +34,8 @@ namespace loudness{
     {
         //Camstep limit is 0.1
         if(camStep_ <= 0.1)
-            interp_ = false;
+            isExcitationPatternInterpolated_ = false;
+        
         /*
          * Level per ERB precalculations
          */
@@ -90,6 +91,11 @@ namespace loudness{
         Real camHi = 38.9;
         nFilters_ = round((camHi-camLo)/camStep_)+1; 
 
+        LOUDNESS_DEBUG(name_
+                << ": interpolation applied: " << isExcitationPatternInterpolated_
+                << " filter spacing in Cams: " << camStep_
+                << " Total number of filters: " << nFilters_);
+
         const Real p51_1k = 4000 / freqToERB(1000.0);
 
         //p upper is level invariant
@@ -101,19 +107,18 @@ namespace loudness{
         //comp_level holds level per ERB on each component
         compLevel_.assign(input.getNChannels(), 0.0);
 
-        //required for log interpolation
-        if(interp_)
-            excitationLevel_.assign(nFilters_, 0.0);
-        
-        //centre freqs in cams
-        cams_.assign(nFilters_, 0);
-
         //centre freqs in Hz
         fc_.assign(nFilters_, 0);
 
         //initialize output SignalBank
-        if(interp_)
+        if(isExcitationPatternInterpolated_)
         {
+            //centre freqs in cams
+            cams_.assign(nFilters_, 0);
+
+            //required for log interpolation
+            excitationLevel_.assign(nFilters_, 0.0);
+
             output_.initialize(input.getNEars(), 372, 1, input.getFs());
             output_.setChannelSpacingInCams(0.1);
             for(int i=0; i<372; i++)
@@ -127,14 +132,15 @@ namespace loudness{
         output_.setFrameRate(input.getFrameRate());
 
         //fill the above arrays and calculate roex filter response for upper skirt
-        Real erb;
         for(int i=0; i<nFilters_; i++)
         {
-            cams_[i] = camLo+(i*camStep_);
-            fc_[i] = camToFreq(cams_[i]);
-            if(!interp_)
+            Real cam = camLo + (i*camStep_);
+            fc_[i] = camToFreq(cam);
+            if (isExcitationPatternInterpolated_)
+                cams_[i] = cam;
+            else
                 output_.setCentreFreq(i, fc_[i]); //some redundancy here
-            erb = freqToERB(fc_[i]);
+            Real erb = freqToERB(fc_[i]);
             pu_[i] = 4*fc_[i]/erb;
             pl_[i] = 0.35*(pu_[i]/p51_1k);
         }
@@ -171,10 +177,7 @@ namespace loudness{
                     runningSum -= inputPowerSpectrum[k++];
 
                 //convert to dB, subtract 51 here to save operations later
-                if (runningSum < 1e-10)
-                    compLevel_[i] = -151.0;
-                else
-                    compLevel_[i] = 10*log10(runningSum)-51;
+                compLevel_[i] = powerToDecibels(runningSum, 1e-10, -100.0) - 51;
             }
 
             /*
@@ -212,7 +215,7 @@ namespace loudness{
                 }
 
                 //excitation level
-                if (interp_)
+                if (isExcitationPatternInterpolated_)
                     excitationLevel_[i] = log(excitationLin + 1e-10);
                 else
                     outputExcitationPattern[i] = excitationLin;
@@ -222,7 +225,7 @@ namespace loudness{
              * Part 3: Interpolate to estimate 
              * 0.1~Cam res excitation pattern
              */
-            if(interp_)
+            if(isExcitationPatternInterpolated_)
             {
                 spline_.set_points(cams_, excitationLevel_);
                 for(int i=0; i < 372; i++)

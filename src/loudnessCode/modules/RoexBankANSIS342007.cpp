@@ -41,6 +41,10 @@ namespace loudness{
         //number of roex filters to use
         nFilters_ = round((camHi_-camLo_)/camStep_)+1; //+1 inclusive
 
+        LOUDNESS_DEBUG(name_
+                << " filter spacing in Cams: " << camStep_
+                << " Total number of filters: " << nFilters_);
+
         //initialize output SignalBank
         output_.initialize(input.getNEars(), nFilters_, 1, input.getFs());
         output_.setFrameRate(input.getFrameRate());
@@ -117,10 +121,7 @@ namespace loudness{
                 }
 
                 //convert to dB, subtract 51 here to save operations later
-                if (excitationLin < 1e-10)
-                    compLevel_[i] = -151.0;
-                else
-                    compLevel_[i] = 10*log10(excitationLin)-51;
+                compLevel_[i] = powerToDecibels(excitationLin, 1e-10, -100.0) - 51;
             }
             
             //now the excitation pattern
