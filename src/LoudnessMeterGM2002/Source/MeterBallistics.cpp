@@ -81,7 +81,7 @@ void MeterBallistics::setNumMeters (unsigned int newNumMeters)
             targetLevels.add (minLevel);
             currentLevels.add (minLevel);
             previousLevels.add (minLevel);
-            riseStepSizes.add (5);
+            riseStepSizes.add (500);
             decayStepSizes.add (50);
         }
     }

@@ -35,6 +35,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     addAndMakeVisible (settingsScreen);
     settingsScreen.setBounds (0, getHeight(), getWidth(), 70);
     settingsScreen.submitButton.addListener (this);
+    oldLoudnessParameters = settingsScreen.getLoudnessParameters();
     
     startTimer (50);
 }
@@ -62,7 +63,17 @@ void LoudnessMeterAudioProcessorEditor::buttonClicked (Button *buttonThatWasClic
     else if (buttonThatWasClicked == &(settingsScreen.submitButton))
     {
         hideSettings();
-        processor.setLoudnessParameters (settingsScreen.getLoudnessParameters());
+
+        LoudnessParameters newLoudnessParameters = settingsScreen.getLoudnessParameters();
+
+        if (newLoudnessParameters.modelRate != oldLoudnessParameters.modelRate ||
+            newLoudnessParameters.camSpacing != oldLoudnessParameters.camSpacing ||
+            newLoudnessParameters.compression != oldLoudnessParameters.compression ||
+            newLoudnessParameters.filter != oldLoudnessParameters.filter)
+        {
+            processor.setLoudnessParameters (newLoudnessParameters);
+            oldLoudnessParameters = newLoudnessParameters;
+        }
     }
 }
 

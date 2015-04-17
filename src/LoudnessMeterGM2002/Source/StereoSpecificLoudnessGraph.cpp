@@ -151,7 +151,7 @@ void StereoSpecificLoudnessGraph::setSpecificLoudnessValues (const Array <double
 
 		for (int i = 0; i < numMeters; ++i)
         {
-            setMeterRiseTime (i, 1000);
+            setMeterDecayTime (i, 500);
         }
     }
 

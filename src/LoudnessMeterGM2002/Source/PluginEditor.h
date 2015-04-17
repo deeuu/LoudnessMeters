@@ -47,6 +47,8 @@ private:
     
     SettingsButton settingsButton;
     SettingsScreen settingsScreen;
+
+    LoudnessParameters oldLoudnessParameters;
     
     ComponentAnimator animator;
     void showSettings();
