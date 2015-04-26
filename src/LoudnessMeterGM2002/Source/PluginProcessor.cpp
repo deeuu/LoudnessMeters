@@ -181,17 +181,17 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     */
 
     // STL
-    const loudness::SignalBank* bank = &model.getOutputSignalBank ("ShortTermLoudness");
+    const loudness::SignalBank* bank = &model.getOutputModuleSignalBank ("ShortTermLoudness");
     pointerToSTLLeft = bank -> getSingleSampleReadPointer (0, 0);
     pointerToSTLRight = bank -> getSingleSampleReadPointer (1, 0);
 
     // LTL
-    bank = &model.getOutputSignalBank ("LongTermLoudness");
+    bank = &model.getOutputModuleSignalBank ("LongTermLoudness");
     pointerToLTLLeft = bank -> getSingleSampleReadPointer (0, 0);
     pointerToLTLRight = bank -> getSingleSampleReadPointer (1, 0);
 
     // Specific loudness (loudness as a function of frequency)
-    bank = &model.getOutputSignalBank ("SpecificLoudnessPattern");
+    bank = &model.getOutputModuleSignalBank ("SpecificLoudnessPattern");
     pointerToSpecificLeft = bank -> getSingleSampleReadPointer (0, 0);
     pointerToSpecificRight = bank -> getSingleSampleReadPointer (1, 0);
     

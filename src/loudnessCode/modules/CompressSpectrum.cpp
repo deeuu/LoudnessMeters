@@ -31,9 +31,7 @@ namespace loudness{
 
     bool CompressSpectrum::initializeInternal(const SignalBank &input)
     {
-#ifndef _MSC_VER
         LOUDNESS_ASSERT(input.getNChannels() > 1, name_ << ": Insufficient number of channels.");
-#endif
 
         /*
          * This code is sloppy due to along time spent figuring how 

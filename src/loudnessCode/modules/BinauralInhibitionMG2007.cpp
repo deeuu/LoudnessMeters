@@ -33,10 +33,8 @@ namespace loudness{
 
     bool BinauralInhibitionMG2007::initializeInternal(const SignalBank &input)
     {
-#ifndef _MSC_VER
         LOUDNESS_ASSERT(input.getNEars() == 2, name_
                 << ": This module requires an input SignalBank with two ears.");
-#endif
 
         /* Gaussian smoothing kernel. 
          * Since the kernel is symmetric, we just use one half.
