@@ -1,7 +1,8 @@
 #include "SettingsButton.h"
 
-SettingsButton::SettingsButton()
+SettingsButton::SettingsButton(const Colour& colour)
     : Button ("Settings"),
+      faceColour (colour),
       bodyColour (0xffaaaaaa),
       bodyColourMouseOver (0xff999999),
       bodyColourDown (0xff888888)
@@ -40,6 +41,6 @@ void SettingsButton::paintButton (Graphics &g, bool isMouseOverButton, bool isBu
 
     symbolPath.addPath (innerPath, AffineTransform::verticalFlip (height));
     
-    g.setColour (Colours::blue);
+    g.setColour (faceColour);
     g.fillPath (symbolPath);
 }

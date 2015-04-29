@@ -17,6 +17,7 @@
 #include "StereoSpecificLoudnessGraph.h"
 #include "SettingsButton.h"
 #include "SettingsScreen.h"
+#include "CalibrationScreen.h"
 
 
 //==============================================================================
@@ -47,12 +48,14 @@ private:
     
     SettingsButton settingsButton;
     SettingsScreen settingsScreen;
+    SettingsButton calibrationButton;
+    CalibrationScreen calibrationScreen;
 
     LoudnessParameters oldLoudnessParameters;
     
     ComponentAnimator animator;
-    void showSettings();
-    void hideSettings();
+    void showSettings (Component& screenToShow);
+    void hideSettings (Component& screenToHide);
     
     void timerCallback();
 

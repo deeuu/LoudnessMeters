@@ -29,6 +29,11 @@ struct LoudnessValues
     Array <double> centreFrequencies, leftSpecificLoudness, rightSpecificLoudness;
 };
 
+struct MeasuredLevels
+{
+    float left, right;
+};
+
 class LoudnessMeterAudioProcessor  : public AudioProcessor
 {
 public:
@@ -86,6 +91,8 @@ public:
     void setLoudnessParameters (const LoudnessParameters &parameters);
     LoudnessParameters getLoudnessParameters();
 
+    void calibrate (const MeasuredLevels& measuredLevels);
+
 private:
     int hopSize, numEars;
     double fs;
@@ -110,6 +117,7 @@ private:
     // loudness settings 
     LoudnessParameters loudnessParameters;
     void initialiseLoudness (const LoudnessParameters &newParameters);
+
     
     // settings flags
     enum SettingsFlag

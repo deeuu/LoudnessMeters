@@ -230,6 +230,12 @@ LoudnessParameters LoudnessMeterAudioProcessor::getLoudnessParameters()
     return loudnessParameters;
 }
 
+void LoudnessMeterAudioProcessor::calibrate (const MeasuredLevels& measuredLevels)
+{
+    Logger::outputDebugString ("Left value: " + String(measuredLevels.left));
+    Logger::outputDebugString ("Right value: " + String(measuredLevels.right));
+}
+
 
 void LoudnessMeterAudioProcessor::releaseResources()
 {
@@ -271,6 +277,9 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
             //model process call
             model.process (inputSignalBank);
 
+            //SPL meter process call
+            //meter.process (inputSignalBank);
+
             remainingSamples -= samplesNeeded;
             readPos += samplesNeeded;
             samplesNeeded = hopSize;
@@ -296,8 +305,6 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         /*
          * Output
          */
-        //Logger::outputDebugString("processBlock: STL (left):" + String (*pointerToSTLLeft) + "\n");
-        //Logger::outputDebugString("processBlock: STL (right):" + String (*pointerToSTLRight) + "\n");
         
         if (copyLoudnessValues.get() == 1)
         {
@@ -305,6 +312,7 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
             loudnessValues.rightSTL = loudness::soneToPhonMGB1997 (*pointerToSTLRight, true);
             loudnessValues.leftLTL = loudness::soneToPhonMGB1997 (*pointerToLTLLeft, true);
             loudnessValues.rightLTL = loudness::soneToPhonMGB1997 (*pointerToLTLRight, true);
+            //loudnessValues.overallSPL = loudness::AmplitudeToDecibels(*pointerToOverallSPL);
             
             for (int i = 0; i < numAuditoryChannels; ++i)
             {

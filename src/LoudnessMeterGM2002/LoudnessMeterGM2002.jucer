@@ -96,6 +96,10 @@
       </GROUP>
     </GROUP>
     <GROUP id="{A378BF1D-E94F-A564-0129-4472F286686B}" name="Source">
+      <FILE id="OtWat6" name="CalibrationScreen.cpp" compile="1" resource="0"
+            file="Source/CalibrationScreen.cpp"/>
+      <FILE id="a9rerk" name="CalibrationScreen.h" compile="0" resource="0"
+            file="Source/CalibrationScreen.h"/>
       <FILE id="E5a6yy" name="SettingsScreen.cpp" compile="1" resource="0"
             file="Source/SettingsScreen.cpp"/>
       <FILE id="kCGcGB" name="SettingsScreen.h" compile="0" resource="0"

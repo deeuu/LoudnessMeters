@@ -13,8 +13,11 @@
 
 //==============================================================================
 LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMeterAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p),
+    : AudioProcessorEditor (&p),
+      processor (p),
       loudnessValues (processor.getPointerToLoudnessValues()),
+      settingsButton (Colours::blue),
+      calibrationButton (Colours::red),
       settingsScreen (processor.getLoudnessParameters())
 {
     setSize (430, 310);
@@ -31,11 +34,20 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     addAndMakeVisible (settingsButton);
     settingsButton.setBounds (385, 280, 20, 20);
     settingsButton.addListener (this);
+
+    addAndMakeVisible (calibrationButton);
+    calibrationButton.setBounds (330, 280, 20, 20);
+    calibrationButton.addListener (this);
     
     addAndMakeVisible (settingsScreen);
     settingsScreen.setBounds (0, getHeight(), getWidth(), 70);
     settingsScreen.submitButton.addListener (this);
     oldLoudnessParameters = settingsScreen.getLoudnessParameters();
+
+    addAndMakeVisible (calibrationScreen);
+    calibrationScreen.setBounds (0, getHeight(), getWidth(), 70);
+    calibrationScreen.submitButton.addListener (this);
+    calibrationScreen.calibrateButton.addListener (this);
     
     startTimer (50);
 }
@@ -58,14 +70,17 @@ void LoudnessMeterAudioProcessorEditor::buttonClicked (Button *buttonThatWasClic
 {
     if (buttonThatWasClicked == &settingsButton)
     {
-        showSettings();
+        //Show the settings screen to allow model config
+        showSettings(settingsScreen);
     }
     else if (buttonThatWasClicked == &(settingsScreen.submitButton))
     {
-        hideSettings();
+        hideSettings (settingsScreen);
 
+        //Get the new params from GUI
         LoudnessParameters newLoudnessParameters = settingsScreen.getLoudnessParameters();
 
+        //Update only if a parameter has changed
         if (newLoudnessParameters.modelRate != oldLoudnessParameters.modelRate ||
             newLoudnessParameters.camSpacing != oldLoudnessParameters.camSpacing ||
             newLoudnessParameters.compression != oldLoudnessParameters.compression ||
@@ -75,29 +90,47 @@ void LoudnessMeterAudioProcessorEditor::buttonClicked (Button *buttonThatWasClic
             oldLoudnessParameters = newLoudnessParameters;
         }
     }
+    else if (buttonThatWasClicked == &calibrationButton)
+    {
+        //shoow calibraton screen to allow calibration
+        showSettings(calibrationScreen);
+    }
+    else if (buttonThatWasClicked == &(calibrationScreen.calibrateButton))
+    {
+        processor.calibrate (calibrationScreen.getMeasuredLevels());
+    }
+    else if (buttonThatWasClicked == &(calibrationScreen.submitButton))
+    {
+        hideSettings (calibrationScreen);
+    }
 }
 
 void LoudnessMeterAudioProcessorEditor::timerCallback()
 {
     if (processor.loudnessValuesReady())
     {
-        barGraph.setMeterLevels (loudnessValues->leftSTL, loudnessValues->leftLTL, loudnessValues->rightSTL, loudnessValues->rightLTL);
-        specificLoudness.setSpecificLoudnessValues (loudnessValues->centreFrequencies, loudnessValues->leftSpecificLoudness, loudnessValues->rightSpecificLoudness);
+        barGraph.setMeterLevels (loudnessValues->leftSTL,
+                                 loudnessValues->leftLTL,
+                                 loudnessValues->rightSTL,
+                                 loudnessValues->rightLTL);
+        specificLoudness.setSpecificLoudnessValues (loudnessValues->centreFrequencies, 
+                                                    loudnessValues->leftSpecificLoudness,
+                                                    loudnessValues->rightSpecificLoudness);
         
         processor.updateLoudnessValues();
     }
 }
 
-void LoudnessMeterAudioProcessorEditor::showSettings()
+void LoudnessMeterAudioProcessorEditor::showSettings (Component &screenToShow)
 {
-    animator.animateComponent (&settingsScreen,
+    animator.animateComponent (&screenToShow,
                                Rectangle <int> (0, getHeight() - 80, getWidth(), 80),
                                1.0f, 1000, false, 0.0, 0.0);
 }
 
-void LoudnessMeterAudioProcessorEditor::hideSettings()
+void LoudnessMeterAudioProcessorEditor::hideSettings (Component &screenToHide)
 {
-    animator.animateComponent (&settingsScreen,
+    animator.animateComponent (&screenToHide,
                                Rectangle <int> (0, getHeight(), getWidth(), 80),
                                1.0f, 1000, false, 0.0, 0.0);
     repaint();

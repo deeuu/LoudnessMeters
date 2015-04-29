@@ -72,6 +72,7 @@ OBJECTS := \
   $(OBJDIR)/SignalBank_80ff8e3.o \
   $(OBJDIR)/cnpy_9262e5e.o \
   $(OBJDIR)/Spline_78a3501e.o \
+  $(OBJDIR)/CalibrationScreen_ceed6d57.o \
   $(OBJDIR)/SettingsScreen_4992be78.o \
   $(OBJDIR)/SettingsButton_77d2523e.o \
   $(OBJDIR)/StereoSpecificLoudnessGraph_5b2e71dc.o \
@@ -228,6 +229,11 @@ $(OBJDIR)/cnpy_9262e5e.o: ../../../loudnessCode/thirdParty/cnpy/cnpy.cpp
 $(OBJDIR)/Spline_78a3501e.o: ../../../loudnessCode/thirdParty/spline/Spline.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Spline.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/CalibrationScreen_ceed6d57.o: ../../Source/CalibrationScreen.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling CalibrationScreen.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/SettingsScreen_4992be78.o: ../../Source/SettingsScreen.cpp
