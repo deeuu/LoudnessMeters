@@ -17,32 +17,28 @@
  * along with Loudness.  If not, see <http://www.gnu.org/licenses/>. 
  */
 
-#include "ARAverager.h"
+#include "PeakFollower.h"
 #include "../support/AuditoryTools.h"
 
 namespace loudness{
 
-    ARAverager::ARAverager(Real attackTime, Real releaseTime) :
-        Module("ARAverager"),
-        attackTime_(attackTime),
-        releaseTime_(releaseTime)
+    PeakFollower::PeakFollower(Real releaseTime) 
+        : Module("PeakFollower"),
+          releaseTime_(releaseTime)
     {
         LOUDNESS_DEBUG(name_ << ": Constructed.");
     }
 
-    ARAverager::~ARAverager()
+    PeakFollower::~PeakFollower()
     {};
 
-    bool ARAverager::initializeInternal(const SignalBank &input)
+    bool PeakFollower::initializeInternal(const SignalBank &input)
     {
         //filter coefficients
-        attackCoef_ = 1 - exp(-1.0 / (input.getFrameRate() * attackTime_));
         releaseCoef_ = 1 - exp(-1.0 / (input.getFrameRate() * releaseTime_));
 
         LOUDNESS_DEBUG(name_ << ": Input frame rate: "
                 << input.getFrameRate()
-                << ". Attack coefficient: "
-                << attackCoef_
                 << ". Release coefficient: "
                 << releaseCoef_);
 
@@ -52,7 +48,7 @@ namespace loudness{
         return 1;
     }
 
-    void ARAverager::processInternal(const SignalBank &input)
+    void PeakFollower::processInternal(const SignalBank &input)
     {       
         int lastSampleIdx = input.getNSamples() - 1;
 
@@ -61,15 +57,19 @@ namespace loudness{
             for (int chn = 0; chn < input.getNChannels(); ++chn)
             {
                 const Real* x = input.getSignalReadPointer(ear, chn, 0);
+
                 Real* y = output_.getSignalWritePointer(ear, chn, 0);
+
                 Real yPrev = y[lastSampleIdx];
 
                 for (int smp = 0; smp < input.getNSamples(); ++smp)
                 {
-                    if (x[smp] > yPrev)
-                        y[smp] = attackCoef_ * (x[smp] - yPrev) + yPrev;
+                    Real absX = abs (x[smp]);
+
+                    if (absX >= yPrev)
+                        y[smp] = absX;
                     else
-                        y[smp] = releaseCoef_ * (x[smp] - yPrev) + yPrev;
+                        y[smp] = yPrev - releaseCoef_ * yPrev;
                     yPrev = y[smp];
                 }
             }
@@ -77,6 +77,6 @@ namespace loudness{
     }
 
     //output SignalBanks are cleared so not to worry about filter state
-    void ARAverager::resetInternal()
+    void PeakFollower::resetInternal()
     {}
 }

@@ -18,25 +18,68 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
       loudnessValues (processor.getPointerToLoudnessValues()),
       settingsButton (Colours::blue),
       calibrationButton (Colours::red),
-      settingsScreen (processor.getLoudnessParameters())
+      settingsScreen (processor.getLoudnessParameters()),
+      displayForLTL("Long Term", Colours::lightgrey, Colours::yellow),
+      displayForPeakSTL("Peak", Colours::lightgrey, Colours::yellow),
+      displayForSPL("SPL", Colours::lightgrey, Colours::yellow)
 {
-    setSize (430, 310);
-    
-    addAndMakeVisible (barGraph);
-    barGraph.setGraduationColour (Colours::lightgrey);
-    barGraph.setPhonsRange (40, 120);
-    barGraph.setBounds (330, 20, 80, 260);
-    
+    int generalSpacing = 10;
+    int windowWidth = 700;
+    int windowHeight = 350;
+    setSize (windowWidth, windowHeight);
+   
+    int goldenPoint = windowWidth / 1.618;
+    int specLoudGraphWidth = goldenPoint - 1.5 * generalSpacing;
+    int specLoudGraphHeight = 300;
     addAndMakeVisible (specificLoudness);
     specificLoudness.setGraduationColour (Colours::lightgrey);
-    specificLoudness.setBounds (10, 9, 320, 258);
-    
+    specificLoudness.setBounds (generalSpacing, 
+                                generalSpacing,
+                                specLoudGraphWidth,
+                                specLoudGraphHeight);
+
+    int barX = goldenPoint + 0.5 * generalSpacing;
+    int barWidth = (windowWidth - goldenPoint - 2.5 * generalSpacing) / 2;
+    addAndMakeVisible (barGraph);
+    barGraph.setGraduationColour (Colours::lightgrey);
+    barGraph.setPhonsRange (0, 34);
+    barGraph.setBounds (barX,
+                        generalSpacing,
+                        barWidth, 
+                        specLoudGraphHeight);
+
+    int valueDisplayWidth = barWidth / 1.5;
+    int valueDisplayHeight = valueDisplayWidth;
+    int displayForLTLX = barX + barWidth 
+                         + (windowWidth - (barX + barWidth)
+                         - valueDisplayWidth)/2;
+    addAndMakeVisible (displayForLTL);
+    displayForLTL.setBounds (displayForLTLX, generalSpacing, 
+                             valueDisplayWidth, valueDisplayHeight);
+
+    addAndMakeVisible (displayForPeakSTL);
+    displayForPeakSTL.setBounds (displayForLTLX, 
+                                 valueDisplayHeight + generalSpacing,
+                                 valueDisplayWidth, valueDisplayHeight);
+
+    addAndMakeVisible (displayForSPL);
+    displayForSPL.setBounds (displayForLTLX, 
+                             valueDisplayHeight * 2 + generalSpacing * 2,
+                             valueDisplayWidth, valueDisplayHeight);
+
+    int settingsWidth = 20, settingsHeight = 20;
+    int settingsX = displayForLTLX + generalSpacing;
+    int settingsY = specLoudGraphHeight + generalSpacing - settingsHeight;
     addAndMakeVisible (settingsButton);
-    settingsButton.setBounds (385, 280, 20, 20);
+    settingsButton.setBounds (settingsX, settingsY,
+                              settingsWidth, settingsHeight);
     settingsButton.addListener (this);
 
+    int calibrationX = settingsX + barWidth;
     addAndMakeVisible (calibrationButton);
-    calibrationButton.setBounds (330, 280, 20, 20);
+    calibrationButton.setBounds (settingsX + settingsWidth + generalSpacing,
+                                 settingsY, settingsWidth,
+                                 settingsHeight);
     calibrationButton.addListener (this);
     
     addAndMakeVisible (settingsScreen);
@@ -109,14 +152,17 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
 {
     if (processor.loudnessValuesReady())
     {
-        barGraph.setMeterLevels (loudnessValues->leftSTL,
-                                 loudnessValues->leftLTL,
-                                 loudnessValues->rightSTL,
-                                 loudnessValues->rightLTL);
+        //update bar graphs
+        barGraph.setMeterLevels (loudnessValues->leftLTL,
+                                 loudnessValues->leftPeakSTL,
+                                 loudnessValues->rightLTL,
+                                 loudnessValues->rightPeakSTL);
+
+        //update specific loudness graph
         specificLoudness.setSpecificLoudnessValues (loudnessValues->centreFrequencies, 
                                                     loudnessValues->leftSpecificLoudness,
                                                     loudnessValues->rightSpecificLoudness);
-        
+
         processor.updateLoudnessValues();
     }
 }

@@ -25,7 +25,8 @@ struct LoudnessParameters
 
 struct LoudnessValues
 {
-    double leftSTL, rightSTL, leftLTL, rightLTL;
+    double leftSTL, rightSTL, leftPeakSTL, rightPeakSTL;
+    double leftLTL, rightLTL, overallLTL;
     Array <double> centreFrequencies, leftSpecificLoudness, rightSpecificLoudness;
 };
 
@@ -105,8 +106,12 @@ private:
 
     const loudness::Real* pointerToSTLLeft;
     const loudness::Real* pointerToSTLRight;
+    const loudness::Real* pointerToPeakSTLLeft;
+    const loudness::Real* pointerToPeakSTLRight;
+    const loudness::Real* pointerToPeakSTLOverall;
     const loudness::Real* pointerToLTLLeft;
     const loudness::Real* pointerToLTLRight;
+    const loudness::Real* pointerToLTLOverall;
     const loudness::Real* pointerToSpecificLeft;
     const loudness::Real* pointerToSpecificRight;
     
@@ -117,7 +122,7 @@ private:
     // loudness settings 
     LoudnessParameters loudnessParameters;
     void initialiseLoudness (const LoudnessParameters &newParameters);
-
+    void tryAndCopyLoudnessValuesAfterProcessing (bool convertToPhons);
     
     // settings flags
     enum SettingsFlag

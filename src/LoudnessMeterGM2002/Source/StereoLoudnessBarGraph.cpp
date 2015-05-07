@@ -1,12 +1,12 @@
 #include "StereoLoudnessBarGraph.h"
 
 StereoLoudnessBarGraph::StereoLoudnessBarGraph()
-    : MeterBallistics (4, 40, 120),
+    : MeterBallistics (4, 0, 34),
       width (0),
       height (0),
       barWidth (0),
       barHeight (0),
-      minPhons (40), maxPhons (120),
+      minPhons (0), maxPhons (34),
       graduationColour (Colours::black)
 {
     addAndMakeVisible (bars [0]);
@@ -17,10 +17,10 @@ StereoLoudnessBarGraph::StereoLoudnessBarGraph()
     setMeterRiseTime (2, 10);
     setMeterRiseTime (3, 10);
 
-    setMeterDecayTime (0, 500);
-    setMeterDecayTime (1, 2000);
-    setMeterDecayTime (2, 500);
-    setMeterDecayTime (3, 2000);
+    setMeterDecayTime (0, 10);
+    setMeterDecayTime (1, 10);
+    setMeterDecayTime (2, 10);
+    setMeterDecayTime (3, 10);
 }
 
 StereoLoudnessBarGraph::~StereoLoudnessBarGraph()

@@ -33,6 +33,7 @@
 #include "../modules/BinauralInhibitionMG2007.h"
 #include "../modules/InstantaneousLoudness.h"
 #include "../modules/ARAverager.h"
+#include "../modules/PeakFollower.h"
 #include "DynamicLoudnessGM2002.h"
 
 namespace loudness{
@@ -65,9 +66,14 @@ namespace loudness{
         isHPFUsed_ = isHPFUsed;
     }
 
-    void DynamicLoudnessGM2002::setResponseDiffuseField(bool isResponseDiffuseField)
+    void DynamicLoudnessGM2002::setPeakSTLFollowerUsed(bool isPeakSTLFollowerUsed)
     {
-        isResponseDiffuseField_ = isResponseDiffuseField;
+        isPeakSTLFollowerUsed_ = isPeakSTLFollowerUsed;
+    }
+
+    void DynamicLoudnessGM2002::setOuterEarType(const OME::Filter& outerEarType)
+    {
+        outerEarType_ = outerEarType;
     }
 
     void DynamicLoudnessGM2002::setPresentationDiotic(bool isPresentationDiotic)
@@ -88,6 +94,11 @@ namespace loudness{
     void DynamicLoudnessGM2002::setExcitationPatternInterpolated(bool isExcitationPatternInterpolated)
     {
         isExcitationPatternInterpolated_ = isExcitationPatternInterpolated;
+    }
+
+    void DynamicLoudnessGM2002::setInterpolationCubic(bool isInterpolationCubic)
+    {
+        isInterpolationCubic_ = isInterpolationCubic;
     }
 
     void DynamicLoudnessGM2002::setFilterSpacingInCams(Real filterSpacingInCams)
@@ -141,9 +152,11 @@ namespace loudness{
         //common to all
         setRate(1000);
         setHPFUsed(false);
-        setResponseDiffuseField(false);
+        setPeakSTLFollowerUsed(false);
+        setOuterEarType(OME::ANSIS342007_FREEFIELD);
         setSpectrumSampledUniformly(true);
         setExcitationPatternInterpolated(false);
+        setInterpolationCubic(true);
         setFilterSpacingInCams(0.25);
         setCompressionCriterionInCams(0.0);
         setRoexBankFast(false);
@@ -270,7 +283,7 @@ namespace loudness{
 
         //windowing: Periodic hann window
         modules_.push_back(unique_ptr<Module>
-                (new Window("hann", windowSizeSamples, true)));
+                (new Window(Window::HANN, windowSizeSamples, true)));
 
         //power spectrum
         modules_.push_back(unique_ptr<Module> 
@@ -279,7 +292,7 @@ namespace loudness{
         /*
          * Compression
          */
-        if(compressionCriterionInCams_ > 0)
+        if((compressionCriterionInCams_ > 0) && (!isSpectrumSampledUniformly_))
         {
             modules_.push_back(unique_ptr<Module>
                     (new CompressSpectrum(compressionCriterionInCams_)));
@@ -290,15 +303,13 @@ namespace loudness{
          */
         if (weightSpectrum)
         {
-            string middleEar = "ANSIS342007";
-            string outerEar = "ANSIS342007_FREEFIELD";
+            OME::Filter middleEar = OME::ANSIS342007_MIDDLE_EAR;
+
             if (isHPFUsed_)
-                middleEar = "ANSIS342007_HPF";
-            if (isResponseDiffuseField_)
-                outerEar = "ANSIS342007_DIFFUSEFIELD";
+                middleEar = OME::ANSIS342007_MIDDLE_EAR_HPF;
 
             modules_.push_back(unique_ptr<Module> 
-                    (new WeightSpectrum(middleEar, outerEar)));
+                    (new WeightSpectrum(middleEar, outerEarType_)));
         }
 
         /*
@@ -307,7 +318,9 @@ namespace loudness{
         if(isRoexBankFast_)
         {
             modules_.push_back(unique_ptr<Module>
-                    (new FastRoexBank(filterSpacingInCams_, isExcitationPatternInterpolated_)));
+                    (new FastRoexBank(filterSpacingInCams_,
+                                      isExcitationPatternInterpolated_,
+                                      isInterpolationCubic_)));
         }
         else
         {
@@ -336,7 +349,8 @@ namespace loudness{
         /*
         * Instantaneous loudness
         */   
-        modules_.push_back(unique_ptr<Module> (new InstantaneousLoudness(1.0, isPresentationDiotic_)));
+        modules_.push_back(unique_ptr<Module> 
+                (new InstantaneousLoudness(1.0, isPresentationDiotic_)));
         outputModules_["InstantaneousLoudness"] = modules_.back().get();
 
         /*
@@ -355,6 +369,15 @@ namespace loudness{
 
         //configure targets
         configureLinearTargetModuleChain();
+
+        //Option to provide PeakFollower
+        if (isPeakSTLFollowerUsed_)
+        {
+            modules_.push_back(unique_ptr<Module> (new PeakFollower(2.0)));
+            outputModules_["PeakShortTermLoudness"] = modules_.back().get();
+            outputModules_["ShortTermLoudness"] -> 
+                addTargetModule (*outputModules_["PeakShortTermLoudness"]);
+        }
 
         return 1;
     }

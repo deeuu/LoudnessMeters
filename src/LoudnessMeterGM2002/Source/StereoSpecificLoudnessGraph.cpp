@@ -16,8 +16,8 @@ StereoSpecificLoudnessGraph::StereoSpecificLoudnessGraph()
 {
     for (int i = 0; i < numMeters; ++i)
     {
-        setMeterRiseTime (i, 10);
-        setMeterDecayTime (i, 1000);
+        setMeterRiseTime (i, 2000);
+        setMeterDecayTime (i, 2000);
     }
 }
 

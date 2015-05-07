@@ -21,6 +21,7 @@
 #define DYNAMICLOUDNESSGM2002_H
 
 #include "../support/Model.h"
+#include "../support/AuditoryTools.h"
 
 namespace loudness{
 
@@ -117,6 +118,8 @@ namespace loudness{
 
             void setExcitationPatternInterpolated(bool isExcitationPatternInterpolated);
 
+            void setInterpolationCubic(bool isInterpolationCubic);
+
             void setSpectrumSampledUniformly(bool isSpectrumSampledUniformly);
 
             void setPresentationDiotic(bool isPresentationDiotic);
@@ -125,7 +128,9 @@ namespace loudness{
 
             void setHPFUsed(bool isHPFUsed);
 
-            void setResponseDiffuseField(bool isResponseDiffuseField);
+            void setPeakSTLFollowerUsed(bool isPeakSTLFollowerUsed);
+
+            void setOuterEarType(const OME::Filter& outerEarType);
 
             void setSpecificLoudnessANSIS342007(bool isSpecificLoudnessANSIS342007_);
 
@@ -145,11 +150,13 @@ namespace loudness{
             Real filterSpacingInCams_, compressionCriterionInCams_;
             Real attackTimeSTL_, releaseTimeSTL_;
             Real attackTimeLTL_, releaseTimeLTL_;
-            bool isRoexBankFast_, isExcitationPatternInterpolated_, isSpectrumSampledUniformly_;
-            bool isPresentationDiotic_, isBinauralInhibitionUsed_;
-            bool isHPFUsed_, isResponseDiffuseField_, isSpecificLoudnessANSIS342007_;
-            bool isFirstSampleAtWindowCentre_;
+            bool isRoexBankFast_, isExcitationPatternInterpolated_, isInterpolationCubic_;
+            bool isSpectrumSampledUniformly_, isPresentationDiotic_;
+            bool  isBinauralInhibitionUsed_, isHPFUsed_;
+            bool isSpecificLoudnessANSIS342007_, isFirstSampleAtWindowCentre_;
+            bool isPeakSTLFollowerUsed_;
             string pathToFilterCoefs_;
+            OME::Filter outerEarType_;
     }; 
 }
 

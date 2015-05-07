@@ -20,8 +20,8 @@ LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
       copyLoudnessValues (1),
       settingsFlag (OkToDoStuff)
 {
-    loudnessParameters.modelRate = 250;
-    loudnessParameters.camSpacing = 0.5;
+    loudnessParameters.modelRate = 62.5;
+    loudnessParameters.camSpacing = 1.0;
     loudnessParameters.compression = 0.3;
     loudnessParameters.filter = "";
 }
@@ -137,7 +137,7 @@ void LoudnessMeterAudioProcessor::prepareToPlay (double sampleRate, int samplesP
 {
     fs = sampleRate;
     
-    Logger::outputDebugString ("prepareToPlay: numInputChannels:" + String (getNumInputChannels()) + "\n");
+    //Logger::outputDebugString ("prepareToPlay: numInputChannels:" + String (getNumInputChannels()) + "\n");
     
     if(!pluginInitialised)//Ardour hack
     {
@@ -166,8 +166,9 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     inputSignalBank.initialize (numEars, 1, hopSize, (int) fs);
     model.configureModelParameters ("recentAndFaster");
     model.setPresentationDiotic (false); //required for left and right output
+    model.setPeakSTLFollowerUsed (true);
 
-    //should be faster
+    //set default params
     model.setRate (loudnessParameters.modelRate);
     model.setFilterSpacingInCams (loudnessParameters.camSpacing);
     model.setCompressionCriterionInCams (loudnessParameters.compression);
@@ -185,10 +186,17 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     pointerToSTLLeft = bank -> getSingleSampleReadPointer (0, 0);
     pointerToSTLRight = bank -> getSingleSampleReadPointer (1, 0);
 
+    // Peak STL
+    bank = &model.getOutputModuleSignalBank ("PeakShortTermLoudness");
+    pointerToPeakSTLLeft = bank -> getSingleSampleReadPointer (0, 0);
+    pointerToPeakSTLRight = bank -> getSingleSampleReadPointer (1, 0);
+    pointerToPeakSTLOverall = bank -> getSingleSampleReadPointer (2, 0);
+
     // LTL
     bank = &model.getOutputModuleSignalBank ("LongTermLoudness");
     pointerToLTLLeft = bank -> getSingleSampleReadPointer (0, 0);
     pointerToLTLRight = bank -> getSingleSampleReadPointer (1, 0);
+    pointerToLTLOverall = bank -> getSingleSampleReadPointer (2, 0);
 
     // Specific loudness (loudness as a function of frequency)
     bank = &model.getOutputModuleSignalBank ("SpecificLoudnessPattern");
@@ -210,6 +218,9 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
         loudnessValues.rightSpecificLoudness.add (0);
         loudnessValues.centreFrequencies.add (loudness::freqToCam (ptr[i]));
     }
+
+    //Now an intergrator for SPL measurements
+    //integrator.initialize( inputSignalBank);
 
     pluginInitialised = true;
 }
@@ -254,12 +265,12 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
          * Buffer -> SignalBank -> Model
          */
 
-        //Logger::outputDebugString("processBlock: numInputChannels:" + String (getNumInputChannels()) + "\n");
-
         int numSamples = buffer.getNumSamples();
         int numInputChannels = buffer.getNumChannels();
         int remainingSamples = numSamples;
         int readPos = 0;
+
+        //Logger::outputDebugString ("numSamples in this block" + String(numSamples));
 
         // deal with any samples in the input which will create full hop buffers for us
         while (remainingSamples >= samplesNeeded)
@@ -306,25 +317,45 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
          * Output
          */
         
-        if (copyLoudnessValues.get() == 1)
+        tryAndCopyLoudnessValuesAfterProcessing(false);
+        
+        settingsFlag.set (OkToDoStuff);
+    }
+}
+
+void LoudnessMeterAudioProcessor::tryAndCopyLoudnessValuesAfterProcessing (bool convertToPhons)
+{
+    if (copyLoudnessValues.get() == 1)
+    {
+        if (convertToPhons)
         {
             loudnessValues.leftSTL = loudness::soneToPhonMGB1997 (*pointerToSTLLeft, true);
+            loudnessValues.leftPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLLeft, true);
             loudnessValues.rightSTL = loudness::soneToPhonMGB1997 (*pointerToSTLRight, true);
+            loudnessValues.rightPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLRight, true);
             loudnessValues.leftLTL = loudness::soneToPhonMGB1997 (*pointerToLTLLeft, true);
             loudnessValues.rightLTL = loudness::soneToPhonMGB1997 (*pointerToLTLRight, true);
-            //loudnessValues.overallSPL = loudness::AmplitudeToDecibels(*pointerToOverallSPL);
-            
-            for (int i = 0; i < numAuditoryChannels; ++i)
-            {
-                //haven't made my mind up what to do with these yet...
-                loudnessValues.leftSpecificLoudness.set (i, pointerToSpecificLeft [i]);
-                loudnessValues.rightSpecificLoudness.set (i, pointerToSpecificRight [i]);
-            }
-                    
-            copyLoudnessValues.set (0);
+            loudnessValues.overallLTL = loudness::soneToPhonMGB1997 (*pointerToLTLOverall, true);
+        }
+        else
+        {
+            loudnessValues.leftSTL = *pointerToSTLLeft;
+            loudnessValues.rightSTL = *pointerToSTLRight;
+            loudnessValues.rightPeakSTL = *pointerToPeakSTLRight;
+            loudnessValues.leftPeakSTL = *pointerToPeakSTLLeft;
+            loudnessValues.leftLTL = *pointerToLTLLeft;
+            loudnessValues.rightLTL = *pointerToLTLRight;
+            loudnessValues.overallLTL = *pointerToLTLOverall;
         }
 
-        settingsFlag.set (OkToDoStuff);
+        for (int i = 0; i < numAuditoryChannels; ++i)
+        {
+            //haven't made my mind up what to do with these yet...
+            loudnessValues.leftSpecificLoudness.set (i, log2(pointerToSpecificLeft [i]));
+            loudnessValues.rightSpecificLoudness.set (i, log2(pointerToSpecificRight [i]));
+        }
+                
+        copyLoudnessValues.set (0);
     }
 }
 

@@ -50,6 +50,7 @@ endif
 
 OBJECTS := \
   $(OBJDIR)/DynamicLoudnessGM2002_db005328.o \
+  $(OBJDIR)/PeakFollower_22a7b244.o \
   $(OBJDIR)/ARAverager_b708694d.o \
   $(OBJDIR)/BinauralInhibitionMG2007_157fe669.o \
   $(OBJDIR)/Butter_dfc5e627.o \
@@ -72,6 +73,7 @@ OBJECTS := \
   $(OBJDIR)/SignalBank_80ff8e3.o \
   $(OBJDIR)/cnpy_9262e5e.o \
   $(OBJDIR)/Spline_78a3501e.o \
+  $(OBJDIR)/LoudnessValueDisplay_cb2da4e3.o \
   $(OBJDIR)/CalibrationScreen_ceed6d57.o \
   $(OBJDIR)/SettingsScreen_4992be78.o \
   $(OBJDIR)/SettingsButton_77d2523e.o \
@@ -119,6 +121,11 @@ strip:
 $(OBJDIR)/DynamicLoudnessGM2002_db005328.o: ../../../loudnessCode/models/DynamicLoudnessGM2002.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling DynamicLoudnessGM2002.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/PeakFollower_22a7b244.o: ../../../loudnessCode/modules/PeakFollower.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling PeakFollower.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/ARAverager_b708694d.o: ../../../loudnessCode/modules/ARAverager.cpp
@@ -229,6 +236,11 @@ $(OBJDIR)/cnpy_9262e5e.o: ../../../loudnessCode/thirdParty/cnpy/cnpy.cpp
 $(OBJDIR)/Spline_78a3501e.o: ../../../loudnessCode/thirdParty/spline/Spline.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Spline.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/LoudnessValueDisplay_cb2da4e3.o: ../../Source/LoudnessValueDisplay.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling LoudnessValueDisplay.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/CalibrationScreen_ceed6d57.o: ../../Source/CalibrationScreen.cpp

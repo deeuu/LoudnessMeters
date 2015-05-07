@@ -19,6 +19,9 @@
               file="../loudnessCode/models/DynamicLoudnessGM2002.h"/>
       </GROUP>
       <GROUP id="{EACC2048-5D03-1A6C-686A-CA1B9541E292}" name="modules">
+        <FILE id="ViQVmc" name="PeakFollower.cpp" compile="1" resource="0"
+              file="../loudnessCode/modules/PeakFollower.cpp"/>
+        <FILE id="rKCuwS" name="PeakFollower.h" compile="0" resource="0" file="../loudnessCode/modules/PeakFollower.h"/>
         <FILE id="sk0pKe" name="ARAverager.cpp" compile="1" resource="0" file="../loudnessCode/modules/ARAverager.cpp"/>
         <FILE id="noVIrO" name="ARAverager.h" compile="0" resource="0" file="../loudnessCode/modules/ARAverager.h"/>
         <FILE id="iKyDEI" name="BinauralInhibitionMG2007.cpp" compile="1" resource="0"
@@ -96,6 +99,10 @@
       </GROUP>
     </GROUP>
     <GROUP id="{A378BF1D-E94F-A564-0129-4472F286686B}" name="Source">
+      <FILE id="f4x7dF" name="LoudnessValueDisplay.cpp" compile="1" resource="0"
+            file="Source/LoudnessValueDisplay.cpp"/>
+      <FILE id="sxeUii" name="LoudnessValueDisplay.h" compile="0" resource="0"
+            file="Source/LoudnessValueDisplay.h"/>
       <FILE id="OtWat6" name="CalibrationScreen.cpp" compile="1" resource="0"
             file="Source/CalibrationScreen.cpp"/>
       <FILE id="a9rerk" name="CalibrationScreen.h" compile="0" resource="0"

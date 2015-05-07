@@ -29,7 +29,7 @@ private:
     int numMeters;
 
     // again may change this is lazy :P
-    static const int minPhons = 0, maxPhons = 10;
+    static const int minPhons = -4, maxPhons = 1;
 
     float phonsToY (double levelInPhons); 
     float camsToX (double frequencyInCams);

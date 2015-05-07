@@ -30,6 +30,7 @@
 #include "../modules/BinauralInhibitionMG2007.h"
 #include "../modules/InstantaneousLoudness.h"
 #include "../modules/ARAverager.h"
+#include "../modules/PeakFollower.h"
 #include "DynamicLoudnessCH2012.h"
 
 namespace loudness{
@@ -57,14 +58,19 @@ namespace loudness{
         isFirstSampleAtWindowCentre_ = isFirstSampleAtWindowCentre;
     }
  
-   void DynamicLoudnessCH2012::setResponseDiffuseField(bool isResponseDiffuseField)
+    void DynamicLoudnessCH2012::setOuterEarType(const OME::Filter& outerEarType)
     {
-        isResponseDiffuseField_ = isResponseDiffuseField;
+        outerEarType_ = outerEarType;
     }
 
     void DynamicLoudnessCH2012::setPresentationDiotic(bool isPresentationDiotic)
     {
         isPresentationDiotic_ = isPresentationDiotic;
+    }
+
+    void DynamicLoudnessCH2012::setPeakSTLFollowerUsed(bool isPeakSTLFollowerUsed)
+    {
+        isPeakSTLFollowerUsed_ = isPeakSTLFollowerUsed;
     }
 
     void DynamicLoudnessCH2012::setBinauralInhibitionUsed(bool isBinauralInhibitionUsed)
@@ -80,6 +86,11 @@ namespace loudness{
     void DynamicLoudnessCH2012::setExcitationPatternInterpolated(bool isExcitationPatternInterpolated)
     {
         isExcitationPatternInterpolated_ = isExcitationPatternInterpolated;
+    }
+
+    void DynamicLoudnessCH2012::setInterpolationCubic(bool isInterpolationCubic)
+    {
+        isInterpolationCubic_ = isInterpolationCubic;
     }
 
     void DynamicLoudnessCH2012::setSpecificLoudnessOutput(bool isSpecificLoudnessOutput)
@@ -106,9 +117,10 @@ namespace loudness{
     {
         //common to all
         setRate(1000);
-        setResponseDiffuseField(false);
+        setOuterEarType(OME::ANSIS342007_FREEFIELD);
         setSpectrumSampledUniformly(true);
         setExcitationPatternInterpolated(false);
+        setInterpolationCubic(true);
         setSpecificLoudnessOutput(true);
         setBinauralInhibitionUsed(true);
         setPresentationDiotic(true);
@@ -198,7 +210,7 @@ namespace loudness{
         
         //configure windowing: Periodic hann window
         modules_.push_back(unique_ptr<Module>
-                (new Window("hann", windowSizeSamples, true)));
+                (new Window(Window::HANN, windowSizeSamples, true)));
 
         //power spectrum
         modules_.push_back(unique_ptr<Module> 
@@ -207,7 +219,7 @@ namespace loudness{
         /*
          * Compression
          */
-        if(compressionCriterionInCams_ > 0)
+        if((compressionCriterionInCams_ > 0) && (!isSpectrumSampledUniformly_))
         {
             modules_.push_back(unique_ptr<Module>
                     (new CompressSpectrum(compressionCriterionInCams_))); 
@@ -218,13 +230,8 @@ namespace loudness{
          */
         if(pathToFilterCoefs_.empty())
         {
-            string middleEar = "CHGM2011";
-            string outerEar = "ANSIS342007_FREEFIELD";
-            if(isResponseDiffuseField_)
-                outerEar = "ANSIS342007_DIFFUSEFIELD";
-
             modules_.push_back(unique_ptr<Module> 
-                    (new WeightSpectrum(middleEar, outerEar))); 
+                    (new WeightSpectrum(OME::CHGM2011_MIDDLE_EAR, outerEarType_))); 
         }
 
         /*
@@ -254,7 +261,8 @@ namespace loudness{
                 (new DoubleRoexBank(1.5, 40.2,
                                     filterSpacingInCams_,
                                     doubleRoexBankfactor,
-                                    isExcitationPatternInterpolated_)));
+                                    isExcitationPatternInterpolated_,
+                                    isInterpolationCubic_)));
 
         /*
          * Binaural inhibition
@@ -294,6 +302,15 @@ namespace loudness{
         
         //configure targets
         configureLinearTargetModuleChain();
+
+        //Option to provide PeakFollower
+        if (isPeakSTLFollowerUsed_)
+        {
+            modules_.push_back(unique_ptr<Module> (new PeakFollower(2.0)));
+            outputModules_["PeakShortTermLoudness"] = modules_.back().get();
+            outputModules_["ShortTermLoudness"] -> 
+                addTargetModule (*outputModules_["PeakShortTermLoudness"]);
+        }
 
         return 1;
     }

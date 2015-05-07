@@ -18,6 +18,7 @@
 #include "SettingsButton.h"
 #include "SettingsScreen.h"
 #include "CalibrationScreen.h"
+#include "LoudnessValueDisplay.h"
 
 
 //==============================================================================
@@ -43,13 +44,20 @@ private:
     LoudnessMeterAudioProcessor& processor;
     LoudnessValues *loudnessValues;
     
+    //graphs
     StereoLoudnessBarGraph barGraph;
     StereoSpecificLoudnessGraph specificLoudness;
     
+    //Buttons
     SettingsButton settingsButton;
-    SettingsScreen settingsScreen;
     SettingsButton calibrationButton;
+
+    //Screens
+    SettingsScreen settingsScreen;
     CalibrationScreen calibrationScreen;
+
+    //labels for displays loudness values
+    LoudnessValueDisplay displayForLTL, displayForPeakSTL, displayForSPL;
 
     LoudnessParameters oldLoudnessParameters;
     
