@@ -14,6 +14,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "../../loudnessCode/models/DynamicLoudnessGM2002.h"
 #include "../../loudnessCode/support/SignalBank.h"
+#include "../../dsp/SPLMeter.h"
 
 //==============================================================================
 
@@ -25,8 +26,8 @@ struct LoudnessParameters
 
 struct LoudnessValues
 {
-    double leftSTL, rightSTL, leftPeakSTL, rightPeakSTL;
-    double leftLTL, rightLTL, overallLTL;
+    double leftSTL, rightSTL, leftPeakSTL, rightPeakSTL, overallPeakSTL;
+    double leftLTL, rightLTL, overallLTL, averageSPL;
     Array <double> centreFrequencies, leftSpecificLoudness, rightSpecificLoudness;
 };
 
@@ -95,15 +96,21 @@ public:
     void calibrate (const MeasuredLevels& measuredLevels);
 
 private:
+
     int hopSize, numEars;
     double fs;
     int samplesNeeded, writePos;
     bool pluginInitialised;
+
+    // analysers
     AudioSampleBuffer analysisBuffer;
     loudness::SignalBank inputSignalBank;
     loudness::DynamicLoudnessGM2002 model;
+    SPLMeter levelMeter;
+
     int numAuditoryChannels;
 
+    // Pointers to loudness values 
     const loudness::Real* pointerToSTLLeft;
     const loudness::Real* pointerToSTLRight;
     const loudness::Real* pointerToPeakSTLLeft;

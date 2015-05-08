@@ -16,6 +16,7 @@
 LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
     : model(),
       inputSignalBank(),
+      levelMeter (SPLMeter::SLOW, 2e-5),
       pluginInitialised (false),
       copyLoudnessValues (1),
       settingsFlag (OkToDoStuff)
@@ -176,6 +177,9 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
 
     //initialise the model
     model.initialize (inputSignalBank);
+
+    //initialise level meter
+    levelMeter.initialize (inputSignalBank);
     
     /*
     * Pointers to loudness measures
@@ -270,8 +274,6 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         int remainingSamples = numSamples;
         int readPos = 0;
 
-        //Logger::outputDebugString ("numSamples in this block" + String(numSamples));
-
         // deal with any samples in the input which will create full hop buffers for us
         while (remainingSamples >= samplesNeeded)
         {
@@ -289,7 +291,7 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
             model.process (inputSignalBank);
 
             //SPL meter process call
-            //meter.process (inputSignalBank);
+            levelMeter.process (inputSignalBank);
 
             remainingSamples -= samplesNeeded;
             readPos += samplesNeeded;
@@ -327,12 +329,14 @@ void LoudnessMeterAudioProcessor::tryAndCopyLoudnessValuesAfterProcessing (bool 
 {
     if (copyLoudnessValues.get() == 1)
     {
+        // STL, LTL features
         if (convertToPhons)
         {
             loudnessValues.leftSTL = loudness::soneToPhonMGB1997 (*pointerToSTLLeft, true);
             loudnessValues.leftPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLLeft, true);
             loudnessValues.rightSTL = loudness::soneToPhonMGB1997 (*pointerToSTLRight, true);
             loudnessValues.rightPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLRight, true);
+            loudnessValues.overallPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLOverall, true);
             loudnessValues.leftLTL = loudness::soneToPhonMGB1997 (*pointerToLTLLeft, true);
             loudnessValues.rightLTL = loudness::soneToPhonMGB1997 (*pointerToLTLRight, true);
             loudnessValues.overallLTL = loudness::soneToPhonMGB1997 (*pointerToLTLOverall, true);
@@ -343,17 +347,22 @@ void LoudnessMeterAudioProcessor::tryAndCopyLoudnessValuesAfterProcessing (bool 
             loudnessValues.rightSTL = *pointerToSTLRight;
             loudnessValues.rightPeakSTL = *pointerToPeakSTLRight;
             loudnessValues.leftPeakSTL = *pointerToPeakSTLLeft;
+            loudnessValues.overallPeakSTL = *pointerToPeakSTLOverall;
             loudnessValues.leftLTL = *pointerToLTLLeft;
             loudnessValues.rightLTL = *pointerToLTLRight;
             loudnessValues.overallLTL = *pointerToLTLOverall;
         }
 
+        // Specific loudness
         for (int i = 0; i < numAuditoryChannels; ++i)
         {
             //haven't made my mind up what to do with these yet...
             loudnessValues.leftSpecificLoudness.set (i, log2(pointerToSpecificLeft [i]));
             loudnessValues.rightSpecificLoudness.set (i, log2(pointerToSpecificRight [i]));
         }
+
+        // Level
+        loudnessValues.averageSPL = levelMeter.getAverageLevel();
                 
         copyLoudnessValues.set (0);
     }

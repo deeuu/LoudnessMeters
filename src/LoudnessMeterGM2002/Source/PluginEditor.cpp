@@ -163,6 +163,11 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
                                                     loudnessValues->leftSpecificLoudness,
                                                     loudnessValues->rightSpecificLoudness);
 
+        //update number displays
+        displayForLTL.setValueToDisplay (loudnessValues->overallLTL, 1);
+        displayForPeakSTL.setValueToDisplay (loudnessValues->overallPeakSTL, 1);
+        displayForSPL.setValueToDisplay (loudnessValues->averageSPL, 1);
+          
         processor.updateLoudnessValues();
     }
 }

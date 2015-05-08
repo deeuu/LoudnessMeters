@@ -17,6 +17,8 @@ LoudnessValueDisplay::~LoudnessValueDisplay()
 void LoudnessValueDisplay::setValueToDisplay (double newValueToDisplay, int numberOfDecimalPlaces)
 {
     valueToDisplay = String (newValueToDisplay, numberOfDecimalPlaces);
+
+    repaint();
 }
 
 void LoudnessValueDisplay::paint (Graphics& g)

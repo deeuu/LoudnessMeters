@@ -49,6 +49,7 @@ ifeq ($(CONFIG),Release)
 endif
 
 OBJECTS := \
+  $(OBJDIR)/SPLMeter_9543c14c.o \
   $(OBJDIR)/DynamicLoudnessGM2002_db005328.o \
   $(OBJDIR)/PeakFollower_22a7b244.o \
   $(OBJDIR)/ARAverager_b708694d.o \
@@ -117,6 +118,11 @@ clean:
 strip:
 	@echo Stripping LoudnessMeter
 	-@strip --strip-unneeded $(OUTDIR)/$(TARGET)
+
+$(OBJDIR)/SPLMeter_9543c14c.o: ../../../dsp/SPLMeter.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling SPLMeter.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/DynamicLoudnessGM2002_db005328.o: ../../../loudnessCode/models/DynamicLoudnessGM2002.cpp
 	-@mkdir -p $(OBJDIR)

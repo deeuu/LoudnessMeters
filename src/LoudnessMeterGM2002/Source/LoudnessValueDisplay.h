@@ -12,7 +12,7 @@ public:
                          const Colour& valueColour);
     ~LoudnessValueDisplay();
 
-    void setValueToDisplay (double newValueToDisplay, int numberOfDecimalPlaces);
+    void setValueToDisplay (double newValueToDisplay, int numberOfDecimalPlaces = 1);
 
     void paint (Graphics& g) override;
 
