@@ -44,9 +44,9 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     barGraph.setGraduationColour (Colours::lightgrey);
     barGraph.setPhonsRange (0, 34);
     barGraph.setBounds (barX,
-                        generalSpacing,
+                        generalSpacing - barWidth / 20 + specLoudGraphHeight / 17,
                         barWidth, 
-                        specLoudGraphHeight);
+                        59.0 / 68.0 * specLoudGraphHeight + 2.25 / 5.0 * barWidth);
 
     int valueDisplayWidth = barWidth / 1.5;
     int valueDisplayHeight = valueDisplayWidth;
