@@ -3,6 +3,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MeterBallistics.h"
+#include "Graduations.h"
 
 class StereoSpecificLoudnessGraph : public Component,
                                     private MeterBallistics
@@ -22,14 +23,18 @@ public:
     void setSpecificLoudnessValues (const Array <double> &frequencies, const Array <double> &leftValues, const Array <double> &rightValues);
 
 private:
-    int height, width, labelSize, graphX, graphY, graphWidth, graphHeight;
-
     Colour graduationColour, leftTraceColour, rightTraceColour;
+
+    int graphX, graphY, graphWidth, graphHeight;
+    int xGraduationsX, xGraduationsY, xGraduationsWidth, xGraduationsHeight;
+    int yGraduationsX, yGraduationsY, yGraduationsWidth, yGraduationsHeight;
+
+    float minCams, maxCams;
+    float minPhons, maxPhons;
 
     int numMeters;
 
-    // again may change this is lazy :P
-    static const int minPhons = -4, maxPhons = 1;
+    Graduations xGraduations, yGraduations;
 
     float phonsToY (double levelInPhons); 
     float camsToX (double frequencyInCams);

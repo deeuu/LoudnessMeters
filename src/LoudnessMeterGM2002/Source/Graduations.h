@@ -22,7 +22,7 @@ public:
         Logarithmic
     };
 
-    Graduations (Style styleInit, Type typeInit, float minValueInit = 0.0f, float maxValueInit = 10.0f);
+    Graduations (Style styleInit, Type typeInit);
     ~Graduations();
 
     // appearance functions

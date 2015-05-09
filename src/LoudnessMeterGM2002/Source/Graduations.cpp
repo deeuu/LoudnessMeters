@@ -1,16 +1,13 @@
 #include "Graduations.h"
 
-Graduations::Graduations (Style styleInit, Type typeInit, float minValueInit, float maxValueInit)
+Graduations::Graduations (Style styleInit, Type typeInit)
     : style (styleInit),
       type (typeInit),
       colour (Colours::black),
       fontHeight (12.0f),
-      minValue (minValueInit),
-      maxValue (maxValueInit)
+      minValue (0),
+      maxValue (10)
 {
-    // the min value should be less than the max value
-    jassert (minValueInit < maxValueInit);
-
     setSize (20, 200);
 
     calculateTickIncrements();
