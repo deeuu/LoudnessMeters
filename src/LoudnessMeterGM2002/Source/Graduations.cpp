@@ -10,7 +10,7 @@ Graduations::Graduations (Style styleInit, Type typeInit)
 {
     setSize (20, 200);
 
-    calculateTickIncrements();
+    setAndGetRange (minValue, maxValue);
     calculateEndOffset();
 }
 
@@ -58,7 +58,6 @@ void Graduations::setAndGetRange (float &newMinValue, float &newMaxValue)
     maxValue = newMaxValue;
 
     calculateTickIncrements();
-    calculateEndOffset();
 
     newMinValue = minValue;
     newMaxValue = maxValue;
@@ -81,7 +80,7 @@ float Graduations::coordinateToValue (float coordinate)
 
     float scaledAndOffsetCoordinate = (coordinate - minCoordinate) / coordinateRange;
 
-    if (style | Vertical)
+    if (style & Vertical)
     {
         scaledAndOffsetCoordinate = 1.0f - scaledAndOffsetCoordinate;
     }
@@ -114,7 +113,7 @@ float Graduations::valueToCoordinate (float value)
         scaledAndOffsetValue = log (scaledValue) / log (valueRatio);
     }
 
-    if (style | Vertical)
+    if (style & Vertical)
     {
         scaledAndOffsetValue = 1.0f - scaledAndOffsetValue;
     }
@@ -154,11 +153,11 @@ void Graduations::calculateTickIncrements()
 
 void Graduations::calculateEndOffset()
 {
-    if (style | Vertical)
+    if (style & Vertical)
     {
         endOffset = fontHeight / 2.0f;
     }
-    else if (style | Horizontal)
+    else if (style & Horizontal)
     {
         endOffset = fontHeight;
     }
@@ -166,11 +165,11 @@ void Graduations::calculateEndOffset()
 
 int Graduations::getDimension()
 {
-    if (style | Vertical)
+    if (style & Vertical)
     {
         return getHeight();
     }
-    else if (style | Horizontal)
+    else if (style & Horizontal)
     {
         return getWidth();
     }
