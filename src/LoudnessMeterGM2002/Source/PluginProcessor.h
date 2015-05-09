@@ -31,11 +31,6 @@ struct LoudnessValues
     Array <double> centreFrequencies, leftSpecificLoudness, rightSpecificLoudness;
 };
 
-struct MeasuredLevels
-{
-    float left, right;
-};
-
 class LoudnessMeterAudioProcessor  : public AudioProcessor
 {
 public:
@@ -93,7 +88,16 @@ public:
     void setLoudnessParameters (const LoudnessParameters &parameters);
     LoudnessParameters getLoudnessParameters();
 
-    void calibrate (const MeasuredLevels& measuredLevels);
+    // Calibration
+    void calibrate(double leftLevel, double rightLevel);
+    void setMeasurementChannel (int channel);
+    void setMeasurementLevel (double level);
+    void setStartCalibrationMeasurement (bool shouldStart);
+    void setCalibrationMeasurementNew (bool isNew);
+    int getMeasurementChannel() const;
+    double getMeasurementLevel () const;
+    double getNewCalibrationLevel () const;
+    bool isCalibrationMeasurementNew() const;
 
 private:
 
@@ -107,6 +111,12 @@ private:
     loudness::SignalBank inputSignalBank;
     loudness::DynamicLoudnessGM2002 model;
     SPLMeter levelMeter;
+    
+    //calibration stuff
+    int measurementChannel;
+    double measurementLevel, newCalibrationLevel;
+    double calibrationGains[2];
+    bool startCalibrationMeasurement, calibrationMeasurementNew;
 
     int numAuditoryChannels;
 

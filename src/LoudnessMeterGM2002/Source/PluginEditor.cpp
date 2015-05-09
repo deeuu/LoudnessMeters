@@ -21,7 +21,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
       settingsScreen (processor.getLoudnessParameters()),
       displayForLTL("Long Term", Colours::lightgrey, Colours::yellow),
       displayForPeakSTL("Peak", Colours::lightgrey, Colours::yellow),
-      displayForSPL("SPL", Colours::lightgrey, Colours::yellow)
+      displayForSPL("SPL (Z)", Colours::lightgrey, Colours::yellow)
 {
     int generalSpacing = 10;
     int windowWidth = 700;
@@ -135,15 +135,20 @@ void LoudnessMeterAudioProcessorEditor::buttonClicked (Button *buttonThatWasClic
     }
     else if (buttonThatWasClicked == &calibrationButton)
     {
-        //shoow calibraton screen to allow calibration
+        //show calibraton screen to allow calibration
         showSettings(calibrationScreen);
     }
     else if (buttonThatWasClicked == &(calibrationScreen.calibrateButton))
     {
-        processor.calibrate (calibrationScreen.getMeasuredLevels());
+        calibrationScreen.calibrateButton.setButtonText("Calibrating...");
+        processor.setMeasurementChannel (calibrationScreen.getCurrentUserInputChannel());
+        processor.setMeasurementLevel (calibrationScreen.getCurrentUserInputLevel());
+        processor.setStartCalibrationMeasurement (true);
     }
     else if (buttonThatWasClicked == &(calibrationScreen.submitButton))
     {
+        processor.calibrate (calibrationScreen.getCalibrationLevel(0),
+                             calibrationScreen.getCalibrationLevel(1));
         hideSettings (calibrationScreen);
     }
 }
@@ -167,8 +172,16 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
         displayForLTL.setValueToDisplay (loudnessValues->overallLTL, 1);
         displayForPeakSTL.setValueToDisplay (loudnessValues->overallPeakSTL, 1);
         displayForSPL.setValueToDisplay (loudnessValues->averageSPL, 1);
-          
         processor.updateLoudnessValues();
+    }
+
+    if (processor.isCalibrationMeasurementNew())
+    {
+        calibrationScreen.calibrateButton.setButtonText("Calibrate");
+        calibrationScreen.updateBasedOnCalibrationMeasurement (processor.getMeasurementChannel(),
+                                                               processor.getMeasurementLevel(),
+                                                               (float)processor.getNewCalibrationLevel());
+        processor.setCalibrationMeasurementNew(false);
     }
 }
 

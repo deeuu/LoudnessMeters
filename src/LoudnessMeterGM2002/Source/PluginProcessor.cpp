@@ -168,6 +168,9 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     model.configureModelParameters ("recentAndFaster");
     model.setPresentationDiotic (false); //required for left and right output
     model.setPeakSTLFollowerUsed (true);
+    calibrationGains[0] = 1.0;
+    calibrationGains[1] = 1.0;
+    newCalibrationLevel = 0.0;
 
     //set default params
     model.setRate (loudnessParameters.modelRate);
@@ -179,6 +182,7 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     model.initialize (inputSignalBank);
 
     //initialise level meter
+    levelMeter.setNumBlocksToAverage ( static_cast <int> (8.0f * fs / hopSize));
     levelMeter.initialize (inputSignalBank);
     
     /*
@@ -223,9 +227,6 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
         loudnessValues.centreFrequencies.add (loudness::freqToCam (ptr[i]));
     }
 
-    //Now an intergrator for SPL measurements
-    //integrator.initialize( inputSignalBank);
-
     pluginInitialised = true;
 }
 
@@ -244,13 +245,6 @@ LoudnessParameters LoudnessMeterAudioProcessor::getLoudnessParameters()
 {
     return loudnessParameters;
 }
-
-void LoudnessMeterAudioProcessor::calibrate (const MeasuredLevels& measuredLevels)
-{
-    Logger::outputDebugString ("Left value: " + String(measuredLevels.left));
-    Logger::outputDebugString ("Right value: " + String(measuredLevels.right));
-}
-
 
 void LoudnessMeterAudioProcessor::releaseResources()
 {
@@ -280,17 +274,31 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
             //fill the SignalBank to be processed
             for (int ear = 0; ear < numEars; ++ear)
             {
-                int idx = ear;
-                if (numInputChannels == 1)
-                    idx = 0;
-                const float* signalToCopy = buffer.getReadPointer (idx);
+                const float* signalToCopy = buffer.getReadPointer (ear);
                 inputSignalBank.copySamples (ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
+
+                //calibration
+                inputSignalBank.scale (ear, calibrationGains[ear]);
             }
 
             //model process call
             model.process (inputSignalBank);
 
             //SPL meter process call
+            if (startCalibrationMeasurement)
+            {
+                levelMeter.reset(); //hmmm can bias measurement
+                levelMeter.setRunningSumActive(true);
+                startCalibrationMeasurement = false;
+            }
+            else if(levelMeter.isAverageReady())
+            {
+                newCalibrationLevel = measurementLevel - 
+                    levelMeter.getAverageLevel (measurementChannel);
+                levelMeter.setAverageReady(false);
+                calibrationMeasurementNew = true;
+            }
+
             levelMeter.process (inputSignalBank);
 
             remainingSamples -= samplesNeeded;
@@ -323,6 +331,104 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         
         settingsFlag.set (OkToDoStuff);
     }
+}
+
+
+
+//==============================================================================
+bool LoudnessMeterAudioProcessor::hasEditor() const
+{
+    return true; // (change this to false if you choose to not supply an editor)
+}
+
+AudioProcessorEditor* LoudnessMeterAudioProcessor::createEditor()
+{
+    return new LoudnessMeterAudioProcessorEditor (*this);
+}
+
+//==============================================================================
+void LoudnessMeterAudioProcessor::getStateInformation (MemoryBlock& destData)
+{
+    // You should use this method to store your parameters in the memory block.
+    // You could do that either as raw data, or use the XML or ValueTree classes
+    // as intermediaries to make it easy to save and load complex data.
+}
+
+void LoudnessMeterAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+{
+    // You should use this method to restore your parameters from this memory block,
+    // whose contents will have been created by the getStateInformation() call.
+}
+
+//==============================================================================
+// CALIBRATION METHODS
+//==============================================================================
+void LoudnessMeterAudioProcessor::calibrate(double leftLevel, double rightLevel)
+{
+    if (std::abs (leftLevel) < 20)
+        calibrationGains[0] *= Decibels::decibelsToGain (leftLevel);
+    else
+        calibrationGains[0] = 1.0;
+    if (std::abs (rightLevel) < 20)
+        calibrationGains[1] *= Decibels::decibelsToGain (rightLevel);
+    else
+        calibrationGains[1] = 1.0;
+}
+
+void LoudnessMeterAudioProcessor::setMeasurementChannel (int channel)
+{
+    measurementChannel = channel;
+}
+
+void LoudnessMeterAudioProcessor::setMeasurementLevel (double level)
+{
+    measurementLevel = level;
+}
+
+void LoudnessMeterAudioProcessor::setStartCalibrationMeasurement (bool shouldStart)
+{
+    startCalibrationMeasurement = shouldStart;
+}
+
+int LoudnessMeterAudioProcessor::getMeasurementChannel() const
+{
+    return measurementChannel;
+}
+
+double LoudnessMeterAudioProcessor::getMeasurementLevel () const
+{
+    return measurementLevel;
+}
+
+double LoudnessMeterAudioProcessor::getNewCalibrationLevel () const
+{
+    return newCalibrationLevel;
+}
+
+bool LoudnessMeterAudioProcessor::isCalibrationMeasurementNew() const
+{
+    return calibrationMeasurementNew;
+}
+
+void LoudnessMeterAudioProcessor::setCalibrationMeasurementNew(bool isNew)
+{
+    calibrationMeasurementNew = isNew;
+}
+
+//==============================================================================
+bool LoudnessMeterAudioProcessor::loudnessValuesReady()
+{
+    return (copyLoudnessValues.get() == 0);
+}
+
+void LoudnessMeterAudioProcessor::updateLoudnessValues()
+{
+    copyLoudnessValues.set (1);
+}
+
+LoudnessValues* LoudnessMeterAudioProcessor::getPointerToLoudnessValues()
+{
+    return &loudnessValues;
 }
 
 void LoudnessMeterAudioProcessor::tryAndCopyLoudnessValuesAfterProcessing (bool convertToPhons)
@@ -362,53 +468,11 @@ void LoudnessMeterAudioProcessor::tryAndCopyLoudnessValuesAfterProcessing (bool 
         }
 
         // Level
-        loudnessValues.averageSPL = levelMeter.getAverageLevel();
+        loudnessValues.averageSPL = levelMeter.getLevel();
                 
         copyLoudnessValues.set (0);
     }
 }
-
-//==============================================================================
-bool LoudnessMeterAudioProcessor::hasEditor() const
-{
-    return true; // (change this to false if you choose to not supply an editor)
-}
-
-AudioProcessorEditor* LoudnessMeterAudioProcessor::createEditor()
-{
-    return new LoudnessMeterAudioProcessorEditor (*this);
-}
-
-//==============================================================================
-void LoudnessMeterAudioProcessor::getStateInformation (MemoryBlock& destData)
-{
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-}
-
-void LoudnessMeterAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
-{
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-}
-
-//==============================================================================
-bool LoudnessMeterAudioProcessor::loudnessValuesReady()
-{
-    return (copyLoudnessValues.get() == 0);
-}
-
-void LoudnessMeterAudioProcessor::updateLoudnessValues()
-{
-    copyLoudnessValues.set (1);
-}
-
-LoudnessValues* LoudnessMeterAudioProcessor::getPointerToLoudnessValues()
-{
-    return &loudnessValues;
-}
-
 //==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()
