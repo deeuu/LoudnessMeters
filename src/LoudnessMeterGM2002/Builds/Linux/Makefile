@@ -22,7 +22,8 @@ ifeq ($(CONFIG),Debug)
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -g -ggdb -fPIC -O0
   CXXFLAGS += $(CFLAGS)
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -shared -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt -lfftw3 
-
+  LDDEPS :=
+  RESFLAGS :=  -D "LINUX=1" -D "DEBUG=1" -D "_DEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/VST3SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
   TARGET := LoudnessMeter.so
   BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
   CLEANCMD = rm -rf $(OUTDIR)/$(TARGET) $(OBJDIR)
@@ -42,7 +43,8 @@ ifeq ($(CONFIG),Release)
   CFLAGS += $(CPPFLAGS) $(TARGET_ARCH) -fPIC -O3
   CXXFLAGS += $(CFLAGS)
   LDFLAGS += $(TARGET_ARCH) -L$(BINDIR) -L$(LIBDIR) -shared -fvisibility=hidden -L/usr/X11R6/lib/ -lGL -lX11 -lXext -lXinerama -lasound -ldl -lfreetype -lpthread -lrt -lfftw3 
-
+  LDDEPS :=
+  RESFLAGS :=  -D "LINUX=1" -D "NDEBUG=1" -D "JUCER_LINUX_MAKE_7346DA2A=1" -D "JUCE_APP_VERSION=1.0.0" -D "JUCE_APP_VERSION_HEX=0x10000" -I /usr/include -I /usr/include/freetype2 -I ~/SDKs/VST3SDK -I ../../JuceLibraryCode -I ../../JuceLibraryCode/modules
   TARGET := LoudnessMeter.so
   BLDCMD = $(CXX) -o $(OUTDIR)/$(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(TARGET_ARCH)
   CLEANCMD = rm -rf $(OUTDIR)/$(TARGET) $(OBJDIR)
@@ -73,6 +75,7 @@ OBJECTS := \
   $(OBJDIR)/SignalBank_80ff8e3.o \
   $(OBJDIR)/cnpy_9262e5e.o \
   $(OBJDIR)/Spline_78a3501e.o \
+  $(OBJDIR)/Graduations_5325caa6.o \
   $(OBJDIR)/LoudnessValueDisplay_cb2da4e3.o \
   $(OBJDIR)/CalibrationScreen_ceed6d57.o \
   $(OBJDIR)/SettingsScreen_4992be78.o \
@@ -103,7 +106,7 @@ OBJECTS := \
 
 .PHONY: clean
 
-$(OUTDIR)/$(TARGET): $(OBJECTS) $(RESOURCES)
+$(OUTDIR)/$(TARGET): $(OBJECTS) $(LDDEPS) $(RESOURCES)
 	@echo Linking LoudnessMeter
 	-@mkdir -p $(BINDIR)
 	-@mkdir -p $(LIBDIR)
@@ -236,6 +239,11 @@ $(OBJDIR)/cnpy_9262e5e.o: ../../../loudnessCode/thirdParty/cnpy/cnpy.cpp
 $(OBJDIR)/Spline_78a3501e.o: ../../../loudnessCode/thirdParty/spline/Spline.cpp
 	-@mkdir -p $(OBJDIR)
 	@echo "Compiling Spline.cpp"
+	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
+
+$(OBJDIR)/Graduations_5325caa6.o: ../../Source/Graduations.cpp
+	-@mkdir -p $(OBJDIR)
+	@echo "Compiling Graduations.cpp"
 	@$(CXX) $(CXXFLAGS) -o "$@" -c "$<"
 
 $(OBJDIR)/LoudnessValueDisplay_cb2da4e3.o: ../../Source/LoudnessValueDisplay.cpp

@@ -99,6 +99,8 @@
       </GROUP>
     </GROUP>
     <GROUP id="{A378BF1D-E94F-A564-0129-4472F286686B}" name="Source">
+      <FILE id="FaMZEY" name="Graduations.cpp" compile="1" resource="0" file="Source/Graduations.cpp"/>
+      <FILE id="eNkUvH" name="Graduations.h" compile="0" resource="0" file="Source/Graduations.h"/>
       <FILE id="f4x7dF" name="LoudnessValueDisplay.cpp" compile="1" resource="0"
             file="Source/LoudnessValueDisplay.cpp"/>
       <FILE id="sxeUii" name="LoudnessValueDisplay.h" compile="0" resource="0"
