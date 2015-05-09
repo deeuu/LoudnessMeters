@@ -21,7 +21,7 @@
 struct LoudnessParameters
 {
     double modelRate, camSpacing, compression;
-    String filter;
+    int filter;
 };
 
 struct LoudnessValues

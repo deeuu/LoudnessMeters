@@ -135,6 +135,25 @@ void SettingsScreen::comboBoxChanged (ComboBox *boxThatChanged)
             loudnessParameters.compression = 0.3;
         }
     }
+    else if (boxThatChanged == &filter)
+    {
+        if (filter.getSelectedId() == 1)
+        {
+            loudnessParameters.filter = 0;
+        }
+        else if (filter.getSelectedId() == 2)
+        {
+            loudnessParameters.filter = 1;
+        }
+        else if (filter.getSelectedId() == 3)
+        {
+            loudnessParameters.filter = 2;
+        }
+        else if (filter.getSelectedId() == 4)
+        {
+            loudnessParameters.filter = 3;
+        }
+    }
 }
 
 LoudnessParameters SettingsScreen::getLoudnessParameters()

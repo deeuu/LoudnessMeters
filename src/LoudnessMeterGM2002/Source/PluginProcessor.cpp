@@ -24,7 +24,7 @@ LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
     loudnessParameters.modelRate = 62.5;
     loudnessParameters.camSpacing = 1.0;
     loudnessParameters.compression = 0.3;
-    loudnessParameters.filter = "";
+    loudnessParameters.filter = 0;
 }
 
 LoudnessMeterAudioProcessor::~LoudnessMeterAudioProcessor()
@@ -168,6 +168,24 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     model.configureModelParameters ("recentAndFaster");
     model.setPresentationDiotic (false); //required for left and right output
     model.setPeakSTLFollowerUsed (true);
+    switch (loudnessParameters.filter)
+    {
+        case 0 :
+            model.setOuterEarType (loudness::OME::ANSIS342007_FREEFIELD);
+            break;
+        case 1 :
+            model.setOuterEarType (loudness::OME::ANSIS342007_DIFFUSEFIELD);
+            break;
+        case 2 :
+            model.setOuterEarType (loudness::OME::BD_DT990);
+            break;
+        case 3 :
+            model.setOuterEarType (loudness::OME::NONE);
+            break;
+        default :
+            model.setOuterEarType (loudness::OME::ANSIS342007_FREEFIELD);
+    }
+
     calibrationGains[0] = 1.0;
     calibrationGains[1] = 1.0;
     newCalibrationLevel = 0.0;
