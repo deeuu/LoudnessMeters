@@ -4,12 +4,14 @@ Graduations::Graduations (Style styleInit, Type typeInit, float minValueInit, fl
     : style (styleInit),
       type (typeInit),
       colour (Colours::black),
-      fontHeight (10.0f),
+      fontHeight (12.0f),
       minValue (minValueInit),
       maxValue (maxValueInit)
 {
     // the min value should be less than the max value
     jassert (minValueInit < maxValueInit);
+
+    setSize (20, 200);
 
     calculateTickIncrements();
     calculateEndOffset();
@@ -21,6 +23,8 @@ Graduations::~Graduations()
 
 void Graduations::paint (Graphics &g)
 {
+    g.setColour (colour);
+
     if (type == Linear)
     {
         paintLinearGraduations (g);
@@ -48,8 +52,7 @@ void Graduations::setFontHeight (float newFontHeight)
     repaint();
 }
 
-
-void Graduations::setRange (int newMinValue, int newMaxValue)
+void Graduations::setAndGetRange (float &newMinValue, float &newMaxValue)
 {
     // the min value should be less than the max value
     jassert (newMinValue < newMaxValue);
@@ -59,7 +62,10 @@ void Graduations::setRange (int newMinValue, int newMaxValue)
 
     calculateTickIncrements();
     calculateEndOffset();
-    
+
+    newMinValue = minValue;
+    newMaxValue = maxValue;
+
     repaint();
 }
 
@@ -131,13 +137,14 @@ void Graduations::calculateTickIncrements()
 
     if (type == Linear)
     {
-        // try to have a tick every 20 pixels or so
-        float approxNumTicks = dimension / 20.0f;        
+        // try to have a tick every 10 pixels or so
+        float approxNumTicks = dimension / 10.0f;        
         float valueRange = maxValue - minValue;
         float approxTickIncrement = valueRange / approxNumTicks;
         float roundingValue = 0;
 
         smallTickIncrement = roundLinearTickIncrement (approxTickIncrement, roundingValue);
+
         largeTickIncrement = smallTickIncrement * 10.0f / roundingValue;
 
         minValue = floorToNearestX (minValue, largeTickIncrement);
@@ -156,7 +163,7 @@ void Graduations::calculateEndOffset()
     }
     else if (style | Horizontal)
     {
-        endOffset = 2.0f * fontHeight;
+        endOffset = fontHeight;
     }
 }
 
@@ -174,42 +181,120 @@ int Graduations::getDimension()
 
 void Graduations::paintLinearGraduations (Graphics &g)
 {
-    float x = 0, y = 0;
-    float *coordinate;
+    for (float value = minValue; value <= maxValue; value += smallTickIncrement)
+    {
+        float lineThickness = 1.0f;
 
-    if (style | Vertical)
-    {
-        coordinate = &y;
-    }
-    else if (style | Horizontal)
-    {
-        coordinate = &x;
-    }
+        if (fmod (value, largeTickIncrement) == 0)
+        {
+            lineThickness = 2.0f;
+            paintValue (g, value);
+        }
 
-    switch (style)
-    {
-        case VerticalLeft:
-            break;
-            
-        case VerticalCentre:
-            break;
-            
-        case VerticalRight:
-            break;
-            
-        case HorizontalBottom:
-            break;
-            
-        case HorizontalCentre:
-            break;
-            
-        case HorizontalTop:
-            break;
+        paintTick (g, value, lineThickness);
     }
 }
 
 void Graduations::paintLogarithmicGraduations (Graphics &g)
 {
+}
+
+void Graduations::paintTick (Graphics &g, float value, float lineThickness)
+{
+    float coordinate = valueToCoordinate (value);
+
+    if (style == VerticalLeft)
+    {
+        float lineStartX = 2.0f * fontHeight;
+        float lineEndX = getWidth();
+
+        g.drawLine (lineStartX, coordinate, lineEndX, coordinate, lineThickness);
+    }
+    else if (style == VerticalCentre)
+    {
+        float line1StartX = 0.0f;
+        float line1EndX = (getWidth() - 2.0f * fontHeight) / 2.0f;
+        float line2StartX = getWidth() - line1EndX;
+        float line2EndX = getWidth();
+
+        g.drawLine (line1StartX, coordinate, line1EndX, coordinate, lineThickness);
+        g.drawLine (line2StartX, coordinate, line2EndX, coordinate, lineThickness);
+    }
+    else if (style == VerticalRight)
+    {
+        float lineStartX = 0.0f;
+        float lineEndX = getWidth() - 2.0f * fontHeight;
+
+        g.drawLine (lineStartX, coordinate, lineEndX, coordinate, lineThickness);
+    }
+    else if (style == HorizontalBottom)
+    {
+        float lineStartY = 0.0f;
+        float lineEndY = getHeight() - 1.2f * fontHeight;
+
+        g.drawLine (coordinate, lineStartY, coordinate, lineEndY, lineThickness);
+    }
+    else if (style == HorizontalCentre)
+    {
+        float line1StartY = 0.0f;
+        float line1EndY = (getHeight() - 1.2f * fontHeight) / 2.0f;
+        float line2StartY = getHeight() - line1EndY;
+        float line2EndY = getHeight();
+
+        g.drawLine (coordinate, line1StartY, coordinate, line1EndY, lineThickness);
+        g.drawLine (coordinate, line2StartY, coordinate, line2EndY, lineThickness);
+    }
+    else if (style == HorizontalTop)
+    {
+        float lineStartY = 1.2f * fontHeight;
+        float lineEndY = getHeight();
+
+        g.drawLine (coordinate, lineStartY, coordinate, lineEndY, lineThickness);
+    }
+}
+
+void Graduations::paintValue (Graphics &g, float value)
+{
+    float coordinate = valueToCoordinate (value);
+
+    g.setFont (fontHeight);
+
+    int textWidth = 2 * fontHeight;
+    int textX = 0;
+    int textY = 0;
+
+    if (style == VerticalLeft)
+    {
+        textX = 0;
+        textY = coordinate - fontHeight / 2;
+    }
+    else if (style == VerticalCentre)
+    {
+        textX = (getWidth() - 2 * fontHeight) / 2;
+        textY = coordinate - fontHeight / 2;
+    }
+    else if (style == VerticalRight)
+    {
+        textX = getWidth() - 2 * fontHeight;
+        textY = coordinate - fontHeight / 2;
+    }
+    else if (style == HorizontalBottom)
+    {
+        textX = coordinate - fontHeight;
+        textY = getHeight() - fontHeight;
+    }
+    else if (style == HorizontalCentre)
+    {
+        textX = coordinate - fontHeight;
+        textY = (getHeight() - fontHeight) / 2;
+    }
+    else if (style == HorizontalCentre)
+    {
+        textX = coordinate - fontHeight;
+        textY = 0;
+    }
+
+    g.drawFittedText (String (value), textX, textY, textWidth, fontHeight, Justification::centred, 1);
 }
 
 float Graduations::roundLinearTickIncrement (float value, float &roundingValue)

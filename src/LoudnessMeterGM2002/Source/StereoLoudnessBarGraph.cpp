@@ -2,15 +2,13 @@
 
 StereoLoudnessBarGraph::StereoLoudnessBarGraph()
     : MeterBallistics (4, 0, 34),
-      width (0),
-      height (0),
-      barWidth (0),
-      barHeight (0),
       minPhons (0), maxPhons (34),
-      graduationColour (Colours::black)
+      graduationColour (Colours::black),
+      graduations (Graduations::VerticalCentre, Graduations::Linear)
 {
     addAndMakeVisible (bars [0]);
     addAndMakeVisible (bars [1]);
+    addAndMakeVisible (graduations);
 
     setMeterRiseTime (0, 10);
     setMeterRiseTime (1, 10);
@@ -21,6 +19,9 @@ StereoLoudnessBarGraph::StereoLoudnessBarGraph()
     setMeterDecayTime (1, 10);
     setMeterDecayTime (2, 10);
     setMeterDecayTime (3, 10);
+
+    graduations.setColour (graduationColour);
+    graduations.setFontHeight (14.0f);
 }
 
 StereoLoudnessBarGraph::~StereoLoudnessBarGraph()
@@ -29,67 +30,43 @@ StereoLoudnessBarGraph::~StereoLoudnessBarGraph()
 
 void StereoLoudnessBarGraph::paint (Graphics& g)
 {
-    // draw graduations
-    Colour lineColour (graduationColour);
-    g.setColour (lineColour);
-
-    int x1 = 1.5 * barWidth;
-    int x2 = 1.75 * barWidth;
-    int x3 = 3.25 * barWidth;
-    int x4 = 3.5 * barWidth;
-
-    double phonsRange = maxPhons - minPhons;
-    float graduationDistance = 2 * (barHeight - 4) / phonsRange;
-    float y = barWidth / 4.0f + 2;
-
-    for (int i = 0; i < phonsRange / 2 + 1; ++i)
-    {
-        float lineWidth = 0.5f;
-
-        if (i % 5 == 0)
-        {
-            lineWidth = 2.0f;
-
-            String graduationValue (maxPhons - i * 2);
-            g.drawFittedText (graduationValue, x2, y - barWidth / 2.0f, 1.5 * barWidth, barWidth, Justification::centred, 1);
-        }
-        
-        g.drawLine (x1, y, x2, y, lineWidth);
-        g.drawLine (x3, y, x4, y, lineWidth);
-        y += graduationDistance;
-    }
-
-    // draw labels
-    g.drawFittedText ("L", barWidth / 2, height - 1.5 * barWidth, barWidth, barWidth, Justification::centred, 1);
-    g.drawFittedText ("R", 3.5 * barWidth, height - 1.5 * barWidth, barWidth, barWidth, Justification::centred, 1);
 }
 
 void StereoLoudnessBarGraph::resized()
 {
-    width = getWidth();
-    height = getHeight();
-    barWidth = width / 5;
-    barHeight = height - 2.25 * barWidth;
+    int width = getWidth();
+    int height = getHeight();
 
-    bars [0].setBounds (barWidth / 2, barWidth / 4, barWidth, barHeight);
-    bars [1].setBounds (3.5 * barWidth, barWidth / 4, barWidth, barHeight);
+    int graduationWidth = width / 2;
+    int graduationHeight = height - 20;
+
+    int barWidth = width / 4;
+    int barHeight = graduationHeight - 2 * graduations.getEndOffset() + 2;
+
+    int barY = graduations.getEndOffset() - 1;
+
+    bars [0].setBounds (0, barY, barWidth, barHeight);
+    bars [1].setBounds (barWidth + graduationWidth, barY, barWidth, barHeight);
+
+    graduations.setBounds (barWidth, 0, graduationWidth, graduationHeight);
 }
 
 void StereoLoudnessBarGraph::setGraduationColour (Colour newColour)
 {
     graduationColour = newColour;
+    graduations.setColour (graduationColour);
 }
 
-void StereoLoudnessBarGraph::setPhonsRange (double newMinPhons, double newMaxPhons)
+void StereoLoudnessBarGraph::setPhonsRange (float newMinPhons, float newMaxPhons)
 {
+    graduations.setAndGetRange (newMinPhons, newMaxPhons);
     setMeterRange (newMinPhons, newMaxPhons);
     
     minPhons = newMinPhons;
     maxPhons = newMaxPhons;
-
 }
 
-void StereoLoudnessBarGraph::setMeterLevels (double leftLevel, double leftPeak, double rightLevel, double rightPeak)
+void StereoLoudnessBarGraph::setMeterLevels (float leftLevel, float leftPeak, float rightLevel, float rightPeak)
 {
     setMeterLevel (0, leftLevel);    
     setMeterLevel (1, leftPeak);
@@ -99,13 +76,13 @@ void StereoLoudnessBarGraph::setMeterLevels (double leftLevel, double leftPeak, 
 
 void StereoLoudnessBarGraph::meterLevelChanged (int index)
 {
-    double phonsRange = maxPhons - minPhons;
+    float phonsRange = maxPhons - minPhons;
 
-    double leftLevel = (getMeterLevel (0) - minPhons) / phonsRange;
-    double leftPeak = (getMeterLevel (1) - minPhons) / phonsRange;
+    float leftLevel = (getMeterLevel (0) - minPhons) / phonsRange;
+    float leftPeak = (getMeterLevel (1) - minPhons) / phonsRange;
     bars [0].setLevels (leftLevel, leftPeak);
 
-    double rightLevel = (getMeterLevel (2) - minPhons) / phonsRange;
-    double rightPeak = (getMeterLevel (3) - minPhons) / phonsRange;
+    float rightLevel = (getMeterLevel (2) - minPhons) / phonsRange;
+    float rightPeak = (getMeterLevel (3) - minPhons) / phonsRange;
     bars [1].setLevels (rightLevel, rightPeak);
 }

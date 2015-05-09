@@ -31,8 +31,7 @@ public:
     void setColour (Colour newColour);
     void setFontHeight (float newFontHeight);
 
-    // set range
-    void setRange (int newMinValue, int newMaxValue);
+    void setAndGetRange (float &newMinValue, float &newMaxValue);
 
     // get position info
     float getEndOffset();
@@ -58,6 +57,8 @@ private:
 
     void paintLinearGraduations (Graphics &g);
     void paintLogarithmicGraduations (Graphics &g);
+    void paintTick (Graphics &g, float value, float lineThickness);
+    void paintValue (Graphics &g, float value);
 
     float roundLinearTickIncrement (float value, float &roundingValue);
     float floorToNearestX (float value, float x);

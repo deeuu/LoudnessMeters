@@ -4,6 +4,7 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MeterBallistics.h"
 #include "BarGraph.h"
+#include "Graduations.h"
 
 class StereoLoudnessBarGraph : public Component,
                                private MeterBallistics
@@ -17,17 +18,17 @@ public:
 
     void setGraduationColour (Colour newColour);
 
-    void setPhonsRange (double newMinPhons, double newMaxPhons);
+    void setPhonsRange (float newMinPhons, float newMaxPhons);
 
-    void setMeterLevels (double leftLevel, double leftPeak, double rightLevel, double rightPeak);
+    void setMeterLevels (float leftLevel, float leftPeak, float rightLevel, float rightPeak);
     
 private:
     BarGraph bars [2];
 
-    int width, height, barWidth, barHeight;
-    double minPhons, maxPhons;
+    float minPhons, maxPhons;
 
     Colour graduationColour;
+    Graduations graduations;
 
     virtual void meterLevelChanged (int index) override;
 
