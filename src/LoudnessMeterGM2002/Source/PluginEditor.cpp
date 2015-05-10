@@ -90,7 +90,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     addAndMakeVisible (calibrationScreen);
     calibrationScreen.setBounds (0, getHeight(), getWidth(), 70);
     calibrationScreen.submitButton.addListener (this);
-    calibrationScreen.calibrateButton.addListener (this);
+    calibrationScreen.measureButton.addListener (this);
     
     startTimer (50);
 }
@@ -138,9 +138,9 @@ void LoudnessMeterAudioProcessorEditor::buttonClicked (Button *buttonThatWasClic
         //show calibraton screen to allow calibration
         showSettings(calibrationScreen);
     }
-    else if (buttonThatWasClicked == &(calibrationScreen.calibrateButton))
+    else if (buttonThatWasClicked == &(calibrationScreen.measureButton))
     {
-        calibrationScreen.calibrateButton.setButtonText("Calibrating...");
+        calibrationScreen.measureButton.setButtonText("Please wait...");
         processor.setMeasurementChannel (calibrationScreen.getCurrentUserInputChannel());
         processor.setMeasurementLevel (calibrationScreen.getCurrentUserInputLevel());
         processor.setStartCalibrationMeasurement (true);
@@ -149,6 +149,7 @@ void LoudnessMeterAudioProcessorEditor::buttonClicked (Button *buttonThatWasClic
     {
         processor.calibrate (calibrationScreen.getCalibrationLevel(0),
                              calibrationScreen.getCalibrationLevel(1));
+        calibrationScreen.setCalibrationLevelsToUnity();
         hideSettings (calibrationScreen);
     }
 }
@@ -177,7 +178,7 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
 
     if (processor.isCalibrationMeasurementNew())
     {
-        calibrationScreen.calibrateButton.setButtonText("Calibrate");
+        calibrationScreen.measureButton.setButtonText("Measure");
         calibrationScreen.updateBasedOnCalibrationMeasurement (processor.getMeasurementChannel(),
                                                                processor.getMeasurementLevel(),
                                                                (float)processor.getNewCalibrationLevel());

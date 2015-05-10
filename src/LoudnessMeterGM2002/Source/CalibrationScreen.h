@@ -15,7 +15,7 @@ public:
     void paint (Graphics&);
     void resized();
 
-    TextButton submitButton, calibrateButton;
+    TextButton submitButton, measureButton;
 
     void comboBoxChanged (ComboBox *boxThatChanged) override;
     void textEditorTextChanged (TextEditor& editorThatChanged) override;
@@ -24,6 +24,7 @@ public:
                                               double userLevel,
                                               double calibrationLevel);
 
+    void setCalibrationLevelsToUnity ();
     int getCurrentUserInputChannel() const;
     double getCurrentUserInputLevel() const;
     double getCalibrationLevel (int channel) const;

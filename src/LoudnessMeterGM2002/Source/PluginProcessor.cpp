@@ -168,6 +168,12 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     model.configureModelParameters ("recentAndFaster");
     model.setPresentationDiotic (false); //required for left and right output
     model.setPeakSTLFollowerUsed (true);
+    //set default params
+    model.setRate (loudnessParameters.modelRate);
+    model.setFilterSpacingInCams (loudnessParameters.camSpacing);
+    model.setCompressionCriterionInCams (loudnessParameters.compression);
+    model.setExcitationPatternInterpolated (false);
+
     switch (loudnessParameters.filter)
     {
         case 0 :
@@ -186,22 +192,17 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
             model.setOuterEarType (loudness::OME::ANSIS342007_FREEFIELD);
     }
 
-    calibrationGains[0] = 1.0;
-    calibrationGains[1] = 1.0;
-    newCalibrationLevel = 0.0;
-
-    //set default params
-    model.setRate (loudnessParameters.modelRate);
-    model.setFilterSpacingInCams (loudnessParameters.camSpacing);
-    model.setCompressionCriterionInCams (loudnessParameters.compression);
-    model.setExcitationPatternInterpolated (false);
-
     //initialise the model
     model.initialize (inputSignalBank);
 
     //initialise level meter
     levelMeter.setNumBlocksToAverage ( static_cast <int> (8.0f * fs / hopSize));
     levelMeter.initialize (inputSignalBank);
+
+    //initial calibration gains at unity
+    calibrationGains[0] = 1.0;
+    calibrationGains[1] = 1.0;
+    newCalibrationLevel = 0.0;
     
     /*
     * Pointers to loudness measures

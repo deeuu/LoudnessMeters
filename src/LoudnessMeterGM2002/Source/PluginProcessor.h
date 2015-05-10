@@ -115,7 +115,7 @@ private:
     //calibration stuff
     int measurementChannel;
     double measurementLevel, newCalibrationLevel;
-    double calibrationGains[2];
+    double calibrationGains[2], averageGainSoFar;
     bool startCalibrationMeasurement, calibrationMeasurementNew;
 
     int numAuditoryChannels;

@@ -2,8 +2,8 @@
 #include "CalibrationScreen.h"
 
 CalibrationScreen::CalibrationScreen ()
-    : submitButton ("OK"),
-      calibrateButton("Calibrate"),
+    : submitButton ("Calibrate"),
+      measureButton("Measure"),
       calibrationEditorLabel("", "SPL"),
       gainEditorLabel("", "Gain (dB)"),
       calibrationEditorTextFilter(4, "0123456789.-")
@@ -13,35 +13,36 @@ CalibrationScreen::CalibrationScreen ()
                                boxY, 
                                boxWidth,
                                boxHeight);
-    channelSelector.addItem("Left", 1);
-    channelSelector.addItem("Right", 2);
+    channelSelector.addItem ("Left", 1);
+    channelSelector.addItem ("Right", 2);
     channelSelector.addListener (this);
+    channelSelector.setSelectedId (1);
 
-    addAndMakeVisible(calibrationEditor);
-    calibrationEditor.setBounds(80, boxY, boxWidth, boxHeight);
-    calibrationEditor.setInputFilter(&calibrationEditorTextFilter, false);
+    addAndMakeVisible (calibrationEditor);
+    calibrationEditor.setBounds (80, boxY, boxWidth, boxHeight);
+    calibrationEditor.setInputFilter (&calibrationEditorTextFilter, false);
     calibrationEditor.addListener (this);
     calibrationEditorLabel.attachToComponent (&calibrationEditor, false);
 
-    addAndMakeVisible (calibrateButton);
-    calibrateButton.setBounds (160, boxY + boxHeight + boxSpacing, boxWidth, 20);
+    addAndMakeVisible (measureButton);
+    measureButton.setBounds (160, boxY + boxHeight + boxSpacing, boxWidth, boxHeight);
 
-    addAndMakeVisible(gainEditor);
-    gainEditor.setBounds(240, boxY, boxWidth, boxHeight);
-    gainEditor.setInputFilter(&calibrationEditorTextFilter, false);
+    addAndMakeVisible (gainEditor);
+    gainEditor.setBounds (240, boxY, boxWidth, boxHeight);
+    gainEditor.setInputFilter (&calibrationEditorTextFilter, false);
     gainEditor.addListener (this);
     gainEditorLabel.attachToComponent (&gainEditor, false);
 
     addAndMakeVisible (submitButton);
-    submitButton.setBounds (80, boxY + boxHeight + boxSpacing, 40, 20);
+    submitButton.setBounds (80, boxY + boxHeight + boxSpacing, boxWidth, boxHeight);
 
     userInputLevels[0] = 94.0;
     userInputLevels[1] = 94.0;
     calibrationLevels[0] = 0.0;
     calibrationLevels[1] = 0.0;
 
-    calibrationEditor.setText(String(userInputLevels[0], 2));
-    gainEditor.setText(String(calibrationLevels[0], 2));
+    calibrationEditor.setText (String (userInputLevels[0], 2));
+    gainEditor.setText (String (calibrationLevels[0], 2));
 }
 
 CalibrationScreen::~CalibrationScreen()
@@ -60,9 +61,9 @@ void CalibrationScreen::resized()
 
     channelSelector.setTopLeftPosition (midPoint - 2 * boxWidth - 1.5 * boxSpacing, boxY);
     calibrationEditor.setTopLeftPosition (midPoint - boxWidth - 0.5 * boxSpacing, boxY);
-    calibrateButton.setTopLeftPosition (midPoint + 0.5 * boxSpacing, boxY);
+    measureButton.setTopLeftPosition (midPoint + 0.5 * boxSpacing, boxY);
     gainEditor.setTopLeftPosition (midPoint + boxWidth + 1.5 * boxSpacing, boxY);
-    submitButton.setTopLeftPosition (midPoint - 50, boxY + boxHeight + boxSpacing);
+    submitButton.setTopLeftPosition (midPoint - 0.5 * boxWidth, boxY + boxHeight + boxSpacing);
 }
 
 void CalibrationScreen::comboBoxChanged (ComboBox *boxThatChanged)
@@ -116,6 +117,13 @@ double CalibrationScreen::getCurrentUserInputLevel() const
 double CalibrationScreen::getCalibrationLevel (int channel) const
 {
     return calibrationLevels[channel];
+}
+
+void CalibrationScreen::setCalibrationLevelsToUnity ()
+{
+    calibrationLevels[0] = 0.0;
+    calibrationLevels[1] = 0.0;
+    gainEditor.setText(String(calibrationLevels[0], 2));
 }
 
 void CalibrationScreen::updateBasedOnCalibrationMeasurement (int measurementChannel,
