@@ -30,6 +30,7 @@ public:
     virtual void resized() override;
     void setColour (Colour newColour);
     void setFontHeight (float newFontHeight);
+    void showAxisLine (bool newValue);
 
     void setAndGetRange (float &newMinValue, float &newMaxValue);
 
@@ -45,6 +46,8 @@ private:
     Type type;
     Colour colour;
     float fontHeight;
+
+    bool isAxis;
     
     float minValue, maxValue;
     float smallTickIncrement, largeTickIncrement;
@@ -59,10 +62,13 @@ private:
     void paintLogarithmicGraduations (Graphics &g);
     void paintTick (Graphics &g, float value, float lineThickness);
     void paintValue (Graphics &g, float value);
+    void paintAxisLine (Graphics &g);
 
-    float roundLinearTickIncrement (float value, float &roundingValue);
-    float floorToNearestX (float value, float x);
-    float ceilToNearestX (float value, float x);
+    static float roundLinearTickIncrement (float value, float &roundingValue);
+    static float previousPowerOfTen (float value);
+    static float nextPowerOfTen (float value);
+    static float floorToNearestX (float value, float x);
+    static float ceilToNearestX (float value, float x);
 
     enum Orientation
     {

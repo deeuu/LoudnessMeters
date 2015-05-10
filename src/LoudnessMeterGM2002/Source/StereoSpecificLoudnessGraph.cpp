@@ -2,17 +2,17 @@
 #include "StereoSpecificLoudnessGraph.h"
 
 StereoSpecificLoudnessGraph::StereoSpecificLoudnessGraph()
-    : MeterBallistics (0, minPhons, maxPhons),
+    : MeterBallistics (0, 0.01, 2.0f),
       graduationColour (Colours::black),
       leftTraceColour (0xff00ff00), rightTraceColour (0xffff0000),
       graphX (0), graphY (0), graphWidth (0), graphHeight (0),
       xGraduationsX (0), xGraduationsY (0), xGraduationsWidth (20), xGraduationsHeight (20),
       yGraduationsX (0), yGraduationsY (0), yGraduationsWidth (30), yGraduationsHeight (30),
       minCams (0), maxCams (40),
-      minPhons (0), maxPhons (5),
+      minPhons (0.01), maxPhons (2.0f),
       numMeters (0),
       xGraduations (Graduations::HorizontalBottom, Graduations::Linear),
-      yGraduations (Graduations::VerticalLeft, Graduations::Linear)
+      yGraduations (Graduations::VerticalLeft, Graduations::Logarithmic)
 {
     setSize (200, 100);
 
@@ -27,6 +27,9 @@ StereoSpecificLoudnessGraph::StereoSpecificLoudnessGraph()
 
     xGraduations.setAndGetRange (minCams, maxCams);
     yGraduations.setAndGetRange (minPhons, maxPhons);
+
+    xGraduations.showAxisLine (true);
+    yGraduations.showAxisLine (true);
 }
 
 StereoSpecificLoudnessGraph::~StereoSpecificLoudnessGraph()
@@ -45,16 +48,19 @@ void StereoSpecificLoudnessGraph::resized()
     int width = getWidth();
     int height = getHeight();
 
-    xGraduationsX = yGraduationsWidth;
+    float xGraduationsEndOffset = xGraduations.getEndOffset();
+    float yGraduationsEndOffset = yGraduations.getEndOffset();
+
+    xGraduationsX = yGraduationsWidth - xGraduationsEndOffset;
     xGraduationsY = height - xGraduationsHeight;
     xGraduationsWidth = width - yGraduationsWidth;
     
-    yGraduationsHeight = xGraduationsY;
+    yGraduationsHeight = xGraduationsY + yGraduationsEndOffset;
 
-    graphX = xGraduationsX;
-    graphY = yGraduationsY;
-    graphWidth = xGraduationsWidth;
-    graphHeight = yGraduationsHeight;
+    graphX = xGraduationsX + xGraduationsEndOffset;
+    graphY = yGraduationsY + yGraduationsEndOffset;
+    graphWidth = xGraduationsWidth - 2 * xGraduationsEndOffset;
+    graphHeight = yGraduationsHeight - 2 * yGraduationsEndOffset;
 
     xGraduations.setBounds (xGraduationsX, xGraduationsY, xGraduationsWidth, xGraduationsHeight);
     yGraduations.setBounds (yGraduationsX, yGraduationsY, yGraduationsWidth, yGraduationsHeight);

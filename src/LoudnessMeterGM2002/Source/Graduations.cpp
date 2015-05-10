@@ -5,8 +5,9 @@ Graduations::Graduations (Style styleInit, Type typeInit)
       type (typeInit),
       colour (Colours::black),
       fontHeight (12.0f),
-      minValue (0),
-      maxValue (10)
+      isAxis (false),
+      minValue (0.1f),
+      maxValue (10.0f)
 {
     setSize (20, 200);
 
@@ -30,6 +31,11 @@ void Graduations::paint (Graphics &g)
     {
         paintLogarithmicGraduations (g);
     }
+
+    if (isAxis)
+    {
+        paintAxisLine (g);
+    }
 }
 
 void Graduations::resized()
@@ -46,6 +52,12 @@ void Graduations::setFontHeight (float newFontHeight)
 {
     fontHeight = newFontHeight;
     calculateEndOffset();
+    repaint();
+}
+
+void Graduations::showAxisLine (bool newValue)
+{
+    isAxis = newValue;
     repaint();
 }
 
@@ -148,6 +160,11 @@ void Graduations::calculateTickIncrements()
     }
     else if (type == Logarithmic)
     {
+        // logarithmic scales have to start above zero
+        jassert (minValue > 0.0f && maxValue > 0.0f);
+
+        minValue = previousPowerOfTen (minValue);
+        maxValue = nextPowerOfTen (maxValue);
     }
 }
 
@@ -155,11 +172,11 @@ void Graduations::calculateEndOffset()
 {
     if (style & Vertical)
     {
-        endOffset = fontHeight / 2.0f;
+        endOffset = fontHeight / 2.0f - 1;
     }
     else if (style & Horizontal)
     {
-        endOffset = fontHeight;
+        endOffset = fontHeight - 1;
     }
 }
 
@@ -193,6 +210,20 @@ void Graduations::paintLinearGraduations (Graphics &g)
 
 void Graduations::paintLogarithmicGraduations (Graphics &g)
 {
+    int counter = 0;
+
+    for (float value = minValue; value <= maxValue; value += previousPowerOfTen (value), counter = (counter + 1) % 9)
+    {
+        float lineThickness = 1.0f;
+
+        if (counter == 0)
+        {
+            lineThickness = 2.0f;
+            paintValue (g, value);
+        }
+
+        paintTick (g, value, lineThickness);
+    }
 }
 
 void Graduations::paintTick (Graphics &g, float value, float lineThickness)
@@ -293,9 +324,43 @@ void Graduations::paintValue (Graphics &g, float value)
     g.drawFittedText (String (value), textX, textY, textWidth, fontHeight, Justification::centred, 1);
 }
 
+void Graduations::paintAxisLine (Graphics &g)
+{
+    int width = getWidth();
+    int height = getHeight();
+    float lineThickness = 2.0f;
+
+    if (style == VerticalLeft)
+    {
+        g.drawLine (width - 1, endOffset, width - 1, height - endOffset, lineThickness);
+    }
+    else if (style == VerticalCentre)
+    {
+        g.drawLine (width - 1, endOffset, width - 1, height - endOffset, lineThickness);
+        g.drawLine (1, endOffset, 1, height - endOffset, lineThickness);
+    }
+    else if (style == VerticalRight)
+    {
+        g.drawLine (1, endOffset, 1, height - endOffset, lineThickness);
+    }
+    else if (style == HorizontalBottom)
+    {
+        g.drawLine (endOffset, 1, width - endOffset, 1, lineThickness);
+    }
+    else if (style == HorizontalCentre)
+    {
+        g.drawLine (endOffset, 1, width - endOffset, 1, lineThickness);
+        g.drawLine (endOffset, height - 1, width - endOffset, height - 1, lineThickness);
+    }
+    else if (style == HorizontalCentre)
+    {
+        g.drawLine (endOffset, height - 1, width - endOffset, height - 1, lineThickness);
+    }
+}
+
 float Graduations::roundLinearTickIncrement (float value, float &roundingValue)
 {
-    float sigFig = pow (10.0f, floor (log10 (value)));
+    float sigFig = previousPowerOfTen (value);
     float roundedValue = floor (value / sigFig);
 
     if (roundedValue <= 1)
@@ -314,6 +379,16 @@ float Graduations::roundLinearTickIncrement (float value, float &roundingValue)
     roundingValue = roundedValue;
     
     return sigFig * roundedValue;
+}
+
+float Graduations::previousPowerOfTen (float value)
+{
+    return pow (10.0f, floor (log10 (1.01 * value)));
+}
+
+float Graduations::nextPowerOfTen (float value)
+{
+    return pow (10.0f, ceil (log10 (value)));
 }
 
 float Graduations::floorToNearestX (float value, float x)
