@@ -351,8 +351,8 @@ void LoudnessMeterAudioProcessor::tryAndCopyLoudnessValuesAfterProcessing (bool 
         for (int i = 0; i < numAuditoryChannels; ++i)
         {
             //haven't made my mind up what to do with these yet...
-            loudnessValues.leftSpecificLoudness.set (i, log2(pointerToSpecificLeft [i]));
-            loudnessValues.rightSpecificLoudness.set (i, log2(pointerToSpecificRight [i]));
+            loudnessValues.leftSpecificLoudness.set (i, pointerToSpecificLeft [i]);
+            loudnessValues.rightSpecificLoudness.set (i, pointerToSpecificRight [i]);
         }
                 
         copyLoudnessValues.set (0);

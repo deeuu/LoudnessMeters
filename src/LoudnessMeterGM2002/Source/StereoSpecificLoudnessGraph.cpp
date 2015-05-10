@@ -41,6 +41,32 @@ void StereoSpecificLoudnessGraph::paint (Graphics& g)
     // draw graph background
     g.setColour (Colours::black);
     g.fillRect (graphX, graphY, graphWidth, graphHeight);
+
+    // draw traces
+    GenericScopedLock <CriticalSection> lock (mutex);
+
+    g.saveState();
+    g.reduceClipRegion (graphX, graphY, graphWidth, graphHeight);
+
+    Path leftTracePath, rightTracePath;
+    float x = camsToX (centreFrequencies [0]);
+    leftTracePath.startNewSubPath (x, phonsToY (getMeterLevel (0)));
+    rightTracePath.startNewSubPath (x, phonsToY (getMeterLevel (1)));
+
+    for (int i = 1; i < numMeters / 2; ++i)
+    {
+        x = camsToX (centreFrequencies [i]);
+        leftTracePath.lineTo (x, phonsToY (getMeterLevel (i * 2)));
+        rightTracePath.lineTo (x, phonsToY (getMeterLevel (i * 2 + 1)));
+    }
+
+    g.setColour (leftTraceColour);
+    g.strokePath (leftTracePath, PathStrokeType (2.0f));
+
+    g.setColour (rightTraceColour);
+    g.strokePath (rightTracePath, PathStrokeType (2.0f));
+
+    g.restoreState();
 }
 
 void StereoSpecificLoudnessGraph::resized()
@@ -108,10 +134,12 @@ void StereoSpecificLoudnessGraph::setSpecificLoudnessValues (const Array <double
 
 float StereoSpecificLoudnessGraph::phonsToY (double levelInPhons)
 {
+    return yGraduationsY + yGraduations.valueToCoordinate (levelInPhons);
 }
 
 float StereoSpecificLoudnessGraph::camsToX (double frequencyInCams)
 {
+    return xGraduationsX + xGraduations.valueToCoordinate (frequencyInCams);
 }
 
 void StereoSpecificLoudnessGraph::meterLevelChanged (int index)
