@@ -89,8 +89,10 @@ namespace loudness{
 
     bool SpecificLoudnessANSIS342007::initializeInternal(const SignalBank &input)
     {
+#ifndef _MSC_VER
         LOUDNESS_ASSERT(input.getNChannels() > 1,
                 name_ << ": Insufficient number of input channels.");
+#endif
 
         //c value from ANSI 2007
         parameterC_ = 0.046871;

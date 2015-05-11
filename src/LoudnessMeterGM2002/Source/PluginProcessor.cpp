@@ -19,7 +19,8 @@ LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
       levelMeter (SPLMeter::SLOW, 2e-5),
       pluginInitialised (false),
       copyLoudnessValues (1),
-      settingsFlag (OkToDoStuff)
+      settingsFlag (OkToDoStuff),
+	  measurementChannel(0)
 {
     loudnessParameters.modelRate = 62.5;
     loudnessParameters.camSpacing = 1.0;
