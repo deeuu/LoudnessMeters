@@ -5,11 +5,12 @@ StereoSpecificLoudnessGraph::StereoSpecificLoudnessGraph()
     : MeterBallistics (0, 0.01, 2.0f),
       graduationColour (Colours::black),
       leftTraceColour (0xff00ff00), rightTraceColour (0xffff0000),
+      labelHeight (20.0f),
       graphX (0), graphY (0), graphWidth (0), graphHeight (0),
       xGraduationsX (0), xGraduationsY (0), xGraduationsWidth (20), xGraduationsHeight (20),
-      yGraduationsX (0), yGraduationsY (0), yGraduationsWidth (30), yGraduationsHeight (30),
+      yGraduationsX (labelHeight), yGraduationsY (0), yGraduationsWidth (30), yGraduationsHeight (30),
       minCams (0), maxCams (40),
-      minPhons (0.01), maxPhons (2.0f),
+      minLevel (0.01), maxLevel (2.0f),
       numMeters (0),
       xGraduations (Graduations::HorizontalBottom, Graduations::Linear),
       yGraduations (Graduations::VerticalLeft, Graduations::Logarithmic)
@@ -26,7 +27,9 @@ StereoSpecificLoudnessGraph::StereoSpecificLoudnessGraph()
     addAndMakeVisible (yGraduations);
 
     xGraduations.setAndGetRange (minCams, maxCams);
-    yGraduations.setAndGetRange (minPhons, maxPhons);
+    yGraduations.setAndGetRange (minLevel, maxLevel);
+
+    setMeterLevel (minLevel, maxLevel);
 
     xGraduations.showAxisLine (true);
     yGraduations.showAxisLine (true);
@@ -50,14 +53,14 @@ void StereoSpecificLoudnessGraph::paint (Graphics& g)
 
     Path leftTracePath, rightTracePath;
     float x = camsToX (centreFrequencies [0]);
-    leftTracePath.startNewSubPath (x, phonsToY (getMeterLevel (0)));
-    rightTracePath.startNewSubPath (x, phonsToY (getMeterLevel (1)));
+    leftTracePath.startNewSubPath (x, levelToY (getMeterLevel (0)));
+    rightTracePath.startNewSubPath (x, levelToY (getMeterLevel (1)));
 
     for (int i = 1; i < numMeters / 2; ++i)
     {
         x = camsToX (centreFrequencies [i]);
-        leftTracePath.lineTo (x, phonsToY (getMeterLevel (i * 2)));
-        rightTracePath.lineTo (x, phonsToY (getMeterLevel (i * 2 + 1)));
+        leftTracePath.lineTo (x, levelToY (getMeterLevel (i * 2)));
+        rightTracePath.lineTo (x, levelToY (getMeterLevel (i * 2 + 1)));
     }
 
     g.setColour (leftTraceColour);
@@ -67,6 +70,14 @@ void StereoSpecificLoudnessGraph::paint (Graphics& g)
     g.strokePath (rightTracePath, PathStrokeType (2.0f));
 
     g.restoreState();
+
+    // draw axis labels
+    g.setColour (graduationColour);
+
+    g.drawFittedText ("Frequency (cams)", graphX, getHeight() - labelHeight, graphWidth, labelHeight, Justification::centred, 1);
+
+    g.addTransform (AffineTransform::rotation (- float_Pi / 2.0f, 0.0f, graphY + graphHeight));
+    g.drawFittedText ("Specific Loudness (sones)", 0.0f, graphY + graphHeight, graphHeight, labelHeight, Justification::centred, 1);
 }
 
 void StereoSpecificLoudnessGraph::resized()
@@ -77,19 +88,26 @@ void StereoSpecificLoudnessGraph::resized()
     float xGraduationsEndOffset = xGraduations.getEndOffset();
     float yGraduationsEndOffset = yGraduations.getEndOffset();
 
-    xGraduationsX = yGraduationsWidth - xGraduationsEndOffset;
-    xGraduationsY = height - xGraduationsHeight;
-    xGraduationsWidth = width - yGraduationsWidth;
+    xGraduationsX = yGraduationsX + yGraduationsWidth - xGraduationsEndOffset;
+    xGraduationsY = height - xGraduationsHeight - yGraduationsEndOffset - labelHeight;
+    xGraduationsWidth = width - xGraduationsX;
     
-    yGraduationsHeight = xGraduationsY + yGraduationsEndOffset;
+    yGraduationsHeight = xGraduationsY - yGraduationsY + yGraduationsEndOffset;
 
-    graphX = xGraduationsX + xGraduationsEndOffset;
-    graphY = yGraduationsY + yGraduationsEndOffset;
-    graphWidth = xGraduationsWidth - 2 * xGraduationsEndOffset;
-    graphHeight = yGraduationsHeight - 2 * yGraduationsEndOffset;
+    graphX = xGraduationsX + xGraduationsEndOffset - 1;
+    graphY = yGraduationsY + yGraduationsEndOffset - 1;
+    graphWidth = xGraduationsWidth - 2 * xGraduationsEndOffset + 2;
+    graphHeight = yGraduationsHeight - 2 * yGraduationsEndOffset + 2;
 
     xGraduations.setBounds (xGraduationsX, xGraduationsY, xGraduationsWidth, xGraduationsHeight);
     yGraduations.setBounds (yGraduationsX, yGraduationsY, yGraduationsWidth, yGraduationsHeight);
+}
+
+void StereoSpecificLoudnessGraph::setGraphBounds (int x, int y, int width, int height)
+{
+    int componentY = y - yGraduations.getEndOffset() + 1 - yGraduationsY;
+    int componentHeight = height + componentY + y + xGraduationsHeight + labelHeight;
+    setBounds (x, componentY, width, componentHeight);
 }
 
 void StereoSpecificLoudnessGraph::setGraduationColour (Colour newColour)
@@ -132,9 +150,9 @@ void StereoSpecificLoudnessGraph::setSpecificLoudnessValues (const Array <double
     repaint();
 }
 
-float StereoSpecificLoudnessGraph::phonsToY (double levelInPhons)
+float StereoSpecificLoudnessGraph::levelToY (double level)
 {
-    return yGraduationsY + yGraduations.valueToCoordinate (levelInPhons);
+    return yGraduationsY + yGraduations.valueToCoordinate (level);
 }
 
 float StereoSpecificLoudnessGraph::camsToX (double frequencyInCams)

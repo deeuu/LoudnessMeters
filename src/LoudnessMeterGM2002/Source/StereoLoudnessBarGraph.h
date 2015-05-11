@@ -15,17 +15,21 @@ public:
 
     void paint (Graphics&);
     void resized();
+    void setMeterBounds (int x, int y, int width, int height);
 
     void setGraduationColour (Colour newColour);
 
-    void setPhonsRange (float newMinPhons, float newMaxPhons);
+    void setRange (float newMinLevel, float newMaxLevel);
 
     void setMeterLevels (float leftLevel, float leftPeak, float rightLevel, float rightPeak);
     
 private:
     BarGraph bars [2];
 
-    float minPhons, maxPhons;
+    int labelHeight;
+    float minLevel, maxLevel;
+
+    int barWidth;
 
     Colour graduationColour;
     Graduations graduations;

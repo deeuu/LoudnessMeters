@@ -14,6 +14,7 @@ public:
 
     void paint (Graphics&);
     void resized();
+    void setGraphBounds (int x, int y, int width, int height);
 
     void setGraduationColour (Colour newColour);
 
@@ -25,18 +26,19 @@ public:
 private:
     Colour graduationColour, leftTraceColour, rightTraceColour;
 
+    int labelHeight;
     int graphX, graphY, graphWidth, graphHeight;
     int xGraduationsX, xGraduationsY, xGraduationsWidth, xGraduationsHeight;
     int yGraduationsX, yGraduationsY, yGraduationsWidth, yGraduationsHeight;
 
     float minCams, maxCams;
-    float minPhons, maxPhons;
+    float minLevel, maxLevel;
 
     int numMeters;
 
     Graduations xGraduations, yGraduations;
 
-    float phonsToY (double levelInPhons); 
+    float levelToY (double level); 
     float camsToX (double frequencyInCams);
     virtual void meterLevelChanged (int index) override;
 

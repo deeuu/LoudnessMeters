@@ -25,7 +25,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
 {
     int generalSpacing = 10;
     int windowWidth = 700;
-    int windowHeight = 350;
+    int windowHeight = 400;
     setSize (windowWidth, windowHeight);
    
     int goldenPoint = windowWidth / 1.618;
@@ -33,7 +33,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     int specLoudGraphHeight = 300;
     addAndMakeVisible (specificLoudness);
     specificLoudness.setGraduationColour (Colours::lightgrey);
-    specificLoudness.setBounds (generalSpacing, 
+    specificLoudness.setGraphBounds (generalSpacing, 
                                 generalSpacing,
                                 specLoudGraphWidth,
                                 specLoudGraphHeight);
@@ -42,11 +42,11 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     int barWidth = (windowWidth - goldenPoint - 2.5 * generalSpacing) / 2;
     addAndMakeVisible (barGraph);
     barGraph.setGraduationColour (Colours::lightgrey);
-    barGraph.setPhonsRange (0, 34);
-    barGraph.setBounds (barX,
-                        generalSpacing - barWidth / 20 + specLoudGraphHeight / 17,
+    barGraph.setRange (0, 34);
+    barGraph.setMeterBounds (barX,
+                        generalSpacing,
                         barWidth, 
-                        59.0 / 68.0 * specLoudGraphHeight + 2.25 / 5.0 * barWidth);
+                        specLoudGraphHeight);
 
     int valueDisplayWidth = barWidth / 1.5;
     int valueDisplayHeight = valueDisplayWidth;

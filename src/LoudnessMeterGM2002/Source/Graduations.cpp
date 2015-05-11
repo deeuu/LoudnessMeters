@@ -172,11 +172,11 @@ void Graduations::calculateEndOffset()
 {
     if (style & Vertical)
     {
-        endOffset = fontHeight / 2.0f - 1;
+        endOffset = fontHeight / 2.0f;
     }
     else if (style & Horizontal)
     {
-        endOffset = fontHeight - 1;
+        endOffset = fontHeight;
     }
 }
 
