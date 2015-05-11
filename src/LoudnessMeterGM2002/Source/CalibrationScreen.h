@@ -15,22 +15,31 @@ public:
     void paint (Graphics&);
     void resized();
 
-    TextButton submitButton, calibrateButton;
+    TextButton submitButton, measureButton;
 
     void comboBoxChanged (ComboBox *boxThatChanged) override;
-    void textEditorReturnKeyPressed (TextEditor& editorThatChanged) override;
+    void textEditorTextChanged (TextEditor& editorThatChanged) override;
 
-    const MeasuredLevels& getMeasuredLevels() const;
+    void updateBasedOnCalibrationMeasurement (int measurementChannel, 
+                                              double userLevel,
+                                              double calibrationLevel);
+
+    void setCalibrationLevelsToUnity ();
+    int getCurrentUserInputChannel() const;
+    double getCurrentUserInputLevel() const;
+    double getCalibrationLevel (int channel) const;
 
 private:
 
     ComboBox channelSelector;
-    TextEditor calibrationEditor;
+    TextEditor calibrationEditor, gainEditor;
     TextEditor::LengthAndCharacterRestriction calibrationEditorTextFilter;
+    Label calibrationEditorLabel, gainEditorLabel;
 
     static const int boxHeight = 20, boxWidth = 80, boxY = 20, boxSpacing = 10;
 
-    MeasuredLevels measuredLevels;
+    bool currentUserInputChannel;
+    double userInputLevels[2], calibrationLevels[2];
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (CalibrationScreen)
 };

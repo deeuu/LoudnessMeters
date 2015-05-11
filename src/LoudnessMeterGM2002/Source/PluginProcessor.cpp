@@ -16,6 +16,7 @@
 LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
     : model(),
       inputSignalBank(),
+      levelMeter (SPLMeter::SLOW, 2e-5),
       pluginInitialised (false),
       copyLoudnessValues (1),
       settingsFlag (OkToDoStuff)
@@ -23,7 +24,7 @@ LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
     loudnessParameters.modelRate = 62.5;
     loudnessParameters.camSpacing = 1.0;
     loudnessParameters.compression = 0.3;
-    loudnessParameters.filter = "";
+    loudnessParameters.filter = 0;
 }
 
 LoudnessMeterAudioProcessor::~LoudnessMeterAudioProcessor()
@@ -167,15 +168,41 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     model.configureModelParameters ("recentAndFaster");
     model.setPresentationDiotic (false); //required for left and right output
     model.setPeakSTLFollowerUsed (true);
-
     //set default params
     model.setRate (loudnessParameters.modelRate);
     model.setFilterSpacingInCams (loudnessParameters.camSpacing);
     model.setCompressionCriterionInCams (loudnessParameters.compression);
     model.setExcitationPatternInterpolated (false);
 
+    switch (loudnessParameters.filter)
+    {
+        case 0 :
+            model.setOuterEarType (loudness::OME::ANSIS342007_FREEFIELD);
+            break;
+        case 1 :
+            model.setOuterEarType (loudness::OME::ANSIS342007_DIFFUSEFIELD);
+            break;
+        case 2 :
+            model.setOuterEarType (loudness::OME::BD_DT990);
+            break;
+        case 3 :
+            model.setOuterEarType (loudness::OME::NONE);
+            break;
+        default :
+            model.setOuterEarType (loudness::OME::ANSIS342007_FREEFIELD);
+    }
+
     //initialise the model
     model.initialize (inputSignalBank);
+
+    //initialise level meter
+    levelMeter.setNumBlocksToAverage ( static_cast <int> (8.0f * fs / hopSize));
+    levelMeter.initialize (inputSignalBank);
+
+    //initial calibration gains at unity
+    calibrationGains[0] = 1.0;
+    calibrationGains[1] = 1.0;
+    newCalibrationLevel = 0.0;
     
     /*
     * Pointers to loudness measures
@@ -219,9 +246,6 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
         loudnessValues.centreFrequencies.add (loudness::freqToCam (ptr[i]));
     }
 
-    //Now an intergrator for SPL measurements
-    //integrator.initialize( inputSignalBank);
-
     pluginInitialised = true;
 }
 
@@ -240,13 +264,6 @@ LoudnessParameters LoudnessMeterAudioProcessor::getLoudnessParameters()
 {
     return loudnessParameters;
 }
-
-void LoudnessMeterAudioProcessor::calibrate (const MeasuredLevels& measuredLevels)
-{
-    Logger::outputDebugString ("Left value: " + String(measuredLevels.left));
-    Logger::outputDebugString ("Right value: " + String(measuredLevels.right));
-}
-
 
 void LoudnessMeterAudioProcessor::releaseResources()
 {
@@ -270,26 +287,38 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
         int remainingSamples = numSamples;
         int readPos = 0;
 
-        //Logger::outputDebugString ("numSamples in this block" + String(numSamples));
-
         // deal with any samples in the input which will create full hop buffers for us
         while (remainingSamples >= samplesNeeded)
         {
             //fill the SignalBank to be processed
             for (int ear = 0; ear < numEars; ++ear)
             {
-                int idx = ear;
-                if (numInputChannels == 1)
-                    idx = 0;
-                const float* signalToCopy = buffer.getReadPointer (idx);
+                const float* signalToCopy = buffer.getReadPointer (ear);
                 inputSignalBank.copySamples (ear, 0, writePos, signalToCopy + readPos, samplesNeeded);
+
+                //calibration
+                inputSignalBank.scale (ear, calibrationGains[ear]);
             }
 
             //model process call
             model.process (inputSignalBank);
 
             //SPL meter process call
-            //meter.process (inputSignalBank);
+            if (startCalibrationMeasurement)
+            {
+                levelMeter.reset(); //hmmm can bias measurement
+                levelMeter.setRunningSumActive(true);
+                startCalibrationMeasurement = false;
+            }
+            else if(levelMeter.isAverageReady())
+            {
+                newCalibrationLevel = measurementLevel - 
+                    levelMeter.getAverageLevel (measurementChannel);
+                levelMeter.setAverageReady(false);
+                calibrationMeasurementNew = true;
+            }
+
+            levelMeter.process (inputSignalBank);
 
             remainingSamples -= samplesNeeded;
             readPos += samplesNeeded;
@@ -323,42 +352,6 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
     }
 }
 
-void LoudnessMeterAudioProcessor::tryAndCopyLoudnessValuesAfterProcessing (bool convertToPhons)
-{
-    if (copyLoudnessValues.get() == 1)
-    {
-        if (convertToPhons)
-        {
-            loudnessValues.leftSTL = loudness::soneToPhonMGB1997 (*pointerToSTLLeft, true);
-            loudnessValues.leftPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLLeft, true);
-            loudnessValues.rightSTL = loudness::soneToPhonMGB1997 (*pointerToSTLRight, true);
-            loudnessValues.rightPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLRight, true);
-            loudnessValues.leftLTL = loudness::soneToPhonMGB1997 (*pointerToLTLLeft, true);
-            loudnessValues.rightLTL = loudness::soneToPhonMGB1997 (*pointerToLTLRight, true);
-            loudnessValues.overallLTL = loudness::soneToPhonMGB1997 (*pointerToLTLOverall, true);
-        }
-        else
-        {
-            loudnessValues.leftSTL = *pointerToSTLLeft;
-            loudnessValues.rightSTL = *pointerToSTLRight;
-            loudnessValues.rightPeakSTL = *pointerToPeakSTLRight;
-            loudnessValues.leftPeakSTL = *pointerToPeakSTLLeft;
-            loudnessValues.leftLTL = *pointerToLTLLeft;
-            loudnessValues.rightLTL = *pointerToLTLRight;
-            loudnessValues.overallLTL = *pointerToLTLOverall;
-        }
-
-        for (int i = 0; i < numAuditoryChannels; ++i)
-        {
-            //haven't made my mind up what to do with these yet...
-            loudnessValues.leftSpecificLoudness.set (i, pointerToSpecificLeft [i]);
-            loudnessValues.rightSpecificLoudness.set (i, pointerToSpecificRight [i]);
-        }
-                
-        copyLoudnessValues.set (0);
-    }
-}
-
 //==============================================================================
 bool LoudnessMeterAudioProcessor::hasEditor() const
 {
@@ -385,6 +378,61 @@ void LoudnessMeterAudioProcessor::setStateInformation (const void* data, int siz
 }
 
 //==============================================================================
+// CALIBRATION METHODS
+//==============================================================================
+void LoudnessMeterAudioProcessor::calibrate(double leftLevel, double rightLevel)
+{
+    if (std::abs (leftLevel) < 20)
+        calibrationGains[0] *= Decibels::decibelsToGain (leftLevel);
+    else
+        calibrationGains[0] = 1.0;
+    if (std::abs (rightLevel) < 20)
+        calibrationGains[1] *= Decibels::decibelsToGain (rightLevel);
+    else
+        calibrationGains[1] = 1.0;
+}
+
+void LoudnessMeterAudioProcessor::setMeasurementChannel (int channel)
+{
+    measurementChannel = channel;
+}
+
+void LoudnessMeterAudioProcessor::setMeasurementLevel (double level)
+{
+    measurementLevel = level;
+}
+
+void LoudnessMeterAudioProcessor::setStartCalibrationMeasurement (bool shouldStart)
+{
+    startCalibrationMeasurement = shouldStart;
+}
+
+int LoudnessMeterAudioProcessor::getMeasurementChannel() const
+{
+    return measurementChannel;
+}
+
+double LoudnessMeterAudioProcessor::getMeasurementLevel () const
+{
+    return measurementLevel;
+}
+
+double LoudnessMeterAudioProcessor::getNewCalibrationLevel () const
+{
+    return newCalibrationLevel;
+}
+
+bool LoudnessMeterAudioProcessor::isCalibrationMeasurementNew() const
+{
+    return calibrationMeasurementNew;
+}
+
+void LoudnessMeterAudioProcessor::setCalibrationMeasurementNew(bool isNew)
+{
+    calibrationMeasurementNew = isNew;
+}
+
+//==============================================================================
 bool LoudnessMeterAudioProcessor::loudnessValuesReady()
 {
     return (copyLoudnessValues.get() == 0);
@@ -400,6 +448,48 @@ LoudnessValues* LoudnessMeterAudioProcessor::getPointerToLoudnessValues()
     return &loudnessValues;
 }
 
+void LoudnessMeterAudioProcessor::tryAndCopyLoudnessValuesAfterProcessing (bool convertToPhons)
+{
+    if (copyLoudnessValues.get() == 1)
+    {
+        // STL, LTL features
+        if (convertToPhons)
+        {
+            loudnessValues.leftSTL = loudness::soneToPhonMGB1997 (*pointerToSTLLeft, true);
+            loudnessValues.leftPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLLeft, true);
+            loudnessValues.rightSTL = loudness::soneToPhonMGB1997 (*pointerToSTLRight, true);
+            loudnessValues.rightPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLRight, true);
+            loudnessValues.overallPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLOverall, true);
+            loudnessValues.leftLTL = loudness::soneToPhonMGB1997 (*pointerToLTLLeft, true);
+            loudnessValues.rightLTL = loudness::soneToPhonMGB1997 (*pointerToLTLRight, true);
+            loudnessValues.overallLTL = loudness::soneToPhonMGB1997 (*pointerToLTLOverall, true);
+        }
+        else
+        {
+            loudnessValues.leftSTL = *pointerToSTLLeft;
+            loudnessValues.rightSTL = *pointerToSTLRight;
+            loudnessValues.rightPeakSTL = *pointerToPeakSTLRight;
+            loudnessValues.leftPeakSTL = *pointerToPeakSTLLeft;
+            loudnessValues.overallPeakSTL = *pointerToPeakSTLOverall;
+            loudnessValues.leftLTL = *pointerToLTLLeft;
+            loudnessValues.rightLTL = *pointerToLTLRight;
+            loudnessValues.overallLTL = *pointerToLTLOverall;
+        }
+
+        // Specific loudness
+        for (int i = 0; i < numAuditoryChannels; ++i)
+        {
+            //haven't made my mind up what to do with these yet...
+            loudnessValues.leftSpecificLoudness.set (i, log2(pointerToSpecificLeft [i]));
+            loudnessValues.rightSpecificLoudness.set (i, log2(pointerToSpecificRight [i]));
+        }
+
+        // Level
+        loudnessValues.averageSPL = levelMeter.getLevel();
+                
+        copyLoudnessValues.set (0);
+    }
+}
 //==============================================================================
 // This creates new instances of the plugin..
 AudioProcessor* JUCE_CALLTYPE createPluginFilter()

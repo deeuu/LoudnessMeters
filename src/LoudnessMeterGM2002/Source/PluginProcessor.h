@@ -14,25 +14,21 @@
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "../../loudnessCode/models/DynamicLoudnessGM2002.h"
 #include "../../loudnessCode/support/SignalBank.h"
+#include "../../dsp/SPLMeter.h"
 
 //==============================================================================
 
 struct LoudnessParameters
 {
     double modelRate, camSpacing, compression;
-    String filter;
+    int filter;
 };
 
 struct LoudnessValues
 {
-    double leftSTL, rightSTL, leftPeakSTL, rightPeakSTL;
-    double leftLTL, rightLTL, overallLTL;
+    double leftSTL, rightSTL, leftPeakSTL, rightPeakSTL, overallPeakSTL;
+    double leftLTL, rightLTL, overallLTL, averageSPL;
     Array <double> centreFrequencies, leftSpecificLoudness, rightSpecificLoudness;
-};
-
-struct MeasuredLevels
-{
-    float left, right;
 };
 
 class LoudnessMeterAudioProcessor  : public AudioProcessor
@@ -92,18 +88,39 @@ public:
     void setLoudnessParameters (const LoudnessParameters &parameters);
     LoudnessParameters getLoudnessParameters();
 
-    void calibrate (const MeasuredLevels& measuredLevels);
+    // Calibration
+    void calibrate(double leftLevel, double rightLevel);
+    void setMeasurementChannel (int channel);
+    void setMeasurementLevel (double level);
+    void setStartCalibrationMeasurement (bool shouldStart);
+    void setCalibrationMeasurementNew (bool isNew);
+    int getMeasurementChannel() const;
+    double getMeasurementLevel () const;
+    double getNewCalibrationLevel () const;
+    bool isCalibrationMeasurementNew() const;
 
 private:
+
     int hopSize, numEars;
     double fs;
     int samplesNeeded, writePos;
     bool pluginInitialised;
+
+    // analysers
     AudioSampleBuffer analysisBuffer;
     loudness::SignalBank inputSignalBank;
     loudness::DynamicLoudnessGM2002 model;
+    SPLMeter levelMeter;
+    
+    //calibration stuff
+    int measurementChannel;
+    double measurementLevel, newCalibrationLevel;
+    double calibrationGains[2], averageGainSoFar;
+    bool startCalibrationMeasurement, calibrationMeasurementNew;
+
     int numAuditoryChannels;
 
+    // Pointers to loudness values 
     const loudness::Real* pointerToSTLLeft;
     const loudness::Real* pointerToSTLRight;
     const loudness::Real* pointerToPeakSTLLeft;

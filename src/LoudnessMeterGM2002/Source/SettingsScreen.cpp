@@ -6,7 +6,7 @@ SettingsScreen::SettingsScreen (const LoudnessParameters &loudnessParametersInit
       modelRateLabel ("", "Model Rate"),
       camSpacingLabel ("", "Cam Spacing"),
       compressionLabel ("", "Compression"),
-      filterLabel ("", "Filter")
+      filterLabel ("", "Outer Ear")
 {
     addAndMakeVisible (modelRate);
     modelRate.setBounds (10, boxY, boxWidth, boxHeight);
@@ -29,10 +29,10 @@ SettingsScreen::SettingsScreen (const LoudnessParameters &loudnessParametersInit
 
     addAndMakeVisible (compression);
     compression.setBounds (160, boxY, boxWidth, boxHeight);
-    compression.addItem ("0.0", 1);
-    compression.addItem ("0.1", 2);
-    compression.addItem ("0.2", 3);
-    compression.addItem ("0.3", 4);
+    compression.addItem ("0.1", 1);
+    compression.addItem ("0.2", 2);
+    compression.addItem ("0.3", 3);
+    compression.addItem ("0.4", 4);
     compression.addListener (this);
     compressionLabel.attachToComponent (&compression, false);
 
@@ -41,7 +41,7 @@ SettingsScreen::SettingsScreen (const LoudnessParameters &loudnessParametersInit
     filter.addItem ("Free Field", 1);
     filter.addItem ("Diffuse Field", 2);
     filter.addItem ("DT990", 3);
-    filter.addItem ("Middle Ear", 4);
+    filter.addItem ("None", 4);
     filter.addListener (this);
     filterLabel.attachToComponent (&filter, false);
 
@@ -135,6 +135,25 @@ void SettingsScreen::comboBoxChanged (ComboBox *boxThatChanged)
             loudnessParameters.compression = 0.3;
         }
     }
+    else if (boxThatChanged == &filter)
+    {
+        if (filter.getSelectedId() == 1)
+        {
+            loudnessParameters.filter = 0;
+        }
+        else if (filter.getSelectedId() == 2)
+        {
+            loudnessParameters.filter = 1;
+        }
+        else if (filter.getSelectedId() == 3)
+        {
+            loudnessParameters.filter = 2;
+        }
+        else if (filter.getSelectedId() == 4)
+        {
+            loudnessParameters.filter = 3;
+        }
+    }
 }
 
 LoudnessParameters SettingsScreen::getLoudnessParameters()
@@ -202,5 +221,22 @@ void SettingsScreen::setLoudnessParameters (const LoudnessParameters &newLoudnes
     else
     {
         compression.setSelectedId (4);
+    }
+    // display outer ear filter
+    if (loudnessParameters.filter == 0.0)
+    {
+        filter.setSelectedId (1);
+    }
+    else if (loudnessParameters.filter == 0.1)
+    {
+        filter.setSelectedId (2);
+    }
+    else if (loudnessParameters.filter == 0.2)
+    {
+        filter.setSelectedId (3);
+    }
+    else
+    {
+        filter.setSelectedId (4);
     }
 }

@@ -21,7 +21,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
       settingsScreen (processor.getLoudnessParameters()),
       displayForLTL("Long Term", Colours::lightgrey, Colours::yellow),
       displayForPeakSTL("Peak", Colours::lightgrey, Colours::yellow),
-      displayForSPL("SPL", Colours::lightgrey, Colours::yellow)
+      displayForSPL("SPL (Z)", Colours::lightgrey, Colours::yellow)
 {
     int generalSpacing = 10;
     int windowWidth = 700;
@@ -90,7 +90,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     addAndMakeVisible (calibrationScreen);
     calibrationScreen.setBounds (0, getHeight(), getWidth(), 70);
     calibrationScreen.submitButton.addListener (this);
-    calibrationScreen.calibrateButton.addListener (this);
+    calibrationScreen.measureButton.addListener (this);
     
     startTimer (50);
 }
@@ -135,15 +135,21 @@ void LoudnessMeterAudioProcessorEditor::buttonClicked (Button *buttonThatWasClic
     }
     else if (buttonThatWasClicked == &calibrationButton)
     {
-        //shoow calibraton screen to allow calibration
+        //show calibraton screen to allow calibration
         showSettings(calibrationScreen);
     }
-    else if (buttonThatWasClicked == &(calibrationScreen.calibrateButton))
+    else if (buttonThatWasClicked == &(calibrationScreen.measureButton))
     {
-        processor.calibrate (calibrationScreen.getMeasuredLevels());
+        calibrationScreen.measureButton.setButtonText("Please wait...");
+        processor.setMeasurementChannel (calibrationScreen.getCurrentUserInputChannel());
+        processor.setMeasurementLevel (calibrationScreen.getCurrentUserInputLevel());
+        processor.setStartCalibrationMeasurement (true);
     }
     else if (buttonThatWasClicked == &(calibrationScreen.submitButton))
     {
+        processor.calibrate (calibrationScreen.getCalibrationLevel(0),
+                             calibrationScreen.getCalibrationLevel(1));
+        calibrationScreen.setCalibrationLevelsToUnity();
         hideSettings (calibrationScreen);
     }
 }
@@ -163,7 +169,20 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
                                                     loudnessValues->leftSpecificLoudness,
                                                     loudnessValues->rightSpecificLoudness);
 
+        //update number displays
+        displayForLTL.setValueToDisplay (loudnessValues->overallLTL, 1);
+        displayForPeakSTL.setValueToDisplay (loudnessValues->overallPeakSTL, 1);
+        displayForSPL.setValueToDisplay (loudnessValues->averageSPL, 1);
         processor.updateLoudnessValues();
+    }
+
+    if (processor.isCalibrationMeasurementNew())
+    {
+        calibrationScreen.measureButton.setButtonText("Measure");
+        calibrationScreen.updateBasedOnCalibrationMeasurement (processor.getMeasurementChannel(),
+                                                               processor.getMeasurementLevel(),
+                                                               (float)processor.getNewCalibrationLevel());
+        processor.setCalibrationMeasurementNew(false);
     }
 }
 
