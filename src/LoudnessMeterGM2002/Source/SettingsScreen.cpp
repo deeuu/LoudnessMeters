@@ -57,7 +57,10 @@ SettingsScreen::~SettingsScreen()
 
 void SettingsScreen::paint (Graphics& g)
 {
-    g.fillAll (Colour (0xffaaaaaa));
+    g.fillAll (Colour (0xffbbbbbb));
+    g.setColour (Colours::black);
+    g.setFont (18);
+    g.drawFittedText ("Model Settings", 0, 10, getWidth(), 20, Justification::centred, 1);
 }
 
 void SettingsScreen::resized()

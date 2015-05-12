@@ -24,7 +24,7 @@ private:
     ComboBox modelRate, camSpacing, compression, filter;
     Label modelRateLabel, camSpacingLabel, compressionLabel, filterLabel;
 
-    static const int boxHeight = 20, boxWidth = 80, boxY = 20, boxSpacing = 10;
+    static const int boxHeight = 20, boxWidth = 80, boxY = 60, boxSpacing = 10;
 
     void setLoudnessParameters (const LoudnessParameters &newLoudnessParameters);
     LoudnessParameters loudnessParameters;

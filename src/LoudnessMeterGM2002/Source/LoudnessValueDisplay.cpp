@@ -33,5 +33,6 @@ void LoudnessValueDisplay::paint (Graphics& g)
     g.fillEllipse (rect);
 
     g.setColour (valueColour);
+    g.setFont (20);
     g.drawFittedText (valueToDisplay, xPos, yPos + height, getWidth(), height, Justification::centred, 1); 
 }

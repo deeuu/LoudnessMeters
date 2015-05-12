@@ -55,6 +55,7 @@ private:
     //Screens
     SettingsScreen settingsScreen;
     CalibrationScreen calibrationScreen;
+    int screenHeight;
 
     //labels for displays loudness values
     LoudnessValueDisplay displayForLTL, displayForPeakSTL, displayForSPL;

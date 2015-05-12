@@ -19,6 +19,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
       settingsButton ("Settings"),
       calibrationButton ("Calibrate SPL"),
       settingsScreen (processor.getLoudnessParameters()),
+      screenHeight (120),
       displayForLTL("Long Term", Colours::lightgrey, Colours::yellow),
       displayForPeakSTL("Peak", Colours::lightgrey, Colours::yellow),
       displayForSPL("SPL (Z)", Colours::lightgrey, Colours::yellow)
@@ -84,12 +85,12 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     calibrationButton.addListener (this);
     
     addAndMakeVisible (settingsScreen);
-    settingsScreen.setBounds (0, getHeight(), getWidth(), 70);
+    settingsScreen.setBounds (0, getHeight(), getWidth(), screenHeight);
     settingsScreen.submitButton.addListener (this);
     oldLoudnessParameters = settingsScreen.getLoudnessParameters();
 
     addAndMakeVisible (calibrationScreen);
-    calibrationScreen.setBounds (0, getHeight(), getWidth(), 70);
+    calibrationScreen.setBounds (0, getHeight(), getWidth(), screenHeight);
     calibrationScreen.submitButton.addListener (this);
     calibrationScreen.measureButton.addListener (this);
     
@@ -189,15 +190,21 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
 
 void LoudnessMeterAudioProcessorEditor::showSettings (Component &screenToShow)
 {
+    settingsButton.setEnabled (false);
+    calibrationButton.setEnabled (false);
+    
     animator.animateComponent (&screenToShow,
-                               Rectangle <int> (0, getHeight() - 80, getWidth(), 80),
+                               Rectangle <int> (0, getHeight() - screenHeight, getWidth(), screenHeight),
                                1.0f, 1000, false, 0.0, 0.0);
 }
 
 void LoudnessMeterAudioProcessorEditor::hideSettings (Component &screenToHide)
 {
+    settingsButton.setEnabled (true);
+    calibrationButton.setEnabled (true);
+    
     animator.animateComponent (&screenToHide,
-                               Rectangle <int> (0, getHeight(), getWidth(), 80),
+                               Rectangle <int> (0, getHeight(), getWidth(), screenHeight),
                                1.0f, 1000, false, 0.0, 0.0);
     repaint();
 }
