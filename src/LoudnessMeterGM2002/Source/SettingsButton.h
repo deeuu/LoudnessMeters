@@ -6,13 +6,14 @@
 class SettingsButton : public Button
 {
 public:
-    SettingsButton(const Colour& colour);
+    SettingsButton (const String& textInit);
     ~SettingsButton();
 
     void paintButton (Graphics &g, bool isMouseOverButton, bool isButtonDown);
 
 private:
-    Colour faceColour, bodyColour, bodyColourMouseOver, bodyColourDown;
+    String text;
+    Colour bodyColour, bodyColourMouseOver, bodyColourDown;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SettingsButton)
 };

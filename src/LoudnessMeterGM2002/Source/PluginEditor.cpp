@@ -16,8 +16,8 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     : AudioProcessorEditor (&p),
       processor (p),
       loudnessValues (processor.getPointerToLoudnessValues()),
-      settingsButton (Colours::blue),
-      calibrationButton (Colours::red),
+      settingsButton ("Settings"),
+      calibrationButton ("Calibrate SPL"),
       settingsScreen (processor.getLoudnessParameters()),
       displayForLTL("Long Term", Colours::lightgrey, Colours::yellow),
       displayForPeakSTL("Peak", Colours::lightgrey, Colours::yellow),
@@ -67,18 +67,19 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
                              valueDisplayHeight * 2 + generalSpacing * 2,
                              valueDisplayWidth, valueDisplayHeight);
 
-    int settingsWidth = 20, settingsHeight = 20;
-    int settingsX = displayForLTLX + generalSpacing;
+    int settingsWidth = valueDisplayWidth, settingsHeight = 20;
+    int settingsX = displayForLTLX;
     int settingsY = specLoudGraphHeight + generalSpacing - settingsHeight;
     addAndMakeVisible (settingsButton);
     settingsButton.setBounds (settingsX, settingsY,
                               settingsWidth, settingsHeight);
     settingsButton.addListener (this);
 
-    int calibrationX = settingsX + barWidth;
+    int calibrationX = settingsX;
+    int calibrationY = settingsY + settingsHeight + generalSpacing;
     addAndMakeVisible (calibrationButton);
-    calibrationButton.setBounds (settingsX + settingsWidth + generalSpacing,
-                                 settingsY, settingsWidth,
+    calibrationButton.setBounds (calibrationX,
+                                 calibrationY, settingsWidth,
                                  settingsHeight);
     calibrationButton.addListener (this);
     
