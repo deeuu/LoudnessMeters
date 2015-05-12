@@ -1,5 +1,5 @@
-#ifndef __CALIBRATION_SCREEN__
-#define __CALIBRATION_SCREEN__
+#ifndef CALIBRATION_SCREEN_H_INCLUDED
+#define CALIBRATION_SCREEN_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
@@ -45,4 +45,4 @@ private:
 };
 
 
-#endif  // __SETTINGS_SCREEN__
+#endif  // CALIBRATION_SCREEN_H_INCLUDED

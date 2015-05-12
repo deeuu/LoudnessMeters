@@ -1,5 +1,5 @@
-#ifndef __SPECIFIC_LOUDNESS_GRAPH__
-#define __SPECIFIC_LOUDNESS_GRAPH__
+#ifndef SPECIFIC_LOUDNESS_GRAPH_H_INCLUDED
+#define SPECIFIC_LOUDNESS_GRAPH_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MeterBallistics.h"
@@ -50,4 +50,4 @@ private:
 };
 
 
-#endif // __SPECIFIC_LOUDNESS_GRAPH__
+#endif // SPECIFIC_LOUDNESS_GRAPH_H_INCLUDED

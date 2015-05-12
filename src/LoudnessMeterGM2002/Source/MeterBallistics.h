@@ -1,5 +1,5 @@
-#ifndef __METER_BALLISTICS__
-#define __METER_BALLISTICS__
+#ifndef METER_BALLISTICS_H_INCLUDED
+#define METER_BALLISTICS_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -53,4 +53,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MeterBallistics)
 };
 
-#endif // __METER_BALLISTICS__
+#endif // METER_BALLISTICS_H_INCLUDED

@@ -1,5 +1,5 @@
-#ifndef __SETTINGS_SCREEN__
-#define __SETTINGS_SCREEN__
+#ifndef SETTINGS_SCREEN_H_INCLUDED
+#define SETTINGS_SCREEN_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
@@ -33,4 +33,4 @@ private:
 };
 
 
-#endif  // __SETTINGS_SCREEN__
+#endif  // SETTINGS_SCREEN_H_INCLUDED

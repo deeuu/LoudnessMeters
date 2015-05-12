@@ -1,5 +1,5 @@
-#ifndef __BAR_GRAPH__
-#define __BAR_GRAPH__
+#ifndef BAR_GRAPH_H_INCLUDED
+#define BAR_GRAPH_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -23,4 +23,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BarGraph)
 };
 
-#endif  // __BAR_GRAPH__
+#endif  // BAR_GRAPH_H_INCLUDED

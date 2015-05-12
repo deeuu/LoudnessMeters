@@ -1,5 +1,5 @@
-#ifndef __GRADUATIONS__
-#define __GRADUATIONS__
+#ifndef GRADUATIONS_H_INCLUDED
+#define GRADUATIONS_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -77,4 +77,4 @@ private:
     };
 };
 
-#endif // __GRADUATIONS__
+#endif // GRADUATIONS_H_INCLUDED

@@ -1,5 +1,5 @@
-#ifndef __STEREO_LOUDNESS_BAR_GRAPH__
-#define __STEREO_LOUDNESS_BAR_GRAPH__
+#ifndef STEREO_LOUDNESS_BAR_GRAPH_H_INCLUDED
+#define STEREO_LOUDNESS_BAR_GRAPH_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "MeterBallistics.h"
@@ -39,4 +39,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StereoLoudnessBarGraph)
 };
 
-#endif // __STEREO_LOUDNESS_BAR_GRAPH__
+#endif // STEREO_LOUDNESS_BAR_GRAPH_H_INCLUDED

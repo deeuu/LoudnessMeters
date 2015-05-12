@@ -1,5 +1,5 @@
-#ifndef __LOUDNESS_VALUE_DISPLAY__
-#define __LOUDNESS_VALUE_DISPLAY__
+#ifndef LOUDNESS_VALUE_DISPLAY_H_INCLUDED
+#define LOUDNESS_VALUE_DISPLAY_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -25,4 +25,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (LoudnessValueDisplay)
 };
 
-#endif // __SETTINGS_BUTTON__
+#endif // LOUDNESS_VALUE_DISPLAY_H_INCLUDED

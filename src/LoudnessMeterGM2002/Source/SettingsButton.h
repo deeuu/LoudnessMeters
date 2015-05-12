@@ -1,5 +1,5 @@
-#ifndef __SETTINGS_BUTTON__
-#define __SETTINGS_BUTTON__
+#ifndef SETTINGS_BUTTON_H_INCLUDED
+#define SETTINGS_BUTTON_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
 
@@ -18,4 +18,4 @@ private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SettingsButton)
 };
 
-#endif // __SETTINGS_BUTTON__
+#endif // SETTINGS_BUTTON_H_INCLUDED
