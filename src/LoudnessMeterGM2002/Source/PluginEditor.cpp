@@ -26,7 +26,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
 {
     int generalSpacing = 10;
     int windowWidth = 700;
-    int windowHeight = 400;
+    int windowHeight = 380;
     setSize (windowWidth, windowHeight);
    
     int goldenPoint = windowWidth / 1.618;
@@ -60,17 +60,17 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
 
     addAndMakeVisible (displayForPeakSTL);
     displayForPeakSTL.setBounds (displayForLTLX, 
-                                 valueDisplayHeight + generalSpacing,
+                                 valueDisplayHeight + generalSpacing * 2,
                                  valueDisplayWidth, valueDisplayHeight);
 
     addAndMakeVisible (displayForSPL);
     displayForSPL.setBounds (displayForLTLX, 
-                             valueDisplayHeight * 2 + generalSpacing * 2,
+                             valueDisplayHeight * 2 + generalSpacing * 3,
                              valueDisplayWidth, valueDisplayHeight);
 
     int settingsWidth = valueDisplayWidth, settingsHeight = 20;
     int settingsX = displayForLTLX;
-    int settingsY = specLoudGraphHeight + generalSpacing - settingsHeight;
+    int settingsY = specLoudGraphHeight + generalSpacing;
     addAndMakeVisible (settingsButton);
     settingsButton.setBounds (settingsX, settingsY,
                               settingsWidth, settingsHeight);
@@ -161,10 +161,10 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
     if (processor.loudnessValuesReady())
     {
         //update bar graphs
-        barGraph.setMeterLevels (loudnessValues->leftLTL,
-                                 loudnessValues->leftPeakSTL,
-                                 loudnessValues->rightLTL,
-                                 loudnessValues->rightPeakSTL);
+        barGraph.setMeterLevels (loudnessValues->leftSTL,
+                                 loudnessValues->leftSTL,
+                                 loudnessValues->rightSTL,
+                                 loudnessValues->rightSTL);
 
         //update specific loudness graph
         specificLoudness.setSpecificLoudnessValues (loudnessValues->centreFrequencies, 

@@ -12,15 +12,15 @@ StereoLoudnessBarGraph::StereoLoudnessBarGraph()
     addAndMakeVisible (bars [1]);
     addAndMakeVisible (graduations);
 
-    setMeterRiseTime (0, 10);
-    setMeterRiseTime (1, 10);
-    setMeterRiseTime (2, 10);
-    setMeterRiseTime (3, 10);
+    setMeterRiseTime (0, 0);//Left
+    setMeterRiseTime (1, 0);//Left peak
+    setMeterRiseTime (2, 0);//Right
+    setMeterRiseTime (3, 0);//Right peak
 
-    setMeterDecayTime (0, 10);
-    setMeterDecayTime (1, 10);
-    setMeterDecayTime (2, 10);
-    setMeterDecayTime (3, 10);
+    setMeterDecayTime (0, 0);
+    setMeterDecayTime (1, 20000);
+    setMeterDecayTime (2, 0);
+    setMeterDecayTime (3, 20000);
 
     graduations.setColour (graduationColour);
     graduations.setFontHeight (14.0f);
@@ -45,7 +45,7 @@ void StereoLoudnessBarGraph::paint (Graphics& g)
     g.drawFittedText ("L", 0, channelLabelY, barWidth, labelHeight, Justification::centred, 1);
     g.drawFittedText ("R", 3 * barWidth, channelLabelY, barWidth, labelHeight, Justification::centred, 1);
 
-    g.drawFittedText ("Long-Term Loudness\n(sones)", 0, height - 2 * labelHeight, width, 2 * labelHeight, Justification::centred, 2);
+    g.drawFittedText ("Short-Term Loudness\n(sones)", 0, height - 2 * labelHeight, width, 2 * labelHeight, Justification::centred, 2);
 }
 
 void StereoLoudnessBarGraph::resized()

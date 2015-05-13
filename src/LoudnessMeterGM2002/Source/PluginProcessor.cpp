@@ -308,7 +308,7 @@ void LoudnessMeterAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiB
             //SPL meter process call
             if (startCalibrationMeasurement)
             {
-                levelMeter.reset(); //hmmm can bias measurement
+                //levelMeter.reset(); //as can bias measurement
                 levelMeter.setRunningSumActive(true);
                 startCalibrationMeasurement = false;
             }

@@ -24,15 +24,18 @@ void LoudnessValueDisplay::setValueToDisplay (double newValueToDisplay, int numb
 void LoudnessValueDisplay::paint (Graphics& g)
 {
     int xPos = 0, yPos = 0;
-    int height = getHeight() / 2;
+    int height = getHeight() / 3;
+    int circleHeight = 2 * height;
     g.setColour (labelColour);
     g.drawFittedText (labelText, xPos, yPos, getWidth(), height,
                       Justification::centred, 1); 
-    Rectangle <float> rect (xPos, yPos + height, getWidth(), height);
+    Rectangle <float> rect (getWidth() / 6, yPos + height, circleHeight, circleHeight);
     g.setColour (Colours::black);
     g.fillEllipse (rect);
 
     g.setColour (valueColour);
     g.setFont (20);
-    g.drawFittedText (valueToDisplay, xPos, yPos + height, getWidth(), height, Justification::centred, 1); 
+    g.drawFittedText (valueToDisplay, xPos,
+                      yPos + height, getWidth(), 
+                      circleHeight, Justification::centred, 1); 
 }
