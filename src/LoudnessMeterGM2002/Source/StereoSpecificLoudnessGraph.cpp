@@ -2,7 +2,7 @@
 #include "StereoSpecificLoudnessGraph.h"
 
 StereoSpecificLoudnessGraph::StereoSpecificLoudnessGraph()
-    : MeterBallistics (0, 0.01, 2.0f),
+    : MeterBallistics (0, 0.01, 2.0f, false),
       graduationColour (Colours::black),
       leftTraceColour (0xff00ff00), rightTraceColour (0xffff0000),
       labelHeight (20.0f),
@@ -29,7 +29,7 @@ StereoSpecificLoudnessGraph::StereoSpecificLoudnessGraph()
     xGraduations.setAndGetRange (minCams, maxCams);
     yGraduations.setAndGetRange (minLevel, maxLevel);
 
-    setMeterLevel (minLevel, maxLevel);
+    setMeterRange (minLevel, maxLevel);
 
     xGraduations.showAxisLine (true);
     yGraduations.showAxisLine (true);
