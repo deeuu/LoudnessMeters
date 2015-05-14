@@ -72,7 +72,7 @@ void StereoLoudnessBarGraph::resized()
 void StereoLoudnessBarGraph::setMeterBounds (int x, int y, int width, int height)
 {
     int componentY = y - graduations.getEndOffset() + 1;
-    int componentHeight = height + componentY + y + 3 * labelHeight;
+    int componentHeight = height + graduations.getEndOffset() - 1 + 3 * labelHeight;
     setBounds (x, componentY, width, componentHeight);
 }
 
