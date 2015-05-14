@@ -18,9 +18,12 @@ StereoLoudnessBarGraph::StereoLoudnessBarGraph()
     setMeterRiseTime (3, 10);
 
     setMeterDecayTime (0, 10);
-    setMeterDecayTime (1, 10);
+    setMeterDecayTime (1, 5000);
     setMeterDecayTime (2, 10);
-    setMeterDecayTime (3, 10);
+    setMeterDecayTime (3, 5000);
+
+    setMeterHoldTime (1, 1000);
+    setMeterHoldTime (3, 1000);
 
     graduations.setColour (graduationColour);
     graduations.setFontHeight (14.0f);

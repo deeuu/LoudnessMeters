@@ -161,10 +161,10 @@ void LoudnessMeterAudioProcessorEditor::timerCallback()
     if (processor.loudnessValuesReady())
     {
         //update bar graphs
-        barGraph.setMeterLevels (loudnessValues->leftLTL,
-                                 loudnessValues->leftPeakSTL,
-                                 loudnessValues->rightLTL,
-                                 loudnessValues->rightPeakSTL);
+        barGraph.setMeterLevels (loudnessValues->leftSTL,
+                                 loudnessValues->leftSTL,
+                                 loudnessValues->rightSTL,
+                                 loudnessValues->rightSTL);
 
         //update specific loudness graph
         specificLoudness.setSpecificLoudnessValues (loudnessValues->centreFrequencies, 
