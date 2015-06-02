@@ -2,7 +2,7 @@
 #include "StereoSpecificLoudnessGraph.h"
 
 StereoSpecificLoudnessGraph::StereoSpecificLoudnessGraph()
-    : MeterBallistics (0, 0.01, 2.0f),
+    : MeterBallistics (0, 0.01, 2.0f, false),
       graduationColour (Colours::black),
       leftTraceColour (0xff00ff00), rightTraceColour (0xffff0000),
       labelHeight (20.0f),
@@ -29,7 +29,7 @@ StereoSpecificLoudnessGraph::StereoSpecificLoudnessGraph()
     xGraduations.setAndGetRange (minCams, maxCams);
     yGraduations.setAndGetRange (minLevel, maxLevel);
 
-    setMeterLevel (minLevel, maxLevel);
+    setMeterRange (minLevel, maxLevel);
 
     xGraduations.showAxisLine (true);
     yGraduations.showAxisLine (true);
@@ -89,10 +89,10 @@ void StereoSpecificLoudnessGraph::resized()
     float yGraduationsEndOffset = yGraduations.getEndOffset();
 
     xGraduationsX = yGraduationsX + yGraduationsWidth - xGraduationsEndOffset;
-    xGraduationsY = height - xGraduationsHeight - yGraduationsEndOffset - labelHeight;
+    xGraduationsY = height - xGraduationsHeight - yGraduationsEndOffset - 1 - labelHeight;
     xGraduationsWidth = width - xGraduationsX;
     
-    yGraduationsHeight = xGraduationsY - yGraduationsY + yGraduationsEndOffset;
+    yGraduationsHeight = xGraduationsY - yGraduationsY + yGraduationsEndOffset + 1;
 
     graphX = xGraduationsX + xGraduationsEndOffset - 1;
     graphY = yGraduationsY + yGraduationsEndOffset - 1;
@@ -106,7 +106,7 @@ void StereoSpecificLoudnessGraph::resized()
 void StereoSpecificLoudnessGraph::setGraphBounds (int x, int y, int width, int height)
 {
     int componentY = y - yGraduations.getEndOffset() + 1 - yGraduationsY;
-    int componentHeight = height + componentY + y + xGraduationsHeight + labelHeight;
+    int componentHeight = height + yGraduations.getEndOffset() - 1 + xGraduationsHeight + labelHeight;
     setBounds (x, componentY, width, componentHeight);
 }
 

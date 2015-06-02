@@ -20,6 +20,9 @@ MeterBallistics::MeterBallistics (unsigned int numMetersInit, double minLevelIni
         previousLevels.add (minLevel);
         riseStepSizes.add (5);
         decayStepSizes.add (50);
+
+        holdTimes.add (0);
+        holdSteps.add (0);
     }
 }
 
@@ -83,6 +86,9 @@ void MeterBallistics::setNumMeters (unsigned int newNumMeters)
             previousLevels.add (minLevel);
             riseStepSizes.add (500);
             decayStepSizes.add (50);
+
+            holdTimes.add (0);
+            holdSteps.add (0);
         }
     }
     else if (newNumMeters < numMeters)
@@ -132,6 +138,14 @@ void MeterBallistics::setMeterDecayTime (unsigned int index, unsigned int fullSc
     decayStepSizes.set (index, updatePeriod * valueRange / fullScaleDecayTimeInMilliseconds);
 }
 
+void MeterBallistics::setMeterHoldTime (unsigned int index, unsigned int holdTimeInMilliseconds)
+{
+    GenericScopedLock <CriticalSection> lock (mutex);
+
+    holdTimes.set (index, holdTimeInMilliseconds / updatePeriod);
+    holdSteps.set (index, holdTimes [index]);
+}
+
 //==========================================================================
 //      Timer Callback
 //==========================================================================
@@ -147,14 +161,22 @@ void MeterBallistics::timerCallback()
 
         if (distanceToTarget < 0.0)
         {
-            if (fabs (distanceToTarget) > decayStepSizes [index])
+            if (holdSteps [index] <= 0)
             {
-                currentLevels.set (index, currentLevels [index] - decayStepSizes [index]);
-                allMetersAtTargets = false;
+                if (fabs (distanceToTarget) > decayStepSizes [index])
+                {
+                    currentLevels.set (index, currentLevels [index] - decayStepSizes [index]);
+                    allMetersAtTargets = false;
+                }
+                else
+                {
+                    currentLevels.set (index, targetLevels [index]);
+                }
             }
             else
             {
-                currentLevels.set (index, targetLevels [index]);
+                holdSteps.set (index, holdSteps [index] - 1);
+                allMetersAtTargets = false;
             }
         }
         else if (distanceToTarget > 0.0)
@@ -168,6 +190,8 @@ void MeterBallistics::timerCallback()
             {
                 currentLevels.set (index, targetLevels [index]);
             }
+
+            holdSteps.set (index, holdTimes [index]);
         }
 
         meterLevelChanged (index);

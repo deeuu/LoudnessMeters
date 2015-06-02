@@ -17,10 +17,13 @@ StereoLoudnessBarGraph::StereoLoudnessBarGraph()
     setMeterRiseTime (2, 0);//Right
     setMeterRiseTime (3, 0);//Right peak
 
-    setMeterDecayTime (0, 0);
-    setMeterDecayTime (1, 20000);
-    setMeterDecayTime (2, 0);
-    setMeterDecayTime (3, 20000);
+    setMeterDecayTime (0, 10);
+    setMeterDecayTime (1, 5000);
+    setMeterDecayTime (2, 10);
+    setMeterDecayTime (3, 5000);
+
+    setMeterHoldTime (1, 1000);
+    setMeterHoldTime (3, 1000);
 
     graduations.setColour (graduationColour);
     graduations.setFontHeight (14.0f);
@@ -69,7 +72,7 @@ void StereoLoudnessBarGraph::resized()
 void StereoLoudnessBarGraph::setMeterBounds (int x, int y, int width, int height)
 {
     int componentY = y - graduations.getEndOffset() + 1;
-    int componentHeight = height + componentY + y + 3 * labelHeight;
+    int componentHeight = height + graduations.getEndOffset() - 1 + 3 * labelHeight;
     setBounds (x, componentY, width, componentHeight);
 }
 

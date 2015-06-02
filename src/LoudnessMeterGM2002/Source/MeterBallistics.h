@@ -31,6 +31,7 @@ public:
     //==========================================================================
     void setMeterRiseTime (unsigned int index, unsigned int fullScaleRiseTimeInMilliseconds);
     void setMeterDecayTime (unsigned int index, unsigned int fullScaleDecayTimeInMilliseconds);
+    void setMeterHoldTime (unsigned int index, unsigned int holdTimeInMilliseconds);
 
     //==========================================================================
     //      Timer Callback
@@ -47,6 +48,7 @@ private:
     double minLevel, maxLevel;
     bool clipToRange;
     Array <double> riseStepSizes, decayStepSizes;
+    Array <unsigned int> holdTimes, holdSteps;
 
     CriticalSection mutex;
 
