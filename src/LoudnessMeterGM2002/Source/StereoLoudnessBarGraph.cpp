@@ -49,7 +49,7 @@ void StereoLoudnessBarGraph::paint (Graphics& g)
     g.drawFittedText ("L", 0, channelLabelY, barWidth, labelHeight, Justification::centred, 1);
     g.drawFittedText ("R", 3 * barWidth, channelLabelY, barWidth, labelHeight, Justification::centred, 1);
 
-    g.drawFittedText ("STL (sones)", 0, height - 2 * labelHeight, width, 2 * labelHeight, Justification::centred, 2);
+    g.drawFittedText ("Short Term\n(sones)", 0, height - 2 * labelHeight, width, 2 * labelHeight, Justification::centred, 2);
 }
 
 void StereoLoudnessBarGraph::resized()
