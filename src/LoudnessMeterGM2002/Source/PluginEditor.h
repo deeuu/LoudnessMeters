@@ -44,6 +44,8 @@ private:
     LoudnessMeterAudioProcessor& processor;
     LoudnessValues *loudnessValues;
     
+    Colour textColour;
+    
     //graphs
     StereoLoudnessBarGraph barGraph;
     StereoSpecificLoudnessGraph specificLoudness;

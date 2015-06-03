@@ -118,11 +118,18 @@ float Graduations::valueToCoordinate (float value)
         float valueRange = maxValue - minValue;
         scaledAndOffsetValue = (value - minValue) / valueRange;
     }
-    else if (type == Logarithmic)
-    {
-        float valueRatio = maxValue / minValue;
-        float scaledValue = value / minValue;
-        scaledAndOffsetValue = log (scaledValue) / log (valueRatio);
+	else if (type == Logarithmic)
+	{
+		if (value <= 0)
+		{
+			scaledAndOffsetValue = -0.1;
+		}
+		else
+		{
+		    float valueRatio = maxValue / minValue;
+		    float scaledValue = value / minValue;
+	        scaledAndOffsetValue = log(scaledValue) / log(valueRatio);
+		}
     }
 
     if (style & Vertical)

@@ -27,6 +27,8 @@ void LoudnessValueDisplay::paint (Graphics& g)
     int height = getHeight() / 3;
     int circleHeight = 2 * height;
     g.setColour (labelColour);
+    
+    g.setFont (20);
     g.drawFittedText (labelText, xPos, yPos, getWidth(), height,
                       Justification::centred, 1); 
     Rectangle <float> rect (getWidth() / 6, yPos + height, circleHeight, circleHeight);
@@ -34,7 +36,6 @@ void LoudnessValueDisplay::paint (Graphics& g)
     g.fillEllipse (rect);
 
     g.setColour (valueColour);
-    g.setFont (20);
     g.drawFittedText (valueToDisplay, xPos,
                       yPos + height, getWidth(), 
                       circleHeight, Justification::centred, 1); 

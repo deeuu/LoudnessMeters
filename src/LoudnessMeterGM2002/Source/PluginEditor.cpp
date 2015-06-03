@@ -16,13 +16,14 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     : AudioProcessorEditor (&p),
       processor (p),
       loudnessValues (processor.getPointerToLoudnessValues()),
+      textColour (Colours::white),
       settingsButton ("Settings"),
       calibrationButton ("Calibrate SPL"),
       settingsScreen (processor.getLoudnessParameters()),
       screenHeight (120),
-      displayForLTL("Long Term", Colours::lightgrey, Colours::yellow),
-      displayForPeakSTL("Peak", Colours::lightgrey, Colours::yellow),
-      displayForSPL("SPL (Z)", Colours::lightgrey, Colours::yellow)
+      displayForLTL("Long Term", textColour, Colours::yellow),
+      displayForPeakSTL("Peak", textColour, Colours::yellow),
+      displayForSPL("SPL (Z)", textColour, Colours::yellow)
 {
     int generalSpacing = 10;
     int windowWidth = 700;
@@ -33,7 +34,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     int specLoudGraphWidth = goldenPoint - 1.5 * generalSpacing;
     int specLoudGraphHeight = 300;
     addAndMakeVisible (specificLoudness);
-    specificLoudness.setGraduationColour (Colours::lightgrey);
+    specificLoudness.setGraduationColour (textColour);
     specificLoudness.setGraphBounds (generalSpacing, 
                                 generalSpacing,
                                 specLoudGraphWidth,
@@ -42,7 +43,7 @@ LoudnessMeterAudioProcessorEditor::LoudnessMeterAudioProcessorEditor (LoudnessMe
     int barX = goldenPoint + 0.5 * generalSpacing;
     int barWidth = (windowWidth - goldenPoint - 2.5 * generalSpacing) / 2;
     addAndMakeVisible (barGraph);
-    barGraph.setGraduationColour (Colours::lightgrey);
+    barGraph.setGraduationColour (textColour);
     barGraph.setRange (0, 34);
     barGraph.setMeterBounds (barX,
                         generalSpacing,
