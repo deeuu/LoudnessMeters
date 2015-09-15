@@ -42,7 +42,7 @@ StereoSpecificLoudnessGraph::~StereoSpecificLoudnessGraph()
 void StereoSpecificLoudnessGraph::paint (Graphics& g)
 {
     // draw graph background
-    g.setColour (Colours::black);
+    g.setColour (Colour (0xff222222));
     g.fillRect (graphX, graphY, graphWidth, graphHeight);
 
     // draw traces
@@ -74,6 +74,7 @@ void StereoSpecificLoudnessGraph::paint (Graphics& g)
     // draw axis labels
     g.setColour (graduationColour);
 
+    g.setFont (20);
     g.drawFittedText ("Frequency (cams)", graphX, getHeight() - labelHeight, graphWidth, labelHeight, Justification::centred, 1);
 
     g.addTransform (AffineTransform::rotation (- float_Pi / 2.0f, 0.0f, graphY + graphHeight));
