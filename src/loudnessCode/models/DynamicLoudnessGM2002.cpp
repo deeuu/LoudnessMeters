@@ -25,6 +25,7 @@
 #include "../modules/IIR.h"
 #include "../modules/Window.h"
 #include "../modules/PowerSpectrum.h"
+#include "../modules/HoppingGoertzelDFT.h"
 #include "../modules/CompressSpectrum.h"
 #include "../modules/WeightSpectrum.h"
 #include "../modules/FastRoexBank.h"
@@ -42,14 +43,14 @@ namespace loudness{
         Model("DynamicLoudnessGM2002", true),
         pathToFilterCoefs_(pathToFilterCoefs)
     {
-        configureModelParameters("recentAndFaster");
+        configureModelParameters("FasterAndRecent");
     }
 
     DynamicLoudnessGM2002::DynamicLoudnessGM2002() :
         Model("DynamicLoudnessGM2002", true),
         pathToFilterCoefs_("")
     {
-        configureModelParameters("recentAndFaster");
+        configureModelParameters("RecentAndFaster");
     }
     
     DynamicLoudnessGM2002::~DynamicLoudnessGM2002()
@@ -71,9 +72,9 @@ namespace loudness{
         isPeakSTLFollowerUsed_ = isPeakSTLFollowerUsed;
     }
 
-    void DynamicLoudnessGM2002::setOuterEarType(const OME::Filter& outerEarType)
+    void DynamicLoudnessGM2002::setOuterEarFilter(const OME::Filter& outerEarFilter)
     {
-        outerEarType_ = outerEarType;
+        outerEarFilter_ = outerEarFilter;
     }
 
     void DynamicLoudnessGM2002::setPresentationDiotic(bool isPresentationDiotic)
@@ -89,6 +90,16 @@ namespace loudness{
     void DynamicLoudnessGM2002::setSpectrumSampledUniformly(bool isSpectrumSampledUniformly)
     {
         isSpectrumSampledUniformly_ = isSpectrumSampledUniformly;
+    }
+
+    void DynamicLoudnessGM2002::setHoppingGoertzelDFTUsed (bool isHoppingGoertzelDFTUsed)
+    {
+        isHoppingGoertzelDFTUsed_ = isHoppingGoertzelDFTUsed;
+    }
+
+    void DynamicLoudnessGM2002::setSpectralResolutionDoubled(bool isSpectralResolutionDoubled)
+    {
+        isSpectralResolutionDoubled_ = isSpectralResolutionDoubled;
     }
 
     void DynamicLoudnessGM2002::setExcitationPatternInterpolated(bool isExcitationPatternInterpolated)
@@ -133,6 +144,7 @@ namespace loudness{
             releaseTimeSTL_ = -0.001/log(1-0.02);
             attackTimeLTL_ = -0.001/log(1-0.01);
             releaseTimeLTL_ = -0.001/log(1-0.0005);
+            LOUDNESS_DEBUG(name_ << ": Time-constants from 2002 paper");
         }
         else if (author == "MGS2003")
         {
@@ -140,6 +152,7 @@ namespace loudness{
             releaseTimeSTL_  = -0.001/log(1-0.02);
             attackTimeLTL_ = -0.001/log(1-0.01);
             releaseTimeLTL_ = -0.001/log(1-0.005);
+            LOUDNESS_DEBUG(name_ << ": Modified time-constants from 2003 paper");
         }
         else
         {
@@ -151,10 +164,12 @@ namespace loudness{
     {
         //common to all
         setRate(1000);
-        setHPFUsed(false);
+        setHPFUsed(true);
         setPeakSTLFollowerUsed(false);
-        setOuterEarType(OME::ANSIS342007_FREEFIELD);
+        setOuterEarFilter(OME::ANSIS342007_FREEFIELD);
         setSpectrumSampledUniformly(true);
+        setHoppingGoertzelDFTUsed(false);
+        setSpectralResolutionDoubled(false);
         setExcitationPatternInterpolated(false);
         setInterpolationCubic(true);
         setFilterSpacingInCams(0.25);
@@ -168,14 +183,15 @@ namespace loudness{
                 
         if (setName != "GM2002")
         {
-            if (setName == "faster")
+            if (setName == "Faster")
             {
                 setRoexBankFast(true);
                 setExcitationPatternInterpolated(true);
-                setCompressionCriterionInCams(0.3);
+                setFilterSpacingInCams(0.75);
+                setCompressionCriterionInCams(0.2);
                 LOUDNESS_DEBUG(name_ << ": Using faster params for Glasberg and Moore's 2002 model.");
             }
-            else if (setName == "recent")
+            else if (setName == "Recent")
             {
                 configureSmoothingTimes("MGS2003");
                 setSpecificLoudnessANSIS342007(true);
@@ -184,13 +200,14 @@ namespace loudness{
                         << "time-constants from 2003 paper and high-level specific "
                         << "loudness equation (ANSI S3.4 2007)."); 
             }
-            else if (setName == "recentAndFaster")
+            else if (setName == "FasterAndRecent")
             {
-                configureSmoothingTimes("GM2003");
+                configureSmoothingTimes("MGS2003");
                 setSpecificLoudnessANSIS342007(true);
                 setRoexBankFast(true);
                 setExcitationPatternInterpolated(true);
-                setCompressionCriterionInCams(0.3);
+                setFilterSpacingInCams(0.75);
+                setCompressionCriterionInCams(0.2);
                 LOUDNESS_DEBUG(name_
                         << ": Using faster params and "
                         << "updated time-constants from 2003 paper and "
@@ -262,37 +279,60 @@ namespace loudness{
 
         /*
          * Multi-resolution spectrogram
+         * 10 Hz to include energy caused by sidebands for frequencies near
+         * 20Hz but exclude DC.
+         * 15001 Hz so top frequencies included.
          */
         RealVec bandFreqsHz {10, 80, 500, 1250, 2540, 4050, 15001};
 
         //window spec
         RealVec windowSizeSecs {0.064, 0.032, 0.016, 0.008, 0.004, 0.002};
-        vector<int> windowSizeSamples(6,0);
+        vector<int> windowSizeSamples(6, 0);
         //round to nearest sample and force to be even such that centre samples
-        //are aligned.
+        //are aligned (using periodic Hann window)
         for (int w = 0; w < 6; w++)
         {
+            if (isSpectralResolutionDoubled_)
+                windowSizeSecs[w] *= 2;
             windowSizeSamples[w] = (int)round(windowSizeSecs[w] * input.getFs());
-            windowSizeSamples[w] += windowSizeSamples[w]%2;
+            windowSizeSamples[w] += windowSizeSamples[w] % 2;
         }
 
-        //Frame generator
-        int hopSize = int(input.getFs() / rate_);
-        modules_.push_back(unique_ptr<Module> 
-                (new FrameGenerator(windowSizeSamples[0], hopSize, isFirstSampleAtWindowCentre_)));
-
-        //windowing: Periodic hann window
-        modules_.push_back(unique_ptr<Module>
-                (new Window(Window::HANN, windowSizeSamples, true)));
-
+        // hop size to the nearest sample
+        int hopSize = round(input.getFs() / rate_);
+        
         //power spectrum
-        modules_.push_back(unique_ptr<Module> 
-                (new PowerSpectrum(bandFreqsHz, windowSizeSamples, isSpectrumSampledUniformly_)));
+        if (isHoppingGoertzelDFTUsed_)
+        {
+            compressionCriterionInCams_ = 0;
+            modules_.push_back(unique_ptr<Module> 
+                    (new HoppingGoertzelDFT(bandFreqsHz,
+                                            windowSizeSamples,
+                                            hopSize,
+                                            true,
+                                            true)));
+        }
+        else
+        {
+            modules_.push_back(unique_ptr<Module> 
+                    (new FrameGenerator(windowSizeSamples[0],
+                                        hopSize,
+                                        isFirstSampleAtWindowCentre_)));
+
+            //windowing: Periodic hann window
+            modules_.push_back(unique_ptr<Module>
+                    (new Window(Window::HANN, windowSizeSamples, true)));
+
+            modules_.push_back(unique_ptr<Module> 
+                    (new PowerSpectrum(bandFreqsHz,
+                                       windowSizeSamples,
+                                       isSpectrumSampledUniformly_)));
+        }
 
         /*
          * Compression
          */
-        if((compressionCriterionInCams_ > 0) && (!isSpectrumSampledUniformly_))
+        if((compressionCriterionInCams_ > 0) && (isSpectrumSampledUniformly_))
         {
             modules_.push_back(unique_ptr<Module>
                     (new CompressSpectrum(compressionCriterionInCams_)));
@@ -309,7 +349,7 @@ namespace loudness{
                 middleEar = OME::ANSIS342007_MIDDLE_EAR_HPF;
 
             modules_.push_back(unique_ptr<Module> 
-                    (new WeightSpectrum(middleEar, outerEarType_)));
+                    (new WeightSpectrum(middleEar, outerEarFilter_)));
         }
 
         /*
@@ -327,7 +367,7 @@ namespace loudness{
             modules_.push_back(unique_ptr<Module> 
                     (new RoexBankANSIS342007(1.8, 38.9, filterSpacingInCams_)));
         }
-        outputModules_["ExcitationPattern"] = modules_.back().get();
+        outputModules_["Excitation"] = modules_.back().get();
         
         /*
          * Specific loudness
@@ -344,7 +384,7 @@ namespace loudness{
         {
             modules_.push_back(unique_ptr<Module> (new BinauralInhibitionMG2007));
         }
-        outputModules_["SpecificLoudnessPattern"] = modules_.back().get();
+        outputModules_["SpecificLoudness"] = modules_.back().get();
 
         /*
         * Instantaneous loudness

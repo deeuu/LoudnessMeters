@@ -26,18 +26,18 @@ namespace loudness{
           windowType_(windowType),
           length_(length),
           periodic_(periodic),
-          normalisation_(ENERGY),
-          ref_(2e-5)
+          normalisation_(ENERGY)
     {}
+
     Window::Window(const WindowType& windowType, int length, bool periodic) :
         Module("Window"),
         windowType_(windowType),
         periodic_(periodic),
-        normalisation_(ENERGY),
-        ref_(2e-5)
+        normalisation_(ENERGY)
     {
        length_.assign(1, length); 
     }
+
     Window::Window():
         Module("Window")
     {}
@@ -48,10 +48,8 @@ namespace loudness{
    
     bool Window::initializeInternal(const SignalBank &input)
     {
-#ifndef _MSC_VER
         LOUDNESS_ASSERT(input.getNSamples() == length_[0], 
                     name_ << ": Number of input samples does not equal the largest window size!");
-#endif
 
         //number of windows
         nWindows_ = (int)length_.size();
@@ -95,7 +93,7 @@ namespace loudness{
         {
             window_[w].assign(length_[w],0.0);
             generateWindow(window_[w], windowType_, periodic_);
-            normaliseWindow(window_[w], normalisation_, ref_);
+            normaliseWindow(window_[w], normalisation_);
             LOUDNESS_DEBUG(name_ << ": Length of window " << w << " = " << window_[w].size());
         }
 
@@ -160,7 +158,7 @@ namespace loudness{
         normalisation_ = normalisation;
     }
 
-    void Window::normaliseWindow(RealVec &window, const Normalisation& normalisation, double ref)
+    void Window::normaliseWindow(RealVec &window, const Normalisation& normalisation)
     {
         if (normalisation != NONE)
         {
@@ -189,16 +187,10 @@ namespace loudness{
                     normFactor = sqrt(wSize/sumSquares);
             }
 
-            normFactor /= ref;
             LOUDNESS_DEBUG(name_ << ": Normalising window using factor: " << normFactor);
             for(uint i=0; i < wSize; i++)
                 window[i] *= normFactor;
         }
-    }
-
-    void Window::setRef(const Real ref)
-    {
-        ref_ = ref;
     }
 
 }

@@ -28,17 +28,17 @@ namespace loudness{
     /**
      * @class DynamicLoudnessCH2012
      *
-     * @brief Implements Chen and Hu's (2012) time-varying loudness model.
+     * @brief Implements Chen and Hu's (2012) dynamic loudness model.
      *
      * At present, there are two parameter sets available:
      *
-     * 1. CH2012 - The specification used by Chen and Hu (2012).
-     * 2. faster - Uses a compressed spectrum with a filter spacing of 0.25
-     * Cams.
+     * 1. "CH2012"
+     *      - Uses the specification of Chen and Hu (2012).
+     * 2. "Faster" 
+     *      - Uses a compressed spectrum according to a 0.3 Cam criterion.
+     *      - Uses a filter spacing of 0.5 Cams.
      *
-     * The default is `faster'.
-     *
-     * Use configureModelParameters() to select the model parameters.
+     * The default is "Faster". Use configureModelParameters() to switch parameter sets.
      * 
      * If you want to use a time-domain filter for simulating the transmission
      * response of the outer and middle ear, such as the 4096 order FIR filter
@@ -51,14 +51,14 @@ namespace loudness{
      *
      * If the input SignalBank used to initialise this model has one ear, then
      * the instantaneous loudness is multiplied by two. If you don't want this,
-     * call method setDioticPresentation(false) (default is true). If the input
+     * call method setPresentationDiotic(false) (default is true). If the input
      * SignalBank has two ears, the default the instantaneous loudness is a sum
      * of the loudness in both left and right ears. If you want to access the
      * loudness in both left and right ears seperately, call method
-     * setDioticPresentation(false). When there are two ears, the binaural
+     * setPresentationDiotic(false). When there are two ears, the binaural
      * inhibition model proposed by Moore and Glasberg (2007) is used. If you
      * don't want this call method setInhibitSpecificLoudness(false). Note that
-     * because this model does not have an explicit `specific loudness' stage,
+     * because this model does not have a separate `specific loudness' stage,
      * the excitation pattern is scaled to give units of sones rather than
      * power. If you don't want this, call method setOutputSpecificLoudness
      * (false) (default is true). In this case, binaural inhibition will not be
@@ -68,6 +68,16 @@ namespace loudness{
      * pattern can be interpolated to approximate the high resolution pattern.
      * If you want this setExcitationPatternInterpolated(true); In mode `faster'
      * this is true;
+     *
+     * A peak follower can be applied to the short-term loudness using 
+     * setPeakSTLFollowerUsed(true) (default is false).
+     *
+     * OUTPUTS:
+     *  - "SpecificLoudness"
+     *  - "InstantaneousLoudness"
+     *  - "ShortTermLoudness"
+     *  - "LongTermLoudness"
+     *  - "PeakShortTermLoudness" (optional)
      *
      * REFERENCES:
      *
@@ -83,6 +93,7 @@ namespace loudness{
      * of the IEEE International Conference on Acoustics, Speech, and Signal
      * Processing (ICASSP ’12) (pp. 157–160).
      *
+     * @sa DoubleRoexBank
      */
     class DynamicLoudnessCH2012 : public Model
     {
@@ -104,6 +115,8 @@ namespace loudness{
 
             void setSpectrumSampledUniformly(bool isSpectrumSampledUniformly);
 
+            void setHoppingGoertzelDFTUsed (bool isHoppingGoertzelDFTUsed);
+
             void setExcitationPatternInterpolated(bool isExcitationPatternInterpolated);
 
             void setInterpolationCubic(bool isInterpolationCubic);
@@ -114,7 +127,7 @@ namespace loudness{
 
             void setBinauralInhibitionUsed(bool isBinauralInhibitionUsed);
 
-            void setOuterEarType(const OME::Filter& outerEarType);
+            void setOuterEarFilter(const OME::Filter& outerEarFilter);
 
             void setFirstSampleAtWindowCentre(bool isFirstSampleAtWindowCentre);
 
@@ -133,11 +146,12 @@ namespace loudness{
             Real filterSpacingInCams_, compressionCriterionInCams_;
             Real attackTimeSTL_, releaseTimeSTL_;
             Real attackTimeLTL_, releaseTimeLTL_;
-            bool isSpectrumSampledUniformly_, isExcitationPatternInterpolated_;
+            bool isSpectrumSampledUniformly_, isHoppingGoertzelDFTUsed_;
+            bool isExcitationPatternInterpolated_;
             bool isInterpolationCubic_, isPresentationDiotic_;
             bool isSpecificLoudnessOutput_, isBinauralInhibitionUsed_;
             bool isFirstSampleAtWindowCentre_, isPeakSTLFollowerUsed_;
-            OME::Filter outerEarType_;
+            OME::Filter outerEarFilter_;
     }; 
 }
 

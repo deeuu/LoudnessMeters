@@ -167,7 +167,7 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
 
     //loudness model configuration and initialisation
     inputSignalBank.initialize (numEars, 1, hopSize, (int) fs);
-    model.configureModelParameters ("recentAndFaster");
+    model.configureModelParameters ("Faster");
     model.setPresentationDiotic (false); //required for left and right output
     model.setPeakSTLFollowerUsed (true);
     //set default params
@@ -179,19 +179,19 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     switch (loudnessParameters.filter)
     {
         case 0 :
-            model.setOuterEarType (loudness::OME::ANSIS342007_FREEFIELD);
+            model.setOuterEarFilter (loudness::OME::ANSIS342007_FREEFIELD);
             break;
         case 1 :
-            model.setOuterEarType (loudness::OME::ANSIS342007_DIFFUSEFIELD);
+            model.setOuterEarFilter (loudness::OME::ANSIS342007_DIFFUSEFIELD);
             break;
         case 2 :
-            model.setOuterEarType (loudness::OME::BD_DT990);
+            model.setOuterEarFilter (loudness::OME::BD_DT990);
             break;
         case 3 :
-            model.setOuterEarType (loudness::OME::NONE);
+            model.setOuterEarFilter (loudness::OME::NONE);
             break;
         default :
-            model.setOuterEarType (loudness::OME::ANSIS342007_FREEFIELD);
+            model.setOuterEarFilter (loudness::OME::ANSIS342007_FREEFIELD);
     }
 
     //initialise the model
@@ -211,28 +211,28 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     */
 
     // STL
-    const loudness::SignalBank* bank = &model.getOutputModuleSignalBank ("ShortTermLoudness");
+    const loudness::SignalBank* bank = &model.getOutput ("ShortTermLoudness");
     pointerToSTLLeft = bank -> getSingleSampleReadPointer (0, 0);
     pointerToSTLRight = bank -> getSingleSampleReadPointer (1, 0);
 
     // Peak STL
-    bank = &model.getOutputModuleSignalBank ("PeakShortTermLoudness");
+    bank = &model.getOutput ("PeakShortTermLoudness");
     pointerToPeakSTLLeft = bank -> getSingleSampleReadPointer (0, 0);
     pointerToPeakSTLRight = bank -> getSingleSampleReadPointer (1, 0);
     pointerToPeakSTLOverall = bank -> getSingleSampleReadPointer (2, 0);
 
     // LTL
-    bank = &model.getOutputModuleSignalBank ("LongTermLoudness");
+    bank = &model.getOutput ("LongTermLoudness");
     pointerToLTLLeft = bank -> getSingleSampleReadPointer (0, 0);
     pointerToLTLRight = bank -> getSingleSampleReadPointer (1, 0);
     pointerToLTLOverall = bank -> getSingleSampleReadPointer (2, 0);
 
     // Specific loudness (loudness as a function of frequency)
-    bank = &model.getOutputModuleSignalBank ("SpecificLoudnessPattern");
+    bank = &model.getOutput ("SpecificLoudness");
     pointerToSpecificLeft = bank -> getSingleSampleReadPointer (0, 0);
     pointerToSpecificRight = bank -> getSingleSampleReadPointer (1, 0);
     
-    numAuditoryChannels = bank->getNChannels();
+    numAuditoryChannels = bank -> getNChannels();
     
     copyLoudnessValues.set (1);
     loudnessValues.leftSpecificLoudness.clear();
@@ -245,7 +245,7 @@ void LoudnessMeterAudioProcessor::initialiseLoudness (const LoudnessParameters &
     {
         loudnessValues.leftSpecificLoudness.add (0);
         loudnessValues.rightSpecificLoudness.add (0);
-        loudnessValues.centreFrequencies.add (loudness::freqToCam (ptr[i]));
+        loudnessValues.centreFrequencies.add (loudness::hertzToCam (ptr[i]));
     }
 
     pluginInitialised = true;
@@ -455,33 +455,18 @@ void LoudnessMeterAudioProcessor::tryAndCopyLoudnessValuesAfterProcessing (bool 
     if (copyLoudnessValues.get() == 1)
     {
         // STL, LTL features
-        if (convertToPhons)
-        {
-            loudnessValues.leftSTL = loudness::soneToPhonMGB1997 (*pointerToSTLLeft, true);
-            loudnessValues.leftPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLLeft, true);
-            loudnessValues.rightSTL = loudness::soneToPhonMGB1997 (*pointerToSTLRight, true);
-            loudnessValues.rightPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLRight, true);
-            loudnessValues.overallPeakSTL = loudness::soneToPhonMGB1997 (*pointerToPeakSTLOverall, true);
-            loudnessValues.leftLTL = loudness::soneToPhonMGB1997 (*pointerToLTLLeft, true);
-            loudnessValues.rightLTL = loudness::soneToPhonMGB1997 (*pointerToLTLRight, true);
-            loudnessValues.overallLTL = loudness::soneToPhonMGB1997 (*pointerToLTLOverall, true);
-        }
-        else
-        {
-            loudnessValues.leftSTL = *pointerToSTLLeft;
-            loudnessValues.rightSTL = *pointerToSTLRight;
-            loudnessValues.rightPeakSTL = *pointerToPeakSTLRight;
-            loudnessValues.leftPeakSTL = *pointerToPeakSTLLeft;
-            loudnessValues.overallPeakSTL = *pointerToPeakSTLOverall;
-            loudnessValues.leftLTL = *pointerToLTLLeft;
-            loudnessValues.rightLTL = *pointerToLTLRight;
-            loudnessValues.overallLTL = *pointerToLTLOverall;
-        }
+        loudnessValues.leftSTL = *pointerToSTLLeft;
+        loudnessValues.rightSTL = *pointerToSTLRight;
+        loudnessValues.rightPeakSTL = *pointerToPeakSTLRight;
+        loudnessValues.leftPeakSTL = *pointerToPeakSTLLeft;
+        loudnessValues.overallPeakSTL = *pointerToPeakSTLOverall;
+        loudnessValues.leftLTL = *pointerToLTLLeft;
+        loudnessValues.rightLTL = *pointerToLTLRight;
+        loudnessValues.overallLTL = *pointerToLTLOverall;
 
         // Specific loudness
         for (int i = 0; i < numAuditoryChannels; ++i)
         {
-            //haven't made my mind up what to do with these yet...
             loudnessValues.leftSpecificLoudness.set (i, pointerToSpecificLeft [i]);
             loudnessValues.rightSpecificLoudness.set (i, pointerToSpecificRight [i]);
         }

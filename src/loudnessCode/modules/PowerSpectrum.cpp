@@ -21,12 +21,15 @@
 
 namespace loudness{
 
-    PowerSpectrum::PowerSpectrum(const RealVec& bandFreqsHz, const vector<int>& windowSizes, bool sampleSpectrumUniformly):
-        Module("PowerSpectrum"),
-        bandFreqsHz_(bandFreqsHz),
-        windowSizes_(windowSizes),
-        sampleSpectrumUniformly_(sampleSpectrumUniformly),
-        normalisation_("averageEnergy")
+    PowerSpectrum::PowerSpectrum(const RealVec& bandFreqsHz,
+                                 const vector<int>& windowSizes, 
+                                 bool sampleSpectrumUniformly)
+        :   Module("PowerSpectrum"),
+            bandFreqsHz_(bandFreqsHz),
+            windowSizes_(windowSizes),
+            sampleSpectrumUniformly_(sampleSpectrumUniformly),
+            normalisation_(AVERAGE_POWER),
+            referenceValue_(2e-5)
     {}
 
     PowerSpectrum::~PowerSpectrum()
@@ -39,14 +42,12 @@ namespace loudness{
 
         //number of windows
         int nWindows = (int)windowSizes_.size();
-#ifndef _MSC_VER
         LOUDNESS_ASSERT(input.getNChannels() == nWindows,
                 name_ << ": Number of channels do not match number of windows");
         LOUDNESS_ASSERT((int)bandFreqsHz_.size() == (nWindows + 1),
                 name_ << ": Number of frequency bands should equal number of input channels + 1.");
         LOUDNESS_ASSERT(!anyAscendingValues(windowSizes_),
                     name_ << ": Window lengths must be in descending order.");
-#endif
 
         //work out FFT configuration (constrain to power of 2)
         int largestWindowSize = input.getNSamples();
@@ -70,20 +71,17 @@ namespace loudness{
         bandBinIndices_.resize(nWindows);
         normFactor_.resize(nWindows);
         int fs = input.getFs();
+        int nBins = 0;
         for(int i=0; i<nWindows; i++)
         {
             //bin indices to use for compiled spectrum
             bandBinIndices_[i].resize(2);
             //These are NOT the nearest components but satisfies f_k in [f_lo, f_hi)
             bandBinIndices_[i][0] = ceil(bandFreqsHz_[i]*fftSize[i]/fs);
-            LOUDNESS_DEBUG(name_ << ": band low : " << bandBinIndices_[i][0]);
-            bandBinIndices_[i][1] = ceil(bandFreqsHz_[i+1]*fftSize[i]/fs)-1;
-            LOUDNESS_DEBUG(name_ << ": band hi : " << bandBinIndices_[i][1]);
-
-#ifndef _MSC_VER
-            LOUDNESS_ASSERT(bandBinIndices_[i][1]>0,
+            // use < bandBinIndices_[i][1] to exclude upper bin
+            bandBinIndices_[i][1] = ceil(bandFreqsHz_[i+1]*fftSize[i]/fs);
+            LOUDNESS_ASSERT(bandBinIndices_[i][1]>0, 
                     name_ << ": No components found in band number " << i);
-#endif
 
             //exclude DC and Nyquist if found
             int nyqIdx = (fftSize[i]/2) + (fftSize[i]%2);
@@ -92,32 +90,36 @@ namespace loudness{
                 LOUDNESS_WARNING(name_ << ": DC found...excluding.");
                 bandBinIndices_[i][0] = 1;
             }
-            if(bandBinIndices_[i][1] >= nyqIdx)
+            if((bandBinIndices_[i][1]-1) >= nyqIdx)
             {
                 LOUDNESS_WARNING(name_ << 
                         ": Bin is >= nyquist...excluding.");
-                bandBinIndices_[i][1] = nyqIdx-1;
+                bandBinIndices_[i][1] = nyqIdx;
             }
 
+            nBins += bandBinIndices_[i][1]-bandBinIndices_[i][0];
+
             //Power spectrum normalisation
-            if(normalisation_ == "averageEnergy")
-                normFactor_[i] = 2.0/(fftSize[i] * windowSizes_[i]);
-            else
-                normFactor_[i] = 2.0/fftSize[i];
+            Real refSquared = referenceValue_ * referenceValue_;
+            switch (normalisation_)
+            {
+                case NONE:
+                    normFactor_[i] = 1.0 / refSquared;
+                    break;
+                case ENERGY:
+                    normFactor_[i] = 2.0/(fftSize[i] * refSquared);
+                    break;
+                case AVERAGE_POWER:
+                    normFactor_[i] = 2.0/(fftSize[i] * windowSizes_[i] * refSquared);
+                    break;
+                default:
+                    normFactor_[i] = 2.0/(fftSize[i] * refSquared);
+            }
+
             LOUDNESS_DEBUG(name_ << ": Normalisation factor : " << normFactor_[i]);
         }
 
-        //count total number of bins and ensure no overlap
-        int nBins = 0;
-        for(int i=1; i<nWindows; i++)
-        {
-            while((bandBinIndices_[i][0]*fs/fftSize[i]) <= (bandBinIndices_[i-1][1]*fs/fftSize[i-1]))
-                bandBinIndices_[i][0] += 1;
-            nBins += bandBinIndices_[i-1][1]-bandBinIndices_[i-1][0] + 1;
-        }
-        
         //total number of bins in the output spectrum
-        nBins += bandBinIndices_[nWindows-1][1]-bandBinIndices_[nWindows-1][0] + 1;
         LOUDNESS_DEBUG(name_ 
                 << ": Total number of bins comprising the output spectrum: " << nBins);
 
@@ -130,8 +132,14 @@ namespace loudness{
         for(int i=0; i<nWindows; i++)
         {
             j = bandBinIndices_[i][0];
-            while(j <= bandBinIndices_[i][1])
+            while(j < bandBinIndices_[i][1])
                 output_.setCentreFreq(k++, (j++)*fs/(Real)fftSize[i]);
+
+            LOUDNESS_DEBUG(name_ 
+                    << ": Included freq Hz (band low): " 
+                    << fs * bandBinIndices_[i][0] / float(fftSize[i]) 
+                    << ": Included freq Hz (band high): " 
+                    << fs * (bandBinIndices_[i][1] - 1) / float(fftSize[i])); 
         }
 
         return 1;
@@ -157,7 +165,7 @@ namespace loudness{
                 //Extract components from band and compute powers
                 Real re, im;
                 int bin = bandBinIndices_[chn][0];
-                while(bin <= bandBinIndices_[chn][1])
+                while(bin < bandBinIndices_[chn][1])
                 {
                     re = ffts_[fftIdx] -> getReal(bin);
                     im = ffts_[fftIdx] -> getImag(bin++);
@@ -170,8 +178,13 @@ namespace loudness{
     void PowerSpectrum::resetInternal()
     {}
 
-    void PowerSpectrum::setNormalisation(const string &normalisation)
+    void PowerSpectrum::setNormalisation(const Normalisation normalisation)
     {
         normalisation_ = normalisation;
+    }
+
+    void PowerSpectrum::setReferenceValue(Real referenceValue)
+    {
+        referenceValue_ = referenceValue;
     }
 }
