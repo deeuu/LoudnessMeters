@@ -3,14 +3,59 @@
 <JUCERPROJECT id="xwcxs9" name="LoudnessMeter" projectType="audioplug" version="1.0.0"
               bundleIdentifier="com.yourcompany.LoudnessMeter" includeBinaryInAppConfig="1"
               buildVST="1" buildVST3="0" buildAU="1" buildRTAS="0" buildAAX="0"
-              pluginName="LoudnessMeter" pluginDesc="LoudnessMeter" pluginManufacturer="yourcompany"
-              pluginManufacturerCode="Manu" pluginCode="Plug" pluginChannelConfigs="{1, 1}, {2, 2}"
-              pluginIsSynth="0" pluginWantsMidiIn="0" pluginProducesMidiOut="0"
-              pluginSilenceInIsSilenceOut="0" pluginEditorRequiresKeys="0"
-              pluginAUExportPrefix="LoudnessMeterAU" pluginRTASCategory=""
-              aaxIdentifier="com.yourcompany.LoudnessMeter" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
-              jucerVersion="3.1.1">
+              pluginName="LoudnessMeterGM2002" pluginDesc="LoudnessMeterGM2002"
+              pluginManufacturer="yourcompany" pluginManufacturerCode="Manu"
+              pluginCode="Plug" pluginChannelConfigs="{1, 1}, {2, 2}" pluginIsSynth="0"
+              pluginWantsMidiIn="0" pluginProducesMidiOut="0" pluginSilenceInIsSilenceOut="0"
+              pluginEditorRequiresKeys="0" pluginAUExportPrefix="LoudnessMeterAU"
+              pluginRTASCategory="" aaxIdentifier="com.yourcompany.LoudnessMeter"
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="3.1.1">
   <MAINGROUP id="voUama" name="LoudnessMeter">
+    <GROUP id="{FB854380-F02E-95EC-FBA0-16A89F97ACA2}" name="GUI">
+      <FILE id="F0mQhA" name="LoudnessConfig.h" compile="0" resource="0"
+            file="../GUI/LoudnessConfig.h"/>
+      <FILE id="jDpAqE" name="BarGraph.cpp" compile="1" resource="0" file="../GUI/BarGraph.cpp"/>
+      <FILE id="FnbwSA" name="BarGraph.h" compile="0" resource="0" file="../GUI/BarGraph.h"/>
+      <FILE id="YBWdeh" name="CalibrationScreen.cpp" compile="1" resource="0"
+            file="../GUI/CalibrationScreen.cpp"/>
+      <FILE id="aDPe0e" name="CalibrationScreen.h" compile="0" resource="0"
+            file="../GUI/CalibrationScreen.h"/>
+      <FILE id="jRyZpb" name="Graduations.cpp" compile="1" resource="0" file="../GUI/Graduations.cpp"/>
+      <FILE id="uTNcFT" name="Graduations.h" compile="0" resource="0" file="../GUI/Graduations.h"/>
+      <FILE id="QQDjrx" name="LoudnessValueDisplay.cpp" compile="1" resource="0"
+            file="../GUI/LoudnessValueDisplay.cpp"/>
+      <FILE id="wik9PL" name="LoudnessValueDisplay.h" compile="0" resource="0"
+            file="../GUI/LoudnessValueDisplay.h"/>
+      <FILE id="C6bf03" name="MeterBallistics.cpp" compile="1" resource="0"
+            file="../GUI/MeterBallistics.cpp"/>
+      <FILE id="FYAjXv" name="MeterBallistics.h" compile="0" resource="0"
+            file="../GUI/MeterBallistics.h"/>
+      <FILE id="IVfPDI" name="SettingsButton.cpp" compile="1" resource="0"
+            file="../GUI/SettingsButton.cpp"/>
+      <FILE id="xZu5Pi" name="SettingsButton.h" compile="0" resource="0"
+            file="../GUI/SettingsButton.h"/>
+      <FILE id="UgVZ0c" name="SettingsScreen.cpp" compile="1" resource="0"
+            file="../GUI/SettingsScreen.cpp"/>
+      <FILE id="HUlu1C" name="SettingsScreen.h" compile="0" resource="0"
+            file="../GUI/SettingsScreen.h"/>
+      <FILE id="kzRtNb" name="StereoLoudnessBarGraph.cpp" compile="1" resource="0"
+            file="../GUI/StereoLoudnessBarGraph.cpp"/>
+      <FILE id="uvFbKt" name="StereoLoudnessBarGraph.h" compile="0" resource="0"
+            file="../GUI/StereoLoudnessBarGraph.h"/>
+      <FILE id="tcl4N7" name="StereoSpecificLoudnessGraph.cpp" compile="1"
+            resource="0" file="../GUI/StereoSpecificLoudnessGraph.cpp"/>
+      <FILE id="rmTjOv" name="StereoSpecificLoudnessGraph.h" compile="0"
+            resource="0" file="../GUI/StereoSpecificLoudnessGraph.h"/>
+    </GROUP>
+    <GROUP id="{2BF4AA2B-C352-1786-5637-F4BC875151C7}" name="Source">
+      <FILE id="iOzUp8" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="W7nqO8" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="cYCp4Y" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="NYuswp" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+    </GROUP>
     <GROUP id="{FC525ACE-AF43-2473-0E57-100B5AB91637}" name="dsp">
       <FILE id="dalwr6" name="SPLMeter.cpp" compile="1" resource="0" file="../dsp/SPLMeter.cpp"/>
       <FILE id="BYjQr8" name="SPLMeter.h" compile="0" resource="0" file="../dsp/SPLMeter.h"/>
@@ -102,81 +147,42 @@
         </GROUP>
       </GROUP>
     </GROUP>
-    <GROUP id="{A378BF1D-E94F-A564-0129-4472F286686B}" name="Source">
-      <FILE id="FaMZEY" name="Graduations.cpp" compile="1" resource="0" file="Source/Graduations.cpp"/>
-      <FILE id="eNkUvH" name="Graduations.h" compile="0" resource="0" file="Source/Graduations.h"/>
-      <FILE id="f4x7dF" name="LoudnessValueDisplay.cpp" compile="1" resource="0"
-            file="Source/LoudnessValueDisplay.cpp"/>
-      <FILE id="sxeUii" name="LoudnessValueDisplay.h" compile="0" resource="0"
-            file="Source/LoudnessValueDisplay.h"/>
-      <FILE id="OtWat6" name="CalibrationScreen.cpp" compile="1" resource="0"
-            file="Source/CalibrationScreen.cpp"/>
-      <FILE id="a9rerk" name="CalibrationScreen.h" compile="0" resource="0"
-            file="Source/CalibrationScreen.h"/>
-      <FILE id="E5a6yy" name="SettingsScreen.cpp" compile="1" resource="0"
-            file="Source/SettingsScreen.cpp"/>
-      <FILE id="kCGcGB" name="SettingsScreen.h" compile="0" resource="0"
-            file="Source/SettingsScreen.h"/>
-      <FILE id="AFfYkf" name="SettingsButton.cpp" compile="1" resource="0"
-            file="Source/SettingsButton.cpp"/>
-      <FILE id="BUn389" name="SettingsButton.h" compile="0" resource="0"
-            file="Source/SettingsButton.h"/>
-      <FILE id="Twxdbe" name="StereoSpecificLoudnessGraph.cpp" compile="1"
-            resource="0" file="Source/StereoSpecificLoudnessGraph.cpp"/>
-      <FILE id="jwULEQ" name="StereoSpecificLoudnessGraph.h" compile="0"
-            resource="0" file="Source/StereoSpecificLoudnessGraph.h"/>
-      <FILE id="k4ID2p" name="BarGraph.cpp" compile="1" resource="0" file="Source/BarGraph.cpp"/>
-      <FILE id="bsFxLL" name="BarGraph.h" compile="0" resource="0" file="Source/BarGraph.h"/>
-      <FILE id="kVb3WJ" name="MeterBallistics.cpp" compile="1" resource="0"
-            file="Source/MeterBallistics.cpp"/>
-      <FILE id="tJWaZf" name="MeterBallistics.h" compile="0" resource="0"
-            file="Source/MeterBallistics.h"/>
-      <FILE id="XHsnT0" name="StereoLoudnessBarGraph.cpp" compile="1" resource="0"
-            file="Source/StereoLoudnessBarGraph.cpp"/>
-      <FILE id="mFTps1" name="StereoLoudnessBarGraph.h" compile="0" resource="0"
-            file="Source/StereoLoudnessBarGraph.h"/>
-      <FILE id="LEWwoT" name="PluginProcessor.cpp" compile="1" resource="0"
-            file="Source/PluginProcessor.cpp"/>
-      <FILE id="oVe8sb" name="PluginProcessor.h" compile="0" resource="0"
-            file="Source/PluginProcessor.h"/>
-      <FILE id="HzEPvP" name="PluginEditor.cpp" compile="1" resource="0"
-            file="Source/PluginEditor.cpp"/>
-      <FILE id="V3iYiC" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-    </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
     <LINUX_MAKE targetFolder="Builds/Linux" vstFolder="~/SDKs/VST3SDK" externalLibraries="fftw3">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
-                       targetName="LoudnessMeter" binaryPath="/usr/local/lib/lxvst/"/>
+                       targetName="LoudnessMeterGM2002" binaryPath="/usr/local/lib/lxvst/"/>
         <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
-                       targetName="LoudnessMeter" binaryPath="/usr/local/lib/lxvst/"/>
+                       targetName="LoudnessMeterGM2002" binaryPath="/usr/local/lib/lxvst/"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_core" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_events" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_graphics" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_data_structures" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_gui_basics" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_gui_extra" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_cryptography" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_video" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_opengl" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_audio_basics" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_audio_processors" path="JuceLibraryCode/modules"/>
-        <MODULEPATH id="juce_audio_plugin_client" path="JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_core" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_events" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_graphics" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_video" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_opengl" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../JuceLibraryCode/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../JuceLibraryCode/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
     <VS2013 targetFolder="Builds/VisualStudio2013" vstFolder="c:\vstsdk2.4"
             externalLibraries="libfftw3-3.lib&#10;zlib.lib">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="LoudnessMeter" headerPath="c:\Libs\fftw\fftw-3.3.4-dll32&#10;c:\Libs\zlib\include"
+                       isDebug="1" optimisation="1" targetName="LoudnessMeterGM2002"
+                       headerPath="c:\Libs\fftw\fftw-3.3.4-dll32&#10;c:\Libs\zlib\include"
                        libraryPath="c:\Libs\fftw\fftw-3.3.4-dll32&#10;c:\Libs\zlib\lib"/>
         <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="LoudnessMeter" headerPath="c:\Libs\fftw\fftw-3.3.4-dll32&#10;c:\Libs\zlib\include"
+                       isDebug="0" optimisation="3" targetName="LoudnessMeterGM2002"
+                       headerPath="c:\Libs\fftw\fftw-3.3.4-dll32&#10;c:\Libs\zlib\include"
                        libraryPath="c:\Libs\fftw\fftw-3.3.4-dll32&#10;c:\Libs\zlib\lib"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
@@ -198,20 +204,20 @@
     </VS2013>
   </EXPORTFORMATS>
   <MODULES>
-    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_core" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_cryptography" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_events" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_opengl" showAllCode="1" useLocalCopy="1"/>
-    <MODULES id="juce_video" showAllCode="1" useLocalCopy="1"/>
+    <MODULES id="juce_audio_basics" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_audio_devices" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_audio_formats" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_audio_plugin_client" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_audio_processors" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_core" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_cryptography" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_data_structures" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_graphics" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_gui_basics" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_gui_extra" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_opengl" showAllCode="0" useLocalCopy="0"/>
+    <MODULES id="juce_video" showAllCode="0" useLocalCopy="0"/>
   </MODULES>
   <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
 </JUCERPROJECT>

@@ -2,7 +2,7 @@
 #define SETTINGS_SCREEN_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "PluginProcessor.h"
+#include "LoudnessConfig.h"
 
 class SettingsScreen : public Component,
                        public ComboBox::Listener

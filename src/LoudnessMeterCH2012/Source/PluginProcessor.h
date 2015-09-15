@@ -12,7 +12,7 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "../../JuceLibraryCode/JuceHeader.h"
-#include "../../loudnessCode/models/DynamicLoudnessGM2002.h"
+#include "../../loudnessCode/models/DynamicLoudnessCH2012.h"
 #include "../../loudnessCode/support/SignalBank.h"
 #include "../../dsp/SPLMeter.h"
 #include "../../GUI/LoudnessConfig.h"
@@ -97,7 +97,7 @@ private:
     // analysers
     AudioSampleBuffer analysisBuffer;
     loudness::SignalBank inputSignalBank;
-    loudness::DynamicLoudnessGM2002 model;
+    loudness::DynamicLoudnessCH2012 model;
     SPLMeter levelMeter;
     
     //calibration stuff

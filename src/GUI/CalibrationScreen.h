@@ -2,7 +2,6 @@
 #define CALIBRATION_SCREEN_H_INCLUDED
 
 #include "../JuceLibraryCode/JuceHeader.h"
-#include "PluginProcessor.h"
 
 class CalibrationScreen : public Component,
                           public ComboBox::Listener,
