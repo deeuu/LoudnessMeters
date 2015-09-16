@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{933BDBB4-88F5-03D4-A32E-1AF7A9EF37CE}</ProjectGuid>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props"/>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props"/>
+  <ImportGroup Label="ExtensionSettings"/>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
+            Label="LocalAppDataPlatform"/>
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros">
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">LoudnessMeterCH2012</TargetName>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(LibraryPath);c:\Libs\fftw\fftw-3.3.4-dll32;c:\Libs\zlib\lib</LibraryPath>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">LoudnessMeterCH2012</TargetName>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(LibraryPath);c:\Libs\fftw\fftw-3.3.4-dll32;c:\Libs\zlib\lib</LibraryPath>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <HeaderFileName/>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\..\juce;c:\vstsdk2.4;c:\Libs\fftw\fftw-3.3.4-dll32;c:\Libs\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;DEBUG;_DEBUG;JUCER_VS2013_78A5020=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader/>
+      <AssemblerListingLocation>$(IntDir)\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)\</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(OutDir)\LoudnessMeterCH2012.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>libcmt.lib; msvcrt.lib;;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)\LoudnessMeterCH2012.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalLibraryDirectories>c:\Libs\fftw\fftw-3.3.4-dll32;c:\Libs\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalDependencies>libfftw3-3.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>$(IntDir)\LoudnessMeterCH2012.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Midl>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MkTypLibCompatible>true</MkTypLibCompatible>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TargetEnvironment>Win32</TargetEnvironment>
+      <HeaderFileName/>
+    </Midl>
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>..\..\JuceLibraryCode;..\..\..\..\juce;c:\vstsdk2.4;c:\Libs\fftw\fftw-3.3.4-dll32;c:\Libs\zlib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;JUCER_VS2013_78A5020=1;JUCE_APP_VERSION=1.0.0;JUCE_APP_VERSION_HEX=0x10000;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader/>
+      <AssemblerListingLocation>$(IntDir)\</AssemblerListingLocation>
+      <ObjectFileName>$(IntDir)\</ObjectFileName>
+      <ProgramDataBaseFileName>$(IntDir)\</ProgramDataBaseFileName>
+      <WarningLevel>Level4</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <Link>
+      <OutputFile>$(OutDir)\LoudnessMeterCH2012.dll</OutputFile>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)\LoudnessMeterCH2012.pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <AdditionalLibraryDirectories>c:\Libs\fftw\fftw-3.3.4-dll32;c:\Libs\zlib\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LargeAddressAware>true</LargeAddressAware>
+      <AdditionalDependencies>libfftw3-3.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/FORCE:multiple %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <Bscmake>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <OutputFile>$(IntDir)\LoudnessMeterCH2012.bsc</OutputFile>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\loudnessCode\models\DynamicLoudnessCH2012.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\models\DynamicLoudnessGM2002.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\ARAverager.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\BinauralInhibitionMG2007.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\Butter.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\CompressSpectrum.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\DoubleRoexBank.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\FastRoexBank.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\FIR.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\FrameGenerator.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\HoppingGoertzelDFT.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\IIR.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\InstantaneousLoudness.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\PeakFollower.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\PowerSpectrum.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\RoexBankANSIS342007.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\SpecificLoudnessANSIS342007.cpp">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\WeightSpectrum.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\modules\Window.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\support\AuditoryTools.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\support\FFT.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\support\Filter.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\support\Model.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\support\Module.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\support\SignalBank.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\thirdParty\cnpy\cnpy.cpp"/>
+    <ClCompile Include="..\..\..\loudnessCode\thirdParty\spline\Spline.cpp"/>
+    <ClCompile Include="..\..\..\GUI\BarGraph.cpp"/>
+    <ClCompile Include="..\..\..\GUI\CalibrationScreen.cpp"/>
+    <ClCompile Include="..\..\..\GUI\Graduations.cpp"/>
+    <ClCompile Include="..\..\..\GUI\LoudnessValueDisplay.cpp"/>
+    <ClCompile Include="..\..\..\GUI\MeterBallistics.cpp"/>
+    <ClCompile Include="..\..\..\GUI\SettingsButton.cpp"/>
+    <ClCompile Include="..\..\..\GUI\SettingsScreen.cpp"/>
+    <ClCompile Include="..\..\..\GUI\StereoLoudnessBarGraph.cpp"/>
+    <ClCompile Include="..\..\..\GUI\StereoSpecificLoudnessGraph.cpp"/>
+    <ClCompile Include="..\..\Source\PluginEditor.cpp"/>
+    <ClCompile Include="..\..\Source\PluginProcessor.cpp"/>
+    <ClCompile Include="..\..\..\dsp\SPLMeter.cpp"/>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\AAX\juce_AAX_Wrapper.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_basics\juce_audio_basics.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_devices\juce_audio_devices.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_formats\juce_audio_formats.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_processors\juce_audio_processors.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_core\juce_core.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_cryptography\juce_cryptography.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_data_structures\juce_data_structures.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_events\juce_events.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_graphics\juce_graphics.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_gui_basics\juce_gui_basics.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_opengl\juce_opengl.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\utility\juce_PluginUtilities.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_DigiCode1.cpp">
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_DigiCode2.cpp">
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_DigiCode3.cpp">
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_WinUtilities.cpp">
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_Wrapper.cpp">
+      <CallingConvention>StdCall</CallingConvention>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_video\juce_video.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\VST\juce_VST_Wrapper.cpp"/>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\VST3\juce_VST3_Wrapper.cpp"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\loudnessCode\models\DynamicLoudnessCH2012.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\models\DynamicLoudnessGM2002.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\ARAverager.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\BinauralInhibitionMG2007.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\Butter.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\CompressSpectrum.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\DoubleRoexBank.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\FastRoexBank.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\FIR.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\FrameGenerator.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\HoppingGoertzelDFT.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\IIR.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\InstantaneousLoudness.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\PeakFollower.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\PowerSpectrum.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\RoexBankANSIS342007.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\SpecificLoudnessANSIS342007.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\WeightSpectrum.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\modules\Window.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\support\AuditoryTools.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\support\Common.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\support\Debug.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\support\FFT.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\support\Filter.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\support\Model.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\support\Module.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\support\SignalBank.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\support\UsefulFunctions.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\thirdParty\cnpy\cnpy.h"/>
+    <ClInclude Include="..\..\..\loudnessCode\thirdParty\spline\Spline.h"/>
+    <ClInclude Include="..\..\..\GUI\LoudnessConfig.h"/>
+    <ClInclude Include="..\..\..\GUI\BarGraph.h"/>
+    <ClInclude Include="..\..\..\GUI\CalibrationScreen.h"/>
+    <ClInclude Include="..\..\..\GUI\Graduations.h"/>
+    <ClInclude Include="..\..\..\GUI\LoudnessValueDisplay.h"/>
+    <ClInclude Include="..\..\..\GUI\MeterBallistics.h"/>
+    <ClInclude Include="..\..\..\GUI\SettingsButton.h"/>
+    <ClInclude Include="..\..\..\GUI\SettingsScreen.h"/>
+    <ClInclude Include="..\..\..\GUI\StereoLoudnessBarGraph.h"/>
+    <ClInclude Include="..\..\..\GUI\StereoSpecificLoudnessGraph.h"/>
+    <ClInclude Include="..\..\Source\PluginEditor.h"/>
+    <ClInclude Include="..\..\Source\PluginProcessor.h"/>
+    <ClInclude Include="..\..\..\dsp\SPLMeter.h"/>
+    <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h"/>
+    <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h"/>
+    <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h"/>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\loudnessCode\thirdParty\cnpy\LICENSE"/>
+    <None Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_WinResources.rsr"/>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\resources.rc"/>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
+  <ImportGroup Label="ExtensionTargets"/>
+</Project>

@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="LoudnessMeter">
+      <UniqueIdentifier>{B92AFEAB-0F6E-A123-D3EC-5E2C7985491D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoudnessMeter\GUI">
+      <UniqueIdentifier>{8B216DE9-5507-8042-1D07-A7260731332D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoudnessMeter\Source">
+      <UniqueIdentifier>{B4EC2F60-0109-1E8F-5CB0-B7C4CDB7045D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoudnessMeter\dsp">
+      <UniqueIdentifier>{0855A8AA-9C9C-F0D2-7EC0-ADE3ABADE2C0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoudnessMeter\loudnessCode">
+      <UniqueIdentifier>{F4078C86-55CA-B5F9-320E-7459AC537296}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoudnessMeter\loudnessCode\models">
+      <UniqueIdentifier>{7F7E6122-43D0-90D1-DD41-F2DF2C59E2E3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoudnessMeter\loudnessCode\modules">
+      <UniqueIdentifier>{9092C36C-1721-CC69-4F8E-8A7852261215}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoudnessMeter\loudnessCode\support">
+      <UniqueIdentifier>{743178A1-2026-00DD-3340-6456FD52D9AC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoudnessMeter\loudnessCode\thirdParty">
+      <UniqueIdentifier>{609A26C8-376A-4EAD-DCB3-EDFC88273F6B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoudnessMeter\loudnessCode\thirdParty\cnpy">
+      <UniqueIdentifier>{EE4A61F9-1C9F-E7AA-2561-BDAC5F0F436F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoudnessMeter\loudnessCode\thirdParty\spline">
+      <UniqueIdentifier>{7EF47EFC-2C05-0BAB-11F7-03FD567318CA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Juce Library Code">
+      <UniqueIdentifier>{8B4D1BAA-6DB4-CAEC-A0FA-271F354D5C61}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\GUI\BarGraph.cpp">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GUI\CalibrationScreen.cpp">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GUI\Graduations.cpp">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GUI\LoudnessValueDisplay.cpp">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GUI\MeterBallistics.cpp">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GUI\SettingsButton.cpp">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GUI\SettingsScreen.cpp">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GUI\StereoLoudnessBarGraph.cpp">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\GUI\StereoSpecificLoudnessGraph.cpp">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PluginEditor.cpp">
+      <Filter>LoudnessMeter\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\PluginProcessor.cpp">
+      <Filter>LoudnessMeter\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\dsp\SPLMeter.cpp">
+      <Filter>LoudnessMeter\dsp</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\models\DynamicLoudnessGM2002.cpp">
+      <Filter>LoudnessMeter\loudnessCode\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\PeakFollower.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\ARAverager.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\BinauralInhibitionMG2007.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\Butter.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\CompressSpectrum.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\FastRoexBank.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\FIR.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\FrameGenerator.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\IIR.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\InstantaneousLoudness.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\PowerSpectrum.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\RoexBankANSIS342007.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\SpecificLoudnessANSIS342007.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\WeightSpectrum.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\modules\Window.cpp">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\support\AuditoryTools.cpp">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\support\FFT.cpp">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\support\Filter.cpp">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\support\Model.cpp">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\support\Module.cpp">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\support\SignalBank.cpp">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\thirdParty\cnpy\cnpy.cpp">
+      <Filter>LoudnessMeter\loudnessCode\thirdParty\cnpy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\loudnessCode\thirdParty\spline\Spline.cpp">
+      <Filter>LoudnessMeter\loudnessCode\thirdParty\spline</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\JuceLibraryCode\BinaryData.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\AAX\juce_AAX_Wrapper.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_basics\juce_audio_basics.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_devices\juce_audio_devices.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_formats\juce_audio_formats.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_processors\juce_audio_processors.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_core\juce_core.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_cryptography\juce_cryptography.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_data_structures\juce_data_structures.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_events\juce_events.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_graphics\juce_graphics.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_gui_basics\juce_gui_basics.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_gui_extra\juce_gui_extra.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_opengl\juce_opengl.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\utility\juce_PluginUtilities.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_DigiCode1.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_DigiCode2.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_DigiCode3.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_WinUtilities.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_Wrapper.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_video\juce_video.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\VST\juce_VST_Wrapper.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\VST3\juce_VST3_Wrapper.cpp">
+      <Filter>Juce Library Code</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\GUI\LoudnessConfig.h">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GUI\BarGraph.h">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GUI\CalibrationScreen.h">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GUI\Graduations.h">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GUI\LoudnessValueDisplay.h">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GUI\MeterBallistics.h">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GUI\SettingsButton.h">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GUI\SettingsScreen.h">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GUI\StereoLoudnessBarGraph.h">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\GUI\StereoSpecificLoudnessGraph.h">
+      <Filter>LoudnessMeter\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\PluginEditor.h">
+      <Filter>LoudnessMeter\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\PluginProcessor.h">
+      <Filter>LoudnessMeter\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\dsp\SPLMeter.h">
+      <Filter>LoudnessMeter\dsp</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\models\DynamicLoudnessGM2002.h">
+      <Filter>LoudnessMeter\loudnessCode\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\PeakFollower.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\ARAverager.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\BinauralInhibitionMG2007.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\Butter.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\CompressSpectrum.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\FastRoexBank.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\FIR.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\FrameGenerator.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\IIR.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\InstantaneousLoudness.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\PowerSpectrum.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\RoexBankANSIS342007.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\SpecificLoudnessANSIS342007.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\WeightSpectrum.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\modules\Window.h">
+      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\support\AuditoryTools.h">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\support\Common.h">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\support\Debug.h">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\support\FFT.h">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\support\Filter.h">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\support\Model.h">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\support\Module.h">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\support\SignalBank.h">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\support\UsefulFunctions.h">
+      <Filter>LoudnessMeter\loudnessCode\support</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\thirdParty\cnpy\cnpy.h">
+      <Filter>LoudnessMeter\loudnessCode\thirdParty\cnpy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\loudnessCode\thirdParty\spline\Spline.h">
+      <Filter>LoudnessMeter\loudnessCode\thirdParty\spline</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\AppConfig.h">
+      <Filter>Juce Library Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\BinaryData.h">
+      <Filter>Juce Library Code</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\JuceLibraryCode\JuceHeader.h">
+      <Filter>Juce Library Code</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\loudnessCode\thirdParty\cnpy\LICENSE">
+      <Filter>LoudnessMeter\loudnessCode\thirdParty\cnpy</Filter>
+    </None>
+    <None Include="..\..\..\JuceLibraryCode\modules\juce_audio_plugin_client\RTAS\juce_RTAS_WinResources.rsr">
+      <Filter>Juce Library Code</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include=".\resources.rc">
+      <Filter>Juce Library Code</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

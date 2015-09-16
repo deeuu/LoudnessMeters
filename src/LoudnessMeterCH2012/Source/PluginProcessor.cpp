@@ -20,12 +20,12 @@ LoudnessMeterAudioProcessor::LoudnessMeterAudioProcessor()
       pluginInitialised (false),
       copyLoudnessValues (1),
       settingsFlag (OkToDoStuff),
-	  measurementChannel(0), measurementLevel (94.0),
-	  newCalibrationLevel (0.0)
+      measurementChannel(0), measurementLevel (94.0),
+      newCalibrationLevel (0.0)
 {
     loudnessParameters.modelRate = 62.5;
-    loudnessParameters.camSpacing = 1.0;
-    loudnessParameters.compression = 0.3;
+    loudnessParameters.camSpacing = 0.5;
+    loudnessParameters.compression = 0.2;
     loudnessParameters.filter = 0;
 }
 

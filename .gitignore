@@ -1,3 +1,6 @@
 src/LoudnessMeterGM2002/Builds/Linux/build*
+src/LoudnessMeterCH2012/Builds/Linux/build*
+src/LoudnessMeterGM2002/JuceLibraryCode*
+src/LoudnessMeterCH2012/JuceLibraryCode*
 *.swp
 *.swo
