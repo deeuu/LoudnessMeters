@@ -138,34 +138,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\loudnessCode\models\DynamicLoudnessCH2012.cpp"/>
-    <ClCompile Include="..\..\..\loudnessCode\models\DynamicLoudnessGM2002.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\ARAverager.cpp"/>
     <ClCompile Include="..\..\..\loudnessCode\modules\BinauralInhibitionMG2007.cpp"/>
-    <ClCompile Include="..\..\..\loudnessCode\modules\Butter.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\CompressSpectrum.cpp"/>
     <ClCompile Include="..\..\..\loudnessCode\modules\DoubleRoexBank.cpp"/>
-    <ClCompile Include="..\..\..\loudnessCode\modules\FastRoexBank.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\FIR.cpp"/>
     <ClCompile Include="..\..\..\loudnessCode\modules\FrameGenerator.cpp"/>
-    <ClCompile Include="..\..\..\loudnessCode\modules\HoppingGoertzelDFT.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\IIR.cpp"/>
     <ClCompile Include="..\..\..\loudnessCode\modules\InstantaneousLoudness.cpp"/>
     <ClCompile Include="..\..\..\loudnessCode\modules\PeakFollower.cpp"/>
     <ClCompile Include="..\..\..\loudnessCode\modules\PowerSpectrum.cpp"/>
-    <ClCompile Include="..\..\..\loudnessCode\modules\RoexBankANSIS342007.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="..\..\..\loudnessCode\modules\SpecificLoudnessANSIS342007.cpp">
-      <ExcludedFromBuild>true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\WeightSpectrum.cpp"/>
     <ClCompile Include="..\..\..\loudnessCode\modules\Window.cpp"/>
     <ClCompile Include="..\..\..\loudnessCode\support\AuditoryTools.cpp"/>

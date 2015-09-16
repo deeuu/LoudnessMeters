@@ -17,8 +17,6 @@
               file="../loudnessCode/models/DynamicLoudnessCH2012.cpp"/>
         <FILE id="Sx6aj0" name="DynamicLoudnessCH2012.h" compile="0" resource="0"
               file="../loudnessCode/models/DynamicLoudnessCH2012.h"/>
-        <FILE id="hRF1M6" name="DynamicLoudnessGM2002.cpp" compile="0" resource="0"
-              file="../loudnessCode/models/DynamicLoudnessGM2002.cpp"/>
         <FILE id="f24bQn" name="DynamicLoudnessGM2002.h" compile="0" resource="0"
               file="../loudnessCode/models/DynamicLoudnessGM2002.h"/>
       </GROUP>
@@ -29,7 +27,6 @@
               file="../loudnessCode/modules/BinauralInhibitionMG2007.cpp"/>
         <FILE id="VHUvoh" name="BinauralInhibitionMG2007.h" compile="0" resource="0"
               file="../loudnessCode/modules/BinauralInhibitionMG2007.h"/>
-        <FILE id="i22BtT" name="Butter.cpp" compile="0" resource="0" file="../loudnessCode/modules/Butter.cpp"/>
         <FILE id="xCFzRT" name="Butter.h" compile="0" resource="0" file="../loudnessCode/modules/Butter.h"/>
         <FILE id="y8kg56" name="CompressSpectrum.cpp" compile="1" resource="0"
               file="../loudnessCode/modules/CompressSpectrum.cpp"/>
@@ -39,8 +36,6 @@
               file="../loudnessCode/modules/DoubleRoexBank.cpp"/>
         <FILE id="SPSYdm" name="DoubleRoexBank.h" compile="0" resource="0"
               file="../loudnessCode/modules/DoubleRoexBank.h"/>
-        <FILE id="biiFUZ" name="FastRoexBank.cpp" compile="0" resource="0"
-              file="../loudnessCode/modules/FastRoexBank.cpp"/>
         <FILE id="svuyLw" name="FastRoexBank.h" compile="0" resource="0" file="../loudnessCode/modules/FastRoexBank.h"/>
         <FILE id="Lv0FNV" name="FIR.cpp" compile="1" resource="0" file="../loudnessCode/modules/FIR.cpp"/>
         <FILE id="FKoffL" name="FIR.h" compile="0" resource="0" file="../loudnessCode/modules/FIR.h"/>
@@ -48,8 +43,6 @@
               file="../loudnessCode/modules/FrameGenerator.cpp"/>
         <FILE id="HKkyi2" name="FrameGenerator.h" compile="0" resource="0"
               file="../loudnessCode/modules/FrameGenerator.h"/>
-        <FILE id="WWmsOd" name="HoppingGoertzelDFT.cpp" compile="0" resource="0"
-              file="../loudnessCode/modules/HoppingGoertzelDFT.cpp"/>
         <FILE id="NDs3w1" name="HoppingGoertzelDFT.h" compile="0" resource="0"
               file="../loudnessCode/modules/HoppingGoertzelDFT.h"/>
         <FILE id="U6L9AW" name="IIR.cpp" compile="1" resource="0" file="../loudnessCode/modules/IIR.cpp"/>
@@ -64,12 +57,8 @@
         <FILE id="HmGUmH" name="PowerSpectrum.cpp" compile="1" resource="0"
               file="../loudnessCode/modules/PowerSpectrum.cpp"/>
         <FILE id="zwmxoo" name="PowerSpectrum.h" compile="0" resource="0" file="../loudnessCode/modules/PowerSpectrum.h"/>
-        <FILE id="TFNYWY" name="RoexBankANSIS342007.cpp" compile="0" resource="0"
-              file="../loudnessCode/modules/RoexBankANSIS342007.cpp"/>
         <FILE id="Ds9CQq" name="RoexBankANSIS342007.h" compile="0" resource="0"
               file="../loudnessCode/modules/RoexBankANSIS342007.h"/>
-        <FILE id="ZETtE6" name="SpecificLoudnessANSIS342007.cpp" compile="0"
-              resource="0" file="../loudnessCode/modules/SpecificLoudnessANSIS342007.cpp"/>
         <FILE id="deT7kP" name="SpecificLoudnessANSIS342007.h" compile="0"
               resource="0" file="../loudnessCode/modules/SpecificLoudnessANSIS342007.h"/>
         <FILE id="EY3EUE" name="WeightSpectrum.cpp" compile="1" resource="0"

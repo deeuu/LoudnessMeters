@@ -43,16 +43,10 @@
     <ClCompile Include="..\..\..\loudnessCode\models\DynamicLoudnessCH2012.cpp">
       <Filter>LoudnessMeter\loudnessCode\models</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\loudnessCode\models\DynamicLoudnessGM2002.cpp">
-      <Filter>LoudnessMeter\loudnessCode\models</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\ARAverager.cpp">
       <Filter>LoudnessMeter\loudnessCode\modules</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\BinauralInhibitionMG2007.cpp">
-      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\loudnessCode\modules\Butter.cpp">
       <Filter>LoudnessMeter\loudnessCode\modules</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\CompressSpectrum.cpp">
@@ -61,16 +55,10 @@
     <ClCompile Include="..\..\..\loudnessCode\modules\DoubleRoexBank.cpp">
       <Filter>LoudnessMeter\loudnessCode\modules</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\loudnessCode\modules\FastRoexBank.cpp">
-      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\FIR.cpp">
       <Filter>LoudnessMeter\loudnessCode\modules</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\FrameGenerator.cpp">
-      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\loudnessCode\modules\HoppingGoertzelDFT.cpp">
       <Filter>LoudnessMeter\loudnessCode\modules</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\IIR.cpp">
@@ -83,12 +71,6 @@
       <Filter>LoudnessMeter\loudnessCode\modules</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\PowerSpectrum.cpp">
-      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\loudnessCode\modules\RoexBankANSIS342007.cpp">
-      <Filter>LoudnessMeter\loudnessCode\modules</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\loudnessCode\modules\SpecificLoudnessANSIS342007.cpp">
       <Filter>LoudnessMeter\loudnessCode\modules</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\loudnessCode\modules\WeightSpectrum.cpp">
